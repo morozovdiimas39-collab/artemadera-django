@@ -264,19 +264,19 @@ export default function HomePage() {
         </div>
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
               <span className="text-white">Профессиональная</span>
               <br />
               <span className="text-gradient">шлифовка деревянных домов</span>
             </h1>
-            <p className="text-lg sm:text-xl text-gray-300 mb-10 max-w-2xl mx-auto font-light">
+            <p className="text-base sm:text-xl text-gray-300 mb-8 sm:mb-10 max-w-2xl mx-auto font-light leading-relaxed">
               Восстановим красоту и долговечность вашего деревянного дома. Гарантия на все виды работ.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <button type="button" onClick={() => setCallbackOpen(true)} className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl text-base sm:text-lg font-black uppercase tracking-wider shadow-lg shadow-amber-900/20 w-full sm:w-auto">
-                <Phone className="w-5 h-5" /> Бесплатная консультация
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-10 sm:mb-12">
+              <button type="button" onClick={() => setCallbackOpen(true)} className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-5 py-3.5 sm:px-8 sm:py-4 rounded-xl text-sm sm:text-lg font-black uppercase tracking-wider shadow-lg shadow-amber-900/20 w-full sm:w-auto">
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5" /> Бесплатная консультация
               </button>
-              <button onClick={() => scrollToSection('#portfolio')} className="inline-flex items-center justify-center border border-amber-500/50 text-amber-200 hover:bg-amber-500/10 px-6 py-3 sm:px-8 sm:py-4 rounded-xl text-base sm:text-lg font-bold w-full sm:w-auto">
+              <button onClick={() => scrollToSection('#portfolio')} className="inline-flex items-center justify-center border border-amber-500/50 text-amber-200 hover:bg-amber-500/10 px-5 py-3.5 sm:px-8 sm:py-4 rounded-xl text-sm sm:text-lg font-bold w-full sm:w-auto">
                 Посмотреть работы
               </button>
             </div>
