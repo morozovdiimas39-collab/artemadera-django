@@ -155,10 +155,10 @@ export default function TeplyShovPage() {
               Герметизация межвенцовых швов. Устраняем продувы, сохраняем паропроницаемость. Гарантия на работы.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <button type="button" onClick={() => setCallbackOpen(true)} className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-xl text-lg font-medium premium-cta">
+              <button type="button" onClick={() => setCallbackOpen(true)} className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl text-base sm:text-lg font-medium premium-cta w-full sm:w-auto">
                 <Phone className="w-5 h-5" /> Бесплатный расчёт
               </button>
-              <button onClick={() => scrollToSection('#services')} className="inline-flex items-center justify-center border border-amber-500/50 text-amber-200 hover:bg-amber-500/10 px-8 py-4 rounded-xl text-lg">
+              <button onClick={() => scrollToSection('#services')} className="inline-flex items-center justify-center border border-amber-500/50 text-amber-200 hover:bg-amber-500/10 px-6 py-3 sm:px-8 sm:py-4 rounded-xl text-base sm:text-lg w-full sm:w-auto">
                 Услуги и цены
               </button>
             </div>

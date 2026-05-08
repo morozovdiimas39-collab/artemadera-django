@@ -264,10 +264,6 @@ export default function HomePage() {
         </div>
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-500/30 mb-8">
-              <Award className="w-4 h-4 text-amber-400" />
-              <span className="text-sm text-amber-200 font-bold uppercase tracking-widest">Более 10 лет опыта в Москве и области</span>
-            </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
               <span className="text-white">Профессиональная</span>
               <br />
@@ -277,10 +273,10 @@ export default function HomePage() {
               Восстановим красоту и долговечность вашего деревянного дома. Гарантия на все виды работ.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <button type="button" onClick={() => setCallbackOpen(true)} className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-xl text-lg font-black uppercase tracking-wider shadow-lg shadow-amber-900/20">
+              <button type="button" onClick={() => setCallbackOpen(true)} className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl text-base sm:text-lg font-black uppercase tracking-wider shadow-lg shadow-amber-900/20 w-full sm:w-auto">
                 <Phone className="w-5 h-5" /> Бесплатная консультация
               </button>
-              <button onClick={() => scrollToSection('#portfolio')} className="inline-flex items-center justify-center border border-amber-500/50 text-amber-200 hover:bg-amber-500/10 px-8 py-4 rounded-xl text-lg font-bold">
+              <button onClick={() => scrollToSection('#portfolio')} className="inline-flex items-center justify-center border border-amber-500/50 text-amber-200 hover:bg-amber-500/10 px-6 py-3 sm:px-8 sm:py-4 rounded-xl text-base sm:text-lg font-bold w-full sm:w-auto">
                 Посмотреть работы
               </button>
             </div>
