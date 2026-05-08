@@ -258,23 +258,22 @@ export default function HomePage() {
       <CallbackModal open={callbackOpen} onClose={() => setCallbackOpen(false)} />
 
       {/* Hero */}
-      <section id="hero" className="relative min-h-screen flex flex-col overflow-hidden">
+      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url(/hero-bg.jpg)' }}>
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
         </div>
         
-        {/* Верт. отцентрованный главный блок */}
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center min-h-[100svh] sm:min-h-0 pt-20 pb-10 sm:py-20">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
           <div className="max-w-4xl mx-auto w-full text-left sm:text-center">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
               <span className="text-white">Профессиональная</span>
               <br />
               <span className="text-gradient">шлифовка деревянных домов</span>
             </h1>
-            <p className="text-base sm:text-xl text-gray-300 mb-8 sm:mb-10 max-w-2xl sm:mx-auto font-light leading-relaxed">
+            <p className="text-base sm:text-xl text-gray-300 mb-10 max-w-2xl sm:mx-auto font-light leading-relaxed">
               Восстановим красоту и долговечность вашего деревянного дома. Гарантия на все виды работ.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start sm:justify-center mb-0">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start sm:justify-center mb-10 sm:mb-12">
               <button type="button" onClick={() => setCallbackOpen(true)} className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-5 py-3.5 sm:px-8 sm:py-4 rounded-xl text-sm sm:text-lg font-black uppercase tracking-wider shadow-lg shadow-amber-900/20 w-full sm:w-auto">
                 <Phone className="w-4 h-4 sm:w-5 sm:h-5" /> Бесплатная консультация
               </button>
@@ -282,26 +281,24 @@ export default function HomePage() {
                 Посмотреть работы
               </button>
             </div>
-          </div>
-        </div>
-
-        {/* Блок с гарантиями внизу, виден при скролле на мобайле */}
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-10 sm:pt-0 mt-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            <div className="flex items-center justify-start sm:justify-center gap-3 text-gray-300">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0"><Shield className="w-6 h-6 text-amber-400" /></div>
-              <div className="text-left"><div className="font-bold text-white uppercase tracking-wider text-xs">Гарантия 3 года</div><div className="text-xs text-gray-500 uppercase tracking-widest mt-0.5">На все работы</div></div>
-            </div>
-            <div className="flex items-center justify-start sm:justify-center gap-3 text-gray-300">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0"><Clock className="w-6 h-6 text-amber-400" /></div>
-              <div className="text-left"><div className="font-bold text-white uppercase tracking-wider text-xs">Работаем быстро</div><div className="text-xs text-gray-500 uppercase tracking-widest mt-0.5">От 3 дней</div></div>
-            </div>
-            <div className="flex items-center justify-start sm:justify-center gap-3 text-gray-300">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0"><Award className="w-6 h-6 text-amber-400" /></div>
-              <div className="text-left"><div className="font-bold text-white uppercase tracking-wider text-xs">500+ домов</div><div className="text-xs text-gray-500 uppercase tracking-widest mt-0.5">Отреставрировано</div></div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+              <div className="flex items-center justify-start sm:justify-center gap-3 text-gray-300">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0"><Shield className="w-6 h-6 text-amber-400" /></div>
+                <div className="text-left"><div className="font-bold text-white uppercase tracking-wider text-xs">Гарантия 3 года</div><div className="text-xs text-gray-500 uppercase tracking-widest mt-0.5">На все работы</div></div>
+              </div>
+              <div className="flex items-center justify-start sm:justify-center gap-3 text-gray-300">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0"><Clock className="w-6 h-6 text-amber-400" /></div>
+                <div className="text-left"><div className="font-bold text-white uppercase tracking-wider text-xs">Работаем быстро</div><div className="text-xs text-gray-500 uppercase tracking-widest mt-0.5">От 3 дней</div></div>
+              </div>
+              <div className="flex items-center justify-start sm:justify-center gap-3 text-gray-300">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0"><Award className="w-6 h-6 text-amber-400" /></div>
+                <div className="text-left"><div className="font-bold text-white uppercase tracking-wider text-xs">500+ домов</div><div className="text-xs text-gray-500 uppercase tracking-widest mt-0.5">Отреставрировано</div></div>
+              </div>
             </div>
           </div>
         </div>
+        
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden sm:block">
           <ArrowDown className="w-6 h-6 text-amber-400" />
         </div>
