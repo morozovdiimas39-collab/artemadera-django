@@ -1,0 +1,138 @@
+{% load static %}
+<section id="quiz" class="hq-section scroll-mt-24">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+  <div class="hq-heading">
+   <h2 class="hq-heading__title">Рассчитайте <span class="text-gradient">стоимость работ</span></h2>
+   <p class="hq-heading__sub">3 вопроса — и вы получите предварительный расчёт по звонку</p>
+  </div>
+
+  <div class="hq-card">
+   <!-- Правая панель — фото -->
+   <div class="hq-card__image">
+    <img src="{% static 'images/service-1.jpg' %}" alt="" loading="lazy"/>
+   </div>
+
+   <!-- Левая панель — квиз -->
+   <div class="hq-card__body">
+    <form id="home-quiz" method="post" action="/#quiz">
+     {% csrf_token %}
+     <input type="hidden" name="form_type" value="contact"/>
+     <input type="hidden" name="from_block" value="quiz"/>
+     <input type="hidden" name="quiz_service" id="hq-input-service" value=""/>
+     <input type="hidden" name="quiz_house_type" id="hq-input-house" value=""/>
+     <input type="hidden" name="quiz_area" id="hq-input-area" value="100"/>
+
+     <!-- Прогресс -->
+     <div class="hq-progress">
+      <div class="hq-progress__meta">
+       <span class="hq-progress__label" id="hq-step-label">ВОПРОС 1 ИЗ 3</span>
+       <span class="hq-progress__pct" id="hq-step-pct">33%</span>
+      </div>
+      <div class="hq-progress__track">
+       <div class="hq-progress__fill" id="hq-progress-fill" style="width:33%"></div>
+      </div>
+     </div>
+
+     <!-- ШАГ 1: Услуга -->
+     <div class="hq-step" id="hq-step-1" data-step="1">
+      <div class="hq-step__head">
+       <div class="hq-step__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+       </div>
+       <h3 class="hq-step__title">Что нужно сделать?</h3>
+      </div>
+      <div class="hq-options hq-options--3col">
+       <button type="button" class="hq-option" data-step="1" data-value="shlifovka"><span class="hq-option__radio"></span><span>Шлифовка</span></button>
+       <button type="button" class="hq-option" data-step="1" data-value="pokraska"><span class="hq-option__radio"></span><span>Покраска</span></button>
+       <button type="button" class="hq-option" data-step="1" data-value="teplyy-shov"><span class="hq-option__radio"></span><span>Тёплый шов</span></button>
+       <button type="button" class="hq-option" data-step="1" data-value="okosyachka"><span class="hq-option__radio"></span><span>Окосячка</span></button>
+       <button type="button" class="hq-option" data-step="1" data-value="obsada"><span class="hq-option__radio"></span><span>Обсада</span></button>
+       <button type="button" class="hq-option" data-step="1" data-value="kryshi"><span class="hq-option__radio"></span><span>Крыши</span></button>
+       <button type="button" class="hq-option" data-step="1" data-value="injeneriya"><span class="hq-option__radio"></span><span>Инженерия</span></button>
+      </div>
+      <div class="hq-step__footer">
+       <button type="button" class="hq-btn-next" data-goto="2">Далее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+      </div>
+     </div>
+
+     <!-- ШАГ 2: Тип дома -->
+     <div class="hq-step hq-step--hidden" id="hq-step-2" data-step="2">
+      <div class="hq-step__head">
+       <div class="hq-step__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M12 10h.01M8 10h.01M16 10h.01"/></svg>
+       </div>
+       <h3 class="hq-step__title">Какой тип дома у вас?</h3>
+      </div>
+      <div class="hq-options">
+       <button type="button" class="hq-option" data-step="2" data-value="srub"><span class="hq-option__radio"></span><span>Сруб (бревенчатый)</span></button>
+       <button type="button" class="hq-option" data-step="2" data-value="brus"><span class="hq-option__radio"></span><span>Дом из бруса</span></button>
+       <button type="button" class="hq-option" data-step="2" data-value="kleen"><span class="hq-option__radio"></span><span>Клееный брус</span></button>
+       <button type="button" class="hq-option" data-step="2" data-value="ocil"><span class="hq-option__radio"></span><span>Оцилиндровка</span></button>
+       <button type="button" class="hq-option" data-step="2" data-value="lafet"><span class="hq-option__radio"></span><span>Лафет</span></button>
+       <button type="button" class="hq-option" data-step="2" data-value="banya"><span class="hq-option__radio"></span><span>Баня/сауна</span></button>
+      </div>
+      <div class="hq-step__footer">
+       <button type="button" class="hq-btn-back-inline hq-btn-back-inline--hidden" id="hq-back-2">← Назад</button>
+       <button type="button" class="hq-btn-next" data-goto="3">Далее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+      </div>
+     </div>
+
+     <!-- ШАГ 3: Метраж -->
+     <div class="hq-step hq-step--hidden" id="hq-step-3" data-step="3">
+      <div class="hq-step__head">
+       <div class="hq-step__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><path d="m16 12 2 2 4-4"/></svg>
+       </div>
+       <h3 class="hq-step__title">Площадь дома</h3>
+      </div>
+      <div class="hq-area">
+       <div class="hq-area__display">
+        <input type="number" id="hq-area-num" class="hq-area__num" min="20" max="600" value="100" inputmode="numeric" aria-label="Площадь м²"/>
+        <span class="hq-area__unit">м²</span>
+       </div>
+       <input type="range" id="hq-area-slider" class="hq-range" min="20" max="600" step="5" value="100" aria-label="Ползунок площади"/>
+       <div class="hq-area__minmax"><span>20 м²</span><span>600 м²</span></div>
+      </div>
+      <div class="hq-step__footer">
+       <button type="button" class="hq-btn-back-inline" id="hq-back-3">← Назад</button>
+       <button type="button" class="hq-btn-next" data-goto="4">Далее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+      </div>
+     </div>
+
+     <!-- ШАГ 4: Телефон -->
+     <div class="hq-step hq-step--hidden" id="hq-step-4" data-step="4">
+      <div class="hq-step__head">
+       <div class="hq-step__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+       </div>
+       <h3 class="hq-step__title">Ваш телефон</h3>
+       <p class="hq-step__hint">Перезвоним в течение 30 минут с предварительной ценой</p>
+      </div>
+      <div class="hq-summary" id="hq-summary"></div>
+      {% if contact_form_sent %}
+      <div class="hq-sent">
+       <div class="hq-sent__check">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+       </div>
+       <p class="hq-sent__title">Заявка принята</p>
+       <p class="hq-sent__sub">Перезвоним в течение 30 минут</p>
+      </div>
+      {% else %}
+      <div class="hq-phone-wrap">
+       <input type="tel" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" class="hq-phone"/>
+       <button type="submit" class="hq-submit">Получить расчёт стоимости</button>
+       <p class="hq-privacy">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
+      </div>
+      {% endif %}
+      <div class="hq-step__footer">
+       <button type="button" class="hq-btn-back-inline" id="hq-back-4">← Назад</button>
+      </div>
+     </div>
+
+    </form>
+   </div>
+  </div>
+
+ </div>
+</section>

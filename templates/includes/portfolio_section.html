@@ -1,0 +1,123 @@
+{% load static %}
+{% if portfolio_section.is_visible and portfolio_projects %}
+<section id="portfolio" class="portfolio-section relative overflow-hidden bg-[#1c120c]">
+ <div class="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none">
+  <div class="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] bg-amber-500/10 blur-[120px] rounded-full opacity-80"></div>
+  <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 blur-[100px] rounded-full"></div>
+ </div>
+
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <div class="max-w-3xl mb-10 lg:mb-12">
+   <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+    <span class="text-xs text-amber-300 font-black tracking-wider">{{ portfolio_section.badge_text }}</span>
+   </div>
+   <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight">
+    <span class="text-white">{{ portfolio_section.title_prefix }} </span>
+    <span class="text-gradient">{{ portfolio_section.title_highlight }}</span>
+   </h2>
+   <p class="text-gray-400 text-lg sm:text-xl font-light max-w-2xl leading-relaxed">
+    {{ portfolio_section.description }}
+   </p>
+  </div>
+
+  <div class="portfolio-cases-grid">
+   {% for project in portfolio_projects %}
+   {% with cover=project.cover_item %}
+   <button
+    type="button"
+    class="portfolio-case-card"
+    data-portfolio-case-trigger="{{ project.pk }}"
+    aria-expanded="false"
+    aria-controls="portfolio-case-panel-{{ project.pk }}"
+   >
+    <span class="portfolio-case-card-media">
+     {% if cover %}
+     {% include 'includes/portfolio_photo.html' with photo=cover alt=project.title class='portfolio-case-card-img' %}
+     {% endif %}
+     <span class="portfolio-case-card-overlay"></span>
+    </span>
+    <span class="portfolio-case-card-body">
+     {% if project.house_type_label %}
+     <span class="portfolio-case-tag">{{ project.house_type_label }}</span>
+     {% endif %}
+     <span class="portfolio-case-card-title">{{ project.title }}</span>
+     {% if project.summary %}
+     <span class="portfolio-case-card-summary">{{ project.summary }}</span>
+     {% endif %}
+     <span class="portfolio-case-card-cta">Смотреть кейс</span>
+    </span>
+   </button>
+   {% endwith %}
+   {% endfor %}
+  </div>
+
+  <div id="portfolio-detail" class="portfolio-detail" hidden>
+   {% for project in portfolio_projects %}
+   <article
+    id="portfolio-case-panel-{{ project.pk }}"
+    class="portfolio-detail-pane"
+    data-portfolio-case-panel="{{ project.pk }}"
+    hidden
+   >
+    <div class="portfolio-detail-inner">
+     <button type="button" class="portfolio-detail-close" data-portfolio-case-close aria-label="Свернуть кейс">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      Свернуть
+     </button>
+
+     <div class="portfolio-detail-layout">
+      <div class="portfolio-detail-gallery" data-portfolio-gallery>
+       {% with gallery=project.get_gallery_items %}
+       {% for photo in gallery %}
+       <figure class="portfolio-detail-slide{% if forloop.first %} is-active{% endif %}" data-slide-index="{{ forloop.counter0 }}">
+        {% include 'includes/portfolio_photo.html' with photo=photo alt=photo.caption|default:project.title class='portfolio-detail-slide-img' %}
+        {% if photo.caption %}
+        <figcaption>{{ photo.caption }}</figcaption>
+        {% endif %}
+       </figure>
+       {% endfor %}
+       {% if gallery|length > 1 %}
+       <button type="button" class="portfolio-gallery-prev" data-gallery-prev aria-label="Предыдущее фото">‹</button>
+       <button type="button" class="portfolio-gallery-next" data-gallery-next aria-label="Следующее фото">›</button>
+       <div class="portfolio-gallery-thumbs">
+        {% for photo in gallery %}
+        <button type="button" class="portfolio-gallery-thumb{% if forloop.first %} is-active{% endif %}" data-gallery-thumb="{{ forloop.counter0 }}" aria-label="Фото {{ forloop.counter }}">
+         {% include 'includes/portfolio_photo.html' with photo=photo alt='' class='portfolio-gallery-thumb-img' %}
+        </button>
+        {% endfor %}
+       </div>
+       {% endif %}
+       {% endwith %}
+      </div>
+
+      <div class="portfolio-detail-content">
+       <div class="portfolio-detail-tags">
+        {% if project.house_type_label %}
+        <span class="portfolio-case-tag">{{ project.house_type_label }}</span>
+        {% endif %}
+        {% for tag in project.work_types_list %}
+        <span class="portfolio-case-tag portfolio-case-tag--muted">{{ tag }}</span>
+        {% endfor %}
+        {% if project.has_before_after %}
+        <span class="portfolio-case-tag portfolio-case-tag--ba">До / После</span>
+        {% endif %}
+       </div>
+       <h3 class="portfolio-detail-title">{{ project.title }}</h3>
+       {% if project.location %}
+       <p class="portfolio-detail-location">{{ project.location }}</p>
+       {% endif %}
+       {% if project.description %}
+       <div class="portfolio-detail-text">{{ project.description|linebreaks }}</div>
+       {% elif project.summary %}
+       <p class="portfolio-detail-text">{{ project.summary }}</p>
+       {% endif %}
+      </div>
+     </div>
+    </div>
+   </article>
+   {% endfor %}
+  </div>
+ </div>
+</section>
+{% endif %}

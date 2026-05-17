@@ -1,0 +1,6 @@
+{% load static %}
+{% if photo.image %}
+<img src="{{ photo.image.url }}" alt="{{ alt }}" class="{{ class }}" loading="lazy" />
+{% elif photo.static_image %}
+<img src="{% static photo.static_image %}" alt="{{ alt }}" class="{{ class }}" loading="lazy" />
+{% endif %}

@@ -1,0 +1,55 @@
+{% load static %}
+{% if reviews_section.is_visible and site_reviews %}
+<section id="reviews" class="reviews-section">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <div class="reviews-section-head">
+   <div class="reviews-section-head-text">
+    <div class="reviews-badge">
+     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+     <span>{{ reviews_section.badge_text }}</span>
+    </div>
+    <h2 class="reviews-title">
+     <span class="text-white">{{ reviews_section.title_prefix }} </span>
+     <span class="text-gradient">{{ reviews_section.title_highlight }}</span>
+    </h2>
+    <p class="reviews-desc">{{ reviews_section.description }}</p>
+   </div>
+   <div class="reviews-yandex-card">
+    <div class="reviews-yandex-rating">{{ reviews_section.yandex_rating }}</div>
+    <div class="reviews-yandex-stars" aria-hidden="true">★★★★★</div>
+    <p class="reviews-yandex-label">на Яндекс.Картах</p>
+    {% if reviews_section.yandex_reviews_count %}
+    <p class="reviews-yandex-count">{{ reviews_section.yandex_reviews_count }} отзывов</p>
+    {% endif %}
+    <a href="{{ reviews_section.yandex_maps_url }}" target="_blank" rel="noopener noreferrer" class="reviews-yandex-link">
+     Смотреть все отзывы
+     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+   </div>
+  </div>
+
+  <div class="reviews-grid">
+   {% for review in site_reviews %}
+   <article class="review-card">
+    <div class="review-card-top">
+     <div class="review-avatar" aria-hidden="true">{{ review.author_name|slice:":1" }}</div>
+     <div class="review-card-meta">
+      <h3 class="review-headline">{{ review.headline }}</h3>
+      <p class="review-author">{{ review.author_name }}</p>
+     </div>
+     <div class="review-stars" aria-label="Оценка {{ review.rating }} из 5">
+      {% for i in "12345" %}
+       <span class="{% if forloop.counter <= review.rating %}review-star--on{% else %}review-star--off{% endif %}">★</span>
+      {% endfor %}
+     </div>
+    </div>
+    <p class="review-text">«{{ review.text }}»</p>
+    {% if review.source == 'yandex' %}
+    <span class="review-source">Яндекс.Карты</span>
+    {% endif %}
+   </article>
+   {% endfor %}
+  </div>
+ </div>
+</section>
+{% endif %}

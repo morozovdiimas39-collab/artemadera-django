@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
+set -euo pipefail
 cd "$(dirname "$0")"
-npm run dev
+if [[ -d venv ]]; then
+  # shellcheck source=/dev/null
+  source venv/bin/activate
+fi
+exec python manage.py runserver 0.0.0.0:8000

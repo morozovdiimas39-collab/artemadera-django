@@ -1,0 +1,47 @@
+{% load static %}
+{% if before_after_section.is_visible and before_after_items %}
+<section id="comparison" class="comparison-section">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <div class="comparison-section-head">
+   <div class="comparison-badge">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+    <span>{{ before_after_section.badge_text }}</span>
+   </div>
+   <h2 class="comparison-title">
+    <span class="text-white">{{ before_after_section.title_prefix }} </span>
+    <span class="text-gradient">{{ before_after_section.title_highlight }}</span>
+   </h2>
+   <p class="comparison-desc">{{ before_after_section.description }}</p>
+  </div>
+
+  <div class="comparison-grid">
+   {% for item in before_after_items %}
+   <figure class="ba-compare" data-ba-slider>
+    {% if item.after_image %}
+    <img src="{{ item.after_image.url }}" alt="{{ item.title }} — после" class="ba-after" loading="lazy" />
+    {% else %}
+    <img src="{% static item.after_static %}" alt="{{ item.title }} — после" class="ba-after" loading="lazy" />
+    {% endif %}
+    <div class="ba-before-wrap">
+     {% if item.before_image %}
+     <img src="{{ item.before_image.url }}" alt="{{ item.title }} — до" class="ba-before" loading="lazy" />
+     {% else %}
+     <img src="{% static item.before_static %}" alt="{{ item.title }} — до" class="ba-before" loading="lazy" />
+     {% endif %}
+    </div>
+    <div class="ba-handle" aria-hidden="true">
+     <span class="ba-handle-line"></span>
+     <span class="ba-handle-knob"></span>
+    </div>
+    <input type="range" class="ba-range" min="0" max="100" value="50" aria-label="Сравнение до и после: {{ item.title }}" />
+    <span class="ba-label ba-label-before">До</span>
+    <span class="ba-label ba-label-after">После</span>
+    {% if item.title %}
+    <figcaption class="ba-caption">{{ item.title }}</figcaption>
+    {% endif %}
+   </figure>
+   {% endfor %}
+  </div>
+ </div>
+</section>
+{% endif %}

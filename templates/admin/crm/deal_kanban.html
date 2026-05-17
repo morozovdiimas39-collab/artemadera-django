@@ -1,0 +1,89 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'crm/kanban.css' %}">
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="{% static 'crm/kanban.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="crm-kanban" data-move-url="{{ move_url }}">
+ <div class="crm-kanban-toolbar">
+  <div class="crm-kanban-toolbar-left">
+   <h1 class="crm-kanban-title">Воронка продаж</h1>
+   {% if pipeline %}
+   <p class="crm-kanban-subtitle">{{ pipeline.name }}</p>
+   {% endif %}
+  </div>
+  <div class="crm-kanban-toolbar-right">
+   {% if pipelines|length > 1 %}
+   <form method="get" class="crm-kanban-pipeline-form">
+    <label for="pipeline-select">Воронка</label>
+    <select id="pipeline-select" name="pipeline" onchange="this.form.submit()">
+     {% for p in pipelines %}
+     <option value="{{ p.pk }}" {% if pipeline and p.pk == pipeline.pk %}selected{% endif %}>{{ p.name }}</option>
+     {% endfor %}
+    </select>
+   </form>
+   {% endif %}
+   <a href="{% url 'admin:crm_crmdeal_add' %}" class="crm-kanban-btn crm-kanban-btn--primary">+ Сделка</a>
+   <a href="{% url 'admin:crm_crmdeal_changelist' %}" class="crm-kanban-btn crm-kanban-btn--ghost">Список</a>
+  </div>
+ </div>
+
+ {% if not pipeline %}
+ <p class="crm-kanban-empty">Создайте воронку в разделе «Воронки».</p>
+ {% else %}
+ <div class="crm-kanban-board">
+  {% for column in columns %}
+  <section class="crm-kanban-column" data-stage-id="{{ column.stage.pk }}">
+   <header class="crm-kanban-column-head" style="--stage-color: {{ column.stage.color }}">
+    <div class="crm-kanban-column-title">
+     <span class="crm-kanban-column-dot"></span>
+     <span>{{ column.stage.name }}</span>
+     <span class="crm-kanban-column-count">{{ column.count }}</span>
+    </div>
+    {% if column.total %}
+    <div class="crm-kanban-column-sum">{{ column.total|floatformat:0 }} ₽</div>
+    {% endif %}
+   </header>
+   <div class="crm-kanban-cards" data-stage-id="{{ column.stage.pk }}">
+    {% for deal in column.deals %}
+    <article
+     class="crm-kanban-card"
+     draggable="true"
+     data-deal-id="{{ deal.pk }}"
+    >
+     <a href="{% url 'admin:crm_crmdeal_change' deal.pk %}" class="crm-kanban-card-title">{{ deal.title }}</a>
+     {% if deal.contact %}
+     <p class="crm-kanban-card-contact">{{ deal.contact.name }} · {{ deal.contact.phone }}</p>
+     {% endif %}
+     <div class="crm-kanban-card-meta">
+      {% if deal.amount %}
+      <span class="crm-kanban-card-amount">{{ deal.amount|floatformat:0 }} ₽</span>
+      {% endif %}
+      {% if deal.responsible %}
+      <span class="crm-kanban-card-user" title="{{ deal.responsible.get_full_name|default:deal.responsible.username }}">
+       {{ deal.responsible.get_full_name|default:deal.responsible.username|slice:":1" }}
+      </span>
+      {% endif %}
+      {% if deal.priority == 'high' %}
+      <span class="crm-kanban-card-priority crm-kanban-card-priority--high">!</span>
+      {% endif %}
+     </div>
+    </article>
+    {% empty %}
+    <p class="crm-kanban-column-empty">Перетащите сюда сделку</p>
+    {% endfor %}
+   </div>
+  </section>
+  {% endfor %}
+ </div>
+ {% endif %}
+</div>
+{% endblock %}

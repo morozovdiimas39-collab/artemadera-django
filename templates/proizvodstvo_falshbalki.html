@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}page-falshbalki{% endblock %}
+
+{% block content %}
+<section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-[#1c120c]">
+ <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image:url({% static 'images/hero-bg.jpg' %})">
+  <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.45) 60%, #1c120c 100%)"></div>
+ </div>
+ <div class="relative z-10 w-full text-center px-4 sm:px-8 py-32">
+  <div class="mb-4 text-xs text-gray-400">
+   <a class="hover:text-amber-300 transition-colors" href="/">Главная</a>
+   <span class="mx-2 text-gray-600">/</span>
+   <span class="text-amber-200">Фальшбалки</span>
+  </div>
+  <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+   <span class="text-white">Фальшбалки</span><br/>
+   <span class="text-amber-500">деревянные под заказ</span>
+  </h1>
+  <p class="text-gray-300 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+   Изготовление декоративных деревянных балок для потолков и стен. Имитируют<br/>
+   несущие конструкции и создают уют деревянного интерьера.
+  </p>
+  <div class="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 mb-10">
+   <a href="#contact" class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-amber-600 text-white text-base font-bold transition-all hover:bg-amber-500 shadow-lg shadow-amber-900/20 whitespace-nowrap">
+    Заказать фальшбалки
+   </a>
+  </div>
+ </div>
+</section>
+
+<section class="py-20 lg:py-28" style="background-color:#1c120c">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="text-center max-w-2xl mx-auto mb-14">
+   <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 text-xs font-bold tracking-wider uppercase" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d">ПРЕИМУЩЕСТВА</span>
+   <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
+    Почему <span class="text-amber-500">фальшбалки</span>
+   </h2>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
+     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <h3 class="text-white font-bold text-base mb-2">Лёгкость</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">П-образный профиль — не нагружают перекрытия, можно монтировать на любой потолок.</p>
+   </div>
+   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
+     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+    </div>
+    <h3 class="text-white font-bold text-base mb-2">Натуральное дерево</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Сосна или дуб с натуральной текстурой — не полиуретан, а настоящее дерево.</p>
+   </div>
+   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
+     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>
+    </div>
+    <h3 class="text-white font-bold text-base mb-2">Любые размеры</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Делаем по вашим чертежам — любое сечение, длина до 6 м, покрытие под заказ.</p>
+   </div>
+   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
+     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+    </div>
+    <h3 class="text-white font-bold text-base mb-2">Покрытие включено</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Шлифуем и покрываем маслом или лазурью — поставляем готовые к монтажу.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="py-16 lg:py-20" style="background-color:#1c120c">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto rounded-2xl p-8 sm:p-10 text-center" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.15)">
+   <h3 class="text-white font-black text-2xl sm:text-3xl mb-3">Нужны фальшбалки под заказ?</h3>
+   <p class="text-gray-400 mb-6 max-w-xl mx-auto">Отправьте размеры или фото потолка — рассчитаем стоимость и изготовим в течение 5–7 рабочих дней.</p>
+   <a href="#contact" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-amber-600 text-white text-base font-bold transition-all hover:bg-amber-500">
+    Оставить заявку
+   </a>
+  </div>
+ </div>
+</section>
+
+{% include 'includes/contact_section.html' %}
+{% endblock %}

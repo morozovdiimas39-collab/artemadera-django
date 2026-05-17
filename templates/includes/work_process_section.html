@@ -1,0 +1,33 @@
+{% if work_process_section.is_visible and work_process_steps %}
+<section id="process" class="process-section">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="process-section-head">
+   <div class="process-badge">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+    <span>{{ work_process_section.badge_text }}</span>
+   </div>
+   <h2 class="process-title">
+    <span class="text-white">{{ work_process_section.title_prefix }} </span>
+    <span class="text-gradient">{{ work_process_section.title_highlight }}</span>
+   </h2>
+   <p class="process-desc">{{ work_process_section.description }}</p>
+  </div>
+
+  <div class="process-steps-grid">
+   {% for step in work_process_steps %}
+   <article class="process-step-card">
+    <span class="process-step-watermark" aria-hidden="true">{{ step.step_number }}</span>
+    <div class="process-step-top">
+     <span class="process-step-num">{{ step.step_number }}</span>
+     <span class="process-step-arrow" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+     </span>
+    </div>
+    <h3 class="process-step-title">{{ step.title }}</h3>
+    <p class="process-step-text">{{ step.description }}</p>
+   </article>
+   {% endfor %}
+  </div>
+ </div>
+</section>
+{% endif %}

@@ -1,0 +1,48 @@
+{% load static %}
+{% if blog_section.is_visible and blog_posts %}
+<section id="blog" class="blog-section">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <div class="blog-section-head">
+   <div class="blog-section-head-text">
+    <div class="blog-badge">
+     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>
+     <span>{{ blog_section.badge_text }}</span>
+    </div>
+    <h2 class="blog-title">
+     <span class="text-white">{{ blog_section.title_prefix }} </span>
+     <span class="text-gradient">{{ blog_section.title_highlight }}</span>
+    </h2>
+    <p class="blog-desc">{{ blog_section.description }}</p>
+   </div>
+   <a href="{{ blog_section.archive_url }}" target="_blank" rel="noopener noreferrer" class="blog-archive-link">
+    {{ blog_section.archive_link_text }}
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+   </a>
+  </div>
+
+  <div class="blog-grid">
+   {% for post in blog_posts %}
+   <a href="{{ post.url }}" target="_blank" rel="noopener noreferrer" class="blog-card">
+    <span class="blog-card-media">
+     {% if post.image %}
+     <img src="{{ post.image.url }}" alt="{{ post.title }}" class="blog-card-img" loading="lazy" />
+     {% elif post.static_image %}
+     <img src="{% static post.static_image %}" alt="{{ post.title }}" class="blog-card-img" loading="lazy" />
+     {% else %}
+     <span class="blog-card-placeholder" aria-hidden="true"></span>
+     {% endif %}
+    </span>
+    <span class="blog-card-body">
+     {% if post.published_at %}
+     <time class="blog-card-date" datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:'d.m.Y' }}</time>
+     {% endif %}
+     <span class="blog-card-title">{{ post.title }}</span>
+     <span class="blog-card-excerpt">{{ post.excerpt }}</span>
+     <span class="blog-card-cta">Читать</span>
+    </span>
+   </a>
+   {% endfor %}
+  </div>
+ </div>
+</section>
+{% endif %}

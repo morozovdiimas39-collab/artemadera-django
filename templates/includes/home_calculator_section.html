@@ -1,0 +1,110 @@
+{% load static %}
+<div id="quiz" class="scroll-mt-24">
+ <div class="relative rounded-[2rem] bg-card/40 backdrop-blur-2xl border border-white/5 p-6 sm:p-8 lg:p-10 overflow-hidden shadow-[0_0_80px_-20px_rgba(0,0,0,0.5)]">
+  <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-500/10 blur-[100px] rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+
+  <script type="application/json" id="calc-data">{"prices":{{ calculator_prices_json|safe }},"defaultMaterial":"{{ calculator_default_material }}"}</script>
+
+  <div class="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-10 lg:gap-12 items-center">
+   <div class="flex flex-col items-start text-left w-full max-w-[480px] mx-auto lg:mx-0">
+    <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-5">
+     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+    </div>
+    <h3 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 leading-tight">Онлайн-калькулятор</h3>
+    <p class="text-gray-400 text-base sm:text-lg font-light leading-relaxed mb-8">Узнайте примерную стоимость шлифовки. Точную смету рассчитаем после осмотра объекта.</p>
+    <ul class="space-y-4 w-full">
+     <li class="flex items-start gap-3 text-sm">
+      <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">✓</span>
+      <span><strong class="text-white font-semibold">Бесплатный расчёт</strong> — под ваш материал и площадь</span>
+     </li>
+     <li class="flex items-start gap-3 text-sm">
+      <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">✓</span>
+      <span><strong class="text-white font-semibold">Перезвон за 30 минут</strong> — в удобное время</span>
+     </li>
+     <li class="flex items-start gap-3 text-sm">
+      <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">✓</span>
+      <span><strong class="text-white font-semibold">Консультация</strong> — по срокам и этапам работ</span>
+     </li>
+    </ul>
+   </div>
+
+   <div class="hidden lg:block w-px self-stretch min-h-[260px] bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
+
+   <div class="w-full max-w-[480px] mx-auto lg:mx-0 space-y-6">
+    <div>
+     <label class="block text-xs font-bold text-amber-500 uppercase tracking-wider mb-3">Материал дома</label>
+     <div class="grid grid-cols-2 gap-3" id="calc-materials">
+      {% for material in calculator_materials %}
+      <button
+       type="button"
+       class="calc-material p-4 rounded-xl border transition-all text-left flex items-center gap-3 {% if material.key == calculator_default_material %}calc-material--active{% else %}bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/20{% endif %}"
+       data-material="{{ material.key }}"
+       data-price="{{ material.price_per_sqm }}"
+      >
+       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="calc-material-icon shrink-0 text-gray-500" aria-hidden="true">
+        {% if material.key == 'banya' %}
+        <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"></path><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"></path>
+        {% else %}
+        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        {% endif %}
+       </svg>
+       <span class="calc-material-label text-sm font-bold leading-tight">{{ material.label }}</span>
+      </button>
+      {% endfor %}
+     </div>
+    </div>
+
+    <div>
+     <div class="flex justify-between items-end mb-4">
+      <label class="text-xs font-bold text-amber-500 uppercase tracking-wider">Площадь по полу</label>
+      <span class="text-2xl sm:text-3xl font-black text-white tabular-nums"><span id="calc-area-value">{{ calculator_config.area_default }}</span> м²</span>
+     </div>
+     <input
+      id="calc-area"
+      type="range"
+      min="{{ calculator_config.area_min }}"
+      max="{{ calculator_config.area_max }}"
+      step="{{ calculator_config.area_step }}"
+      value="{{ calculator_config.area_default }}"
+      class="calc-range w-full"
+     />
+     <div class="flex justify-between text-xs font-medium text-gray-500 mt-2">
+      <span>{{ calculator_config.area_min }} м²</span>
+      <span>{{ calculator_config.area_max }} м²</span>
+     </div>
+    </div>
+
+    <div class="flex items-center justify-between gap-4 py-5 px-5 rounded-2xl bg-white/[0.04] border border-white/10">
+     <span class="text-sm text-gray-400">Примерная сумма</span>
+     <span id="calc-total" class="text-3xl sm:text-4xl font-black text-amber-500 tabular-nums">{{ calculator_initial_total }}</span>
+    </div>
+
+    {% if contact_form_sent %}
+    <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-6 text-center" role="status">
+     <p class="text-white font-bold mb-1">Заявка отправлена</p>
+     <p class="text-gray-400 text-sm">Перезвоним в течение 30 минут</p>
+    </div>
+    {% else %}
+    <form class="space-y-3" method="post" action="{{ request.path }}#quiz">
+     {% csrf_token %}
+     <input type="hidden" name="form_type" value="contact"/>
+     <input type="hidden" name="from_block" value="calculator"/>
+     <input
+      required
+      type="tel"
+      name="phone"
+      placeholder="+7 (___) ___-__-__"
+      autocomplete="tel"
+      inputmode="tel"
+      class="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-amber-500 focus:bg-white/10 focus:outline-none text-white text-base font-semibold placeholder:text-gray-500 transition-all"
+     />
+     <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold text-base py-4 shadow-lg shadow-amber-900/25 transition-all">
+      Зафиксировать цену
+     </button>
+     <p class="text-center text-xs text-gray-500">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
+    </form>
+    {% endif %}
+   </div>
+  </div>
+ </div>
+</div>

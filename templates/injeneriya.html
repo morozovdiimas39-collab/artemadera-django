@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}page-injeneriya{% endblock %}
+
+{% block content %}
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1c120c]">
+ <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image:url({% static 'images/hero-bg.jpg' %})">
+  <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.45) 60%, #1c120c 100%)"></div>
+ </div>
+ <div class="relative z-10 w-full text-center px-4 sm:px-8 py-32">
+  <div class="mb-4 text-xs text-gray-400">
+   <a class="hover:text-amber-300 transition-colors" href="/">Главная</a>
+   <span class="mx-2 text-gray-600">/</span>
+   <span class="text-amber-200">Инженерные системы</span>
+  </div>
+  <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+   <span class="text-white">Инженерные</span><br/>
+   <span class="text-amber-500">системы дома</span>
+  </h1>
+  <p class="text-gray-300 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+   Электрика, водоснабжение, отопление и канализация для деревянных домов.<br/>
+   Проектирование и монтаж под ключ в Москве и области.
+  </p>
+  <div class="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 mb-14">
+   <button type="button" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})"
+    class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-amber-600 text-white text-base font-bold transition-all hover:bg-amber-500 shadow-lg shadow-amber-900/20 whitespace-nowrap">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+    Рассчитать стоимость
+   </button>
+   <a href="#portfolio"
+    class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl border border-white/40 bg-white/10 text-white text-base font-semibold backdrop-blur-sm transition-all hover:bg-white/15 hover:border-white/55 whitespace-nowrap">
+    Наши работы
+   </a>
+  </div>
+  <div class="flex flex-wrap justify-center gap-8 sm:gap-14 max-w-3xl mx-auto">
+   <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-full border border-amber-500/50 flex items-center justify-center">
+     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    </div>
+    <div class="text-left">
+     <div class="text-white font-bold text-sm uppercase tracking-wider">Гарантия 2 года</div>
+     <div class="text-gray-400 text-xs">На монтаж систем</div>
+    </div>
+   </div>
+   <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-full border border-amber-500/50 flex items-center justify-center">
+     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M2 12h10"/><path d="M9 4v16"/><path d="M14 9l3 3-3 3"/><path d="M14 6h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-7"/></svg>
+    </div>
+    <div class="text-left">
+     <div class="text-white font-bold text-sm uppercase tracking-wider">Под ключ</div>
+     <div class="text-gray-400 text-xs">Проект и монтаж</div>
+    </div>
+   </div>
+   <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-full border border-amber-500/50 flex items-center justify-center">
+     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div class="text-left">
+     <div class="text-white font-bold text-sm uppercase tracking-wider">Спец. для деревянных</div>
+     <div class="text-gray-400 text-xs">Знаем нюансы монтажа</div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <a href="#inj-services" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-10 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше по странице">
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+ </a>
+</section>
+
+<section id="inj-services" class="py-20 lg:py-28" style="background-color:#1c120c">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="text-center max-w-2xl mx-auto mb-14">
+   <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 text-xs font-bold tracking-wider uppercase" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d">СИСТЕМЫ</span>
+   <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
+    Инженерные <span class="text-amber-500">системы</span>
+   </h2>
+   <p class="text-gray-400 text-base leading-relaxed">Комплексное обустройство загородного дома — все системы у одного подрядчика.</p>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
+     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+    </div>
+    <h3 class="text-white font-bold text-base mb-2">Электрика</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Монтаж скрытой и открытой проводки, щитов, розеток и освещения в деревянных домах с учётом ПУЭ.</p>
+   </div>
+   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
+     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>
+    </div>
+    <h3 class="text-white font-bold text-base mb-2">Водоснабжение</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Скважина или колодец, насосная станция, разводка по дому, септик — полный комплекс.</p>
+   </div>
+   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
+     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M12 9a4 4 0 0 0-2 7.5"/><path d="M12 3v2"/><path d="M20 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg>
+    </div>
+    <h3 class="text-white font-bold text-base mb-2">Отопление</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Газовый, твердотопливный или электрический котёл. Радиаторы, тёплый пол, разводка труб.</p>
+   </div>
+   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
+     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+    </div>
+    <h3 class="text-white font-bold text-base mb-2">Проект инженерии</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Разрабатываем проектную документацию для согласования и последующего монтажа систем.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+{% include 'includes/portfolio_section.html' %}
+
+{% include 'includes/work_process_section.html' %}
+
+<section id="faq-inj" class="py-20 lg:py-28" style="background-color:#1c120c">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+   <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 text-xs font-bold tracking-wider uppercase" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d">ВОПРОСЫ</span>
+   <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">Частые <span class="text-amber-500">вопросы</span></h2>
+  </div>
+  <div class="max-w-3xl mx-auto space-y-3">
+   <details class="group rounded-2xl overflow-hidden" style="border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03)">
+    <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+     <span class="text-white font-semibold text-base">Чем отличается монтаж в деревянном доме от кирпичного?</span>
+     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400 shrink-0 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">В деревянном доме важно учитывать усадку и движение сруба. Используем скользящие крепления, компенсационные петли для труб, негорючие гофры для электрики. Без этих нюансов коммуникации быстро выходят из строя.</div>
+   </details>
+   <details class="group rounded-2xl overflow-hidden" style="border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03)">
+    <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+     <span class="text-white font-semibold text-base">Обязателен ли проект инженерных систем?</span>
+     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400 shrink-0 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">Юридически — нет для частных домов. Но с проектом монтаж проходит быстрее и точнее. Это экономия материалов и времени. Для газификации или подключения к централизованным сетям проект обязателен.</div>
+   </details>
+   <details class="group rounded-2xl overflow-hidden" style="border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03)">
+    <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+     <span class="text-white font-semibold text-base">Можно заказать только одну систему?</span>
+     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400 shrink-0 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">Да, монтируем каждую систему отдельно. Но при заказе нескольких систем сразу — выгоднее по цене и удобнее координировать монтаж.</div>
+   </details>
+   <details class="group rounded-2xl overflow-hidden" style="border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03)">
+    <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+     <span class="text-white font-semibold text-base">Работаете в зимнее время?</span>
+     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400 shrink-0 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed">Да, монтаж инженерных систем можно вести круглый год. Часть работ (например, земляные) ограничены сезоном, но электрику, отопление и сантехнику монтируем в любое время.</div>
+   </details>
+  </div>
+ </div>
+</section>
+
+{% include 'includes/contact_section.html' %}
+{% endblock %}

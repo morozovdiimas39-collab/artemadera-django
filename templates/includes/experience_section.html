@@ -1,0 +1,75 @@
+{% load static %}
+{% if experience_section.is_visible %}
+<section id="whyus" class="experience-section relative overflow-hidden bg-[#1c120c]">
+ <div class="absolute inset-0 overflow-hidden pointer-events-none">
+  <div class="absolute top-1/2 left-0 w-[600px] h-[600px] bg-amber-600/10 blur-[140px] rounded-full -translate-y-1/2"></div>
+  <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-white/5 blur-[100px] rounded-full"></div>
+ </div>
+
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <div class="experience-layout">
+   <div class="experience-copy">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-6">
+     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+     <span class="text-xs text-amber-300 font-black tracking-wider">{{ experience_section.badge_text }}</span>
+    </div>
+    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight">
+     <span class="text-white">{{ experience_section.title_prefix }} </span>
+     <span class="text-gradient">{{ experience_section.title_highlight }}</span>
+    </h2>
+    <p class="text-gray-400 text-lg font-light leading-relaxed mb-6">
+     {{ experience_section.description }}
+    </p>
+    <p class="text-gray-300 text-base sm:text-lg leading-relaxed mb-10">
+     {{ experience_section.story }}
+    </p>
+
+    {% if experience_stats %}
+    <div class="grid grid-cols-2 gap-4">
+     {% for stat in experience_stats %}
+     <div class="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-5 backdrop-blur-sm">
+      <div class="text-3xl sm:text-4xl font-black text-amber-500 mb-1 tabular-nums">{{ stat.value }}</div>
+      <div class="text-sm text-gray-400 font-medium leading-snug">{{ stat.label }}</div>
+     </div>
+     {% endfor %}
+    </div>
+    {% endif %}
+   </div>
+
+   <div class="experience-media-col">
+    <div class="experience-media-frame">
+     {% if experience_section.image %}
+     <img src="{{ experience_section.image.url }}" alt="ArteMadera — деревянный дом после отделки" class="experience-media-img" loading="lazy" />
+     {% elif experience_section.static_image %}
+     <img src="{% static experience_section.static_image %}" alt="ArteMadera — деревянный дом после отделки" class="experience-media-img" loading="lazy" />
+     {% endif %}
+    </div>
+   </div>
+  </div>
+
+  {% if experience_advantages %}
+  <div class="experience-advantages-wrap">
+   <div class="experience-advantages-panel">
+    <div class="experience-advantages-head">
+     <h3>Почему выбирают ArteMadera</h3>
+     <p>Прозрачные условия, проверенные материалы и ответственность за результат на каждом объекте.</p>
+    </div>
+    <div class="experience-advantages-grid">
+     {% for item in experience_advantages %}
+     <article class="experience-advantage-item">
+      <div class="experience-advantage-icon" aria-hidden="true">
+       {% include 'includes/experience_icon.html' with icon=item.icon only %}
+      </div>
+      <div class="experience-advantage-body">
+       <h4>{{ item.title }}</h4>
+       <p>{{ item.description }}</p>
+      </div>
+     </article>
+     {% endfor %}
+    </div>
+   </div>
+  </div>
+  {% endif %}
+ </div>
+</section>
+{% endif %}

@@ -1,0 +1,101 @@
+{% if contact_section.is_visible %}
+<section id="contact" class="contact-section">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="contact-layout">
+   <div class="contact-info">
+    <div class="contact-badge">
+     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+     <span>{{ contact_section.badge_text }}</span>
+    </div>
+    <h2 class="contact-title">
+     <span class="text-white">{{ contact_section.title_prefix }} </span>
+     <span class="text-gradient">{{ contact_section.title_highlight }}</span>
+    </h2>
+    <p class="contact-desc">{{ contact_section.description }}</p>
+
+    <ul class="contact-details">
+     <li>
+      <a href="tel:{{ contact_section.phone_href }}" class="contact-detail-link">
+       <span class="contact-detail-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+       </span>
+       <span>
+        <strong>{{ contact_section.phone }}</strong>
+        <small>Звонок бесплатный</small>
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="mailto:{{ contact_section.email }}" class="contact-detail-link">
+       <span class="contact-detail-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/></svg>
+       </span>
+       <span>
+        <strong>{{ contact_section.email }}</strong>
+        <small>{{ contact_section.work_hours }}</small>
+       </span>
+      </a>
+     </li>
+     {% if contact_section.address %}
+     <li class="contact-detail-static">
+      <span class="contact-detail-icon">
+       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+      </span>
+      <span>
+       <strong>Офис</strong>
+       <small>{{ contact_section.address }}</small>
+      </span>
+     </li>
+     {% endif %}
+    </ul>
+   </div>
+
+   <div class="contact-form-side">
+    {% if contact_form_sent %}
+    <div class="contact-form-success" role="status">
+     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+     <p><strong>Заявка отправлена!</strong> Мы перезвоним вам в ближайшее время.</p>
+    </div>
+    {% else %}
+    <form class="contact-form" method="post" action="{{ request.path }}#contact">
+     {% csrf_token %}
+     <input type="hidden" name="form_type" value="contact"/>
+     <p class="contact-form-lead">Оставьте телефон — перезвоним в течение 30 минут</p>
+     <ul class="contact-form-perks" aria-label="Преимущества">
+      <li>
+       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+       Бесплатная консультация
+      </li>
+      <li>
+       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+       Без спама и рассылок
+      </li>
+      <li>
+       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+       Смета по телефону
+      </li>
+     </ul>
+     <div class="contact-form-row">
+      <label class="contact-form-phone-wrap">
+       <span class="visually-hidden">Телефон</span>
+       <input
+        id="contact-phone"
+        class="contact-phone-input"
+        type="tel"
+        name="phone"
+        required
+        placeholder="+7 (___) ___-__-__"
+        autocomplete="tel"
+        inputmode="tel"
+       />
+      </label>
+      <button type="submit" class="contact-submit">{{ contact_section.submit_button_text }}</button>
+     </div>
+     <p class="contact-privacy">{{ contact_section.privacy_note }}</p>
+    </form>
+    {% endif %}
+   </div>
+  </div>
+ </div>
+</section>
+{% endif %}

@@ -1,0 +1,111 @@
+<footer class="site-footer">
+ <div class="site-footer-top">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+   <div class="site-footer-cta">
+    <div class="site-footer-cta-text">
+     <p class="site-footer-cta-label">Готовы обсудить проект?</p>
+     <p class="site-footer-cta-title">Бесплатный замер и смета за 24 часа</p>
+    </div>
+    <div class="site-footer-cta-actions">
+     <a href="/shlifovka#zamer" class="site-footer-cta-btn site-footer-cta-btn--primary">Записаться на замер</a>
+     {% if contact_section %}
+     <a href="tel:{{ contact_section.phone_href }}" class="site-footer-cta-btn site-footer-cta-btn--outline">{{ contact_section.phone }}</a>
+     {% else %}
+     <a href="tel:74950050145" class="site-footer-cta-btn site-footer-cta-btn--outline">+7 (495) 005-01-45</a>
+     {% endif %}
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="site-footer-main">
+   <div class="site-footer-brand">
+    <a href="/" class="site-footer-logo">
+     <span class="site-footer-logo-mark" aria-hidden="true">A</span>
+     <span class="site-footer-logo-text">
+      <span class="site-footer-logo-name"><span class="text-white">Arte</span><span class="text-amber-400">Madera</span></span>
+      <span class="site-footer-logo-tag">Отделка деревянных домов</span>
+     </span>
+    </a>
+    <p class="site-footer-about">
+     Профессиональная шлифовка, покраска и реставрация деревянных домов в Москве и области.
+     Работаем по договору с фиксированной сметой.
+    </p>
+   </div>
+
+   <div class="site-footer-col">
+    <h3 class="site-footer-heading">Страница</h3>
+    <ul class="site-footer-links">
+     <li><a href="/shlifovka#quiz">Калькулятор</a></li>
+     <li><a href="/shlifovka#portfolio">Наши работы</a></li>
+     <li><a href="/shlifovka#comparison">До и после</a></li>
+     <li><a href="/shlifovka#whyus">Почему мы</a></li>
+     <li><a href="/shlifovka#process">Этапы работ</a></li>
+     <li><a href="/shlifovka#faq">Вопросы</a></li>
+     <li><a href="/shlifovka#contact">Контакты</a></li>
+    </ul>
+   </div>
+
+   <div class="site-footer-col">
+    <h3 class="site-footer-heading">Услуги</h3>
+    <ul class="site-footer-links">
+     <li><a href="/shlifovka">Шлифовка деревянных домов</a></li>
+     <li><a href="/pokraska">Покраска</a></li>
+     <li><a href="/teplyy-shov">Тёплый шов</a></li>
+     <li><a href="/otdelka/konopatka">Конопатка</a></li>
+     <li><a href="/obsada">Обсада и окосячка</a></li>
+     <li><a href="/kryshi">Кровельные работы</a></li>
+    </ul>
+   </div>
+
+   <div class="site-footer-col site-footer-col--contact">
+    <h3 class="site-footer-heading">Контакты</h3>
+    <ul class="site-footer-contacts">
+     <li>
+      <a href="tel:{% if contact_section %}{{ contact_section.phone_href }}{% else %}74950050145{% endif %}" class="site-footer-contact">
+       <span class="site-footer-contact-icon site-footer-contact-icon--phone" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+       </span>
+       <span>
+        <strong>{% if contact_section %}{{ contact_section.phone }}{% else %}+7 (495) 005-01-45{% endif %}</strong>
+        <small>Звонок бесплатный</small>
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="mailto:{% if contact_section %}{{ contact_section.email }}{% else %}info@artemadera.ru{% endif %}" class="site-footer-contact">
+       <span class="site-footer-contact-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/></svg>
+       </span>
+       <span>
+        <strong>{% if contact_section %}{{ contact_section.email }}{% else %}info@artemadera.ru{% endif %}</strong>
+        <small>{% if contact_section %}{{ contact_section.work_hours }}{% else %}Пн–Сб 9:00–20:00{% endif %}</small>
+       </span>
+      </a>
+     </li>
+     {% if contact_section and contact_section.address %}
+     <li class="site-footer-contact site-footer-contact--static">
+      <span class="site-footer-contact-icon" aria-hidden="true">
+       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+      </span>
+      <span>
+       <strong>Офис</strong>
+       <small>{{ contact_section.address }}</small>
+      </span>
+     </li>
+     {% endif %}
+    </ul>
+   </div>
+  </div>
+
+  <div class="site-footer-bottom">
+   <p class="site-footer-copy">© {% now "Y" %} ArteMadera. Все права защищены.</p>
+   <div class="site-footer-legal">
+    <a href="/shlifovka#contact">Политика конфиденциальности</a>
+    <span class="site-footer-legal-sep" aria-hidden="true">·</span>
+    <a href="/shlifovka#contact">Публичная оферта</a>
+   </div>
+  </div>
+ </div>
+</footer>

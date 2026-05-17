@@ -1,0 +1,129 @@
+<div id="quiz" class="scroll-mt-24 calc-widget" data-calc-slug="{{ calculator_profile.slug }}">
+ <div class="relative rounded-[2rem] bg-card/40 backdrop-blur-2xl border border-white/5 p-6 sm:p-8 lg:p-10 overflow-hidden shadow-[0_0_80px_-20px_rgba(0,0,0,0.5)]">
+  <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-500/10 blur-[100px] rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none" aria-hidden="true"></div>
+
+  {% if calculator_profile.show_service_picker %}
+  <script type="application/json" id="calc-profiles-data">{{ calculator_profiles_json|safe }}</script>
+  {% endif %}
+
+  <div class="relative z-10">
+   {% if calculator_profile.show_service_picker %}
+   <div class="calc-step calc-step--picker" data-calc-step="picker">
+    <div class="max-w-3xl mx-auto text-center mb-8">
+     <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-4 text-xs text-amber-300 font-bold tracking-wider uppercase">{{ calculator_profile.badge_text }}</span>
+     <h3 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 leading-tight">{{ calculator_profile.title }}</h3>
+     <p class="text-gray-400 text-base sm:text-lg leading-relaxed">{{ calculator_profile.description }}</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-5xl mx-auto">
+     {% for choice in calculator_service_choices %}
+     <button
+      type="button"
+      class="calc-service-pick text-left p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.04] hover:border-amber-500/40 hover:bg-amber-500/10 transition-all"
+      data-target-profile="{{ choice.target_profile.slug }}"
+     >
+      <span class="block text-white font-bold text-base sm:text-lg mb-1">{{ choice.label }}</span>
+      {% if choice.hint %}<span class="block text-gray-500 text-sm">{{ choice.hint }}</span>{% endif %}
+     </button>
+     {% endfor %}
+    </div>
+   </div>
+   {% endif %}
+
+   <div class="calc-step calc-step--calc{% if calculator_profile.show_service_picker %} calc-step--hidden{% endif %}" data-calc-step="calc">
+    {% if calculator_profile.show_service_picker %}
+    <button type="button" class="calc-back-btn mb-6 inline-flex items-center gap-2 text-sm text-gray-400 hover:text-amber-400 transition-colors">
+     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+     Выбрать другую услугу
+    </button>
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-10 lg:gap-12 items-center">
+     <div class="calc-copy flex flex-col items-start text-left w-full max-w-[480px] mx-auto lg:mx-0">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-5">
+       <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/></svg>
+      </div>
+      <span class="calc-badge inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 mb-3 text-xs text-amber-300 font-bold tracking-wider uppercase">{{ calculator_profile.badge_text }}</span>
+      <h3 class="calc-title text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 leading-tight">{{ calculator_profile.title }}</h3>
+      <p class="calc-desc text-gray-400 text-base sm:text-lg font-light leading-relaxed mb-8">{{ calculator_profile.description }}</p>
+      <ul class="space-y-4 w-full calc-perks">
+       <li class="flex items-start gap-3 text-sm"><span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">✓</span><span class="calc-perk-1">{{ calculator_profile.perk_1 }}</span></li>
+       <li class="flex items-start gap-3 text-sm"><span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">✓</span><span class="calc-perk-2">{{ calculator_profile.perk_2 }}</span></li>
+       <li class="flex items-start gap-3 text-sm"><span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">✓</span><span class="calc-perk-3">{{ calculator_profile.perk_3 }}</span></li>
+      </ul>
+     </div>
+
+     <div class="hidden lg:block w-px self-stretch min-h-[260px] bg-gradient-to-b from-transparent via-white/10 to-transparent" aria-hidden="true"></div>
+
+     <div class="calc-panel w-full max-w-[480px] mx-auto lg:mx-0 space-y-6">
+      <div>
+       <label class="calc-options-label block text-xs font-bold text-amber-500 uppercase tracking-wider mb-3">{{ calculator_profile.options_label }}</label>
+       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 calc-options-grid">
+        {% for option in calculator_options %}
+        <button
+         type="button"
+         class="calc-material p-4 rounded-xl border transition-all text-left flex items-center gap-3 {% if option.key == calculator_default_option %}calc-material--active{% else %}bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/20{% endif %}"
+         data-material="{{ option.key }}"
+         data-price="{{ option.price_per_unit }}"
+        >
+         <span class="calc-material-label text-sm font-bold leading-tight">{{ option.label }}</span>
+        </button>
+        {% endfor %}
+       </div>
+      </div>
+
+      <div class="calc-slider-wrap{% if calculator_config.unit_type == 'fixed' %} calc-slider-wrap--hidden{% endif %}">
+       <div class="flex justify-between items-end mb-4">
+        <label class="calc-slider-label text-xs font-bold text-amber-500 uppercase tracking-wider">{% if calculator_config.unit_type == 'linear' %}Длина швов{% else %}Площадь по полу{% endif %}</label>
+        <span class="text-2xl sm:text-3xl font-black text-white tabular-nums"><span class="calc-area-value">{{ calculator_config.area_default }}</span> <span class="calc-unit-label">{{ calculator_config.unit_label }}</span></span>
+       </div>
+       <input
+        class="calc-area calc-range w-full"
+        type="range"
+        min="{{ calculator_config.area_min }}"
+        max="{{ calculator_config.area_max }}"
+        step="{{ calculator_config.area_step }}"
+        value="{{ calculator_config.area_default }}"
+       />
+       <div class="flex justify-between text-xs font-medium text-gray-500 mt-2 calc-range-labels">
+        <span>{{ calculator_config.area_min }} {{ calculator_config.unit_label }}</span>
+        <span>{{ calculator_config.area_max }} {{ calculator_config.unit_label }}</span>
+       </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-4 py-5 px-5 rounded-2xl bg-white/[0.04] border border-white/10">
+       <span class="text-sm text-gray-400">Примерная сумма</span>
+       <span class="calc-total text-3xl sm:text-4xl font-black text-amber-500 tabular-nums">{{ calculator_initial_total }}</span>
+      </div>
+
+      {% if contact_form_sent %}
+      <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-6 text-center" role="status">
+       <p class="text-white font-bold mb-1">Заявка отправлена</p>
+       <p class="text-gray-400 text-sm">Перезвоним в течение 30 минут</p>
+      </div>
+      {% else %}
+      <form class="calc-form space-y-3" method="post" action="{{ request.path }}#quiz">
+       {% csrf_token %}
+       <input type="hidden" name="form_type" value="contact"/>
+       <input type="hidden" name="from_block" value="calculator"/>
+       <input type="hidden" name="calculator_profile" class="calc-profile-input" value="{{ calculator_profile.slug }}"/>
+       <input
+        required
+        type="tel"
+        name="phone"
+        placeholder="+7 (___) ___-__-__"
+        autocomplete="tel"
+        inputmode="tel"
+        class="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-amber-500 focus:bg-white/10 focus:outline-none text-white text-base font-semibold placeholder:text-gray-500 transition-all"
+       />
+       <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold text-base py-4 shadow-lg shadow-amber-900/25 transition-all">
+        {{ calculator_profile.submit_button_text }}
+       </button>
+       <p class="text-center text-xs text-gray-500">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
+      </form>
+      {% endif %}
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
