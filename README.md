@@ -18,3 +18,4 @@ View your app in AI Studio: https://ai.studio/apps/31b6820c-83a7-423c-92ba-81388
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+# artemadera-django
