@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-1goiny6m8_ispgx=gabm+g9a50aq$)rkuwgtkd%qr+*p^xh^ip
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["artemadera.su", "www.artemadera.su", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -155,14 +155,15 @@ UNFOLD = {
     "SITE_SUBHEADER": "Панель управления",
     "SIDEBAR": {
         "show_search": True,
+        "show_all_applications": False,
         "navigation": [
             {
                 "title": "CRM",
-                "separator": True,
-                "collapsible": False,
+                "icon": "business",
+                "collapsible": True,
                 "items": [
                     {
-                        "title": "Воронка (канбан)",
+                        "title": "Воронка",
                         "icon": "view_kanban",
                         "link": "/admin/crm/crmdeal/kanban/",
                     },
@@ -185,6 +186,122 @@ UNFOLD = {
                         "title": "Заявки с сайта",
                         "icon": "inbox",
                         "link": "/admin/main/contactlead/",
+                    },
+                ],
+            },
+            {
+                "title": "Сайт",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Услуги на главной",
+                        "icon": "home",
+                        "link": "/admin/main/service/",
+                    },
+                    {
+                        "title": "Калькуляторы и цены",
+                        "icon": "calculate",
+                        "link": "/admin/main/calculatorprofile/",
+                    },
+                    {
+                        "title": "Статьи блога",
+                        "icon": "article",
+                        "link": "/admin/main/blogpost/",
+                    },
+                    {
+                        "title": "Проекты (портфолио)",
+                        "icon": "photo_library",
+                        "link": "/admin/main/portfolioproject/",
+                    },
+                    {
+                        "title": "Отзывы",
+                        "icon": "star",
+                        "link": "/admin/main/review/",
+                    },
+                ],
+            },
+            {
+                "title": "Блоки на страницах",
+                "icon": "dashboard",
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "О компании — текст",
+                        "icon": "info",
+                        "link": "/admin/main/experiencesection/",
+                    },
+                    {
+                        "title": "О компании — цифры",
+                        "icon": "numbers",
+                        "link": "/admin/main/experiencestat/",
+                    },
+                    {
+                        "title": "О компании — преимущества",
+                        "icon": "verified",
+                        "link": "/admin/main/experienceadvantage/",
+                    },
+                    {
+                        "title": "До / после — слайды",
+                        "icon": "compare",
+                        "link": "/admin/main/beforeafteritem/",
+                    },
+                    {
+                        "title": "До / после — заголовок",
+                        "icon": "title",
+                        "link": "/admin/main/beforeaftersection/",
+                    },
+                    {
+                        "title": "Этапы работ — шаги",
+                        "icon": "timeline",
+                        "link": "/admin/main/workprocessstep/",
+                    },
+                    {
+                        "title": "Этапы — заголовок",
+                        "icon": "title",
+                        "link": "/admin/main/workprocesssection/",
+                    },
+                    {
+                        "title": "FAQ — вопросы",
+                        "icon": "help",
+                        "link": "/admin/main/faqitem/",
+                    },
+                    {
+                        "title": "FAQ — заголовок",
+                        "icon": "title",
+                        "link": "/admin/main/faqsection/",
+                    },
+                    {
+                        "title": "Контакты",
+                        "icon": "call",
+                        "link": "/admin/main/contactsection/",
+                    },
+                    {
+                        "title": "Заголовок портфолио",
+                        "icon": "title",
+                        "link": "/admin/main/portfoliosection/",
+                    },
+                    {
+                        "title": "Заголовок отзывов",
+                        "icon": "title",
+                        "link": "/admin/main/reviewssection/",
+                    },
+                    {
+                        "title": "Заголовок блога",
+                        "icon": "title",
+                        "link": "/admin/main/blogsection/",
+                    },
+                ],
+            },
+            {
+                "title": "Служебное",
+                "icon": "settings",
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Слайдер площади",
+                        "icon": "tune",
+                        "link": "/admin/main/calculatorconfig/",
                     },
                 ],
             },
