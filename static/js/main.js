@@ -334,7 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 7. Before / After sliders ---
   document.querySelectorAll('[data-ba-slider]').forEach(slider => {
     const wrap = slider.querySelector('.ba-before-wrap');
-    const handle = slider.querySelector('.ba-handle');
     const range = slider.querySelector('.ba-range');
     const beforeImg = slider.querySelector('.ba-before');
     if (!wrap || !range) return;
@@ -346,9 +345,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const setPosition = (pct) => {
       const value = Math.min(100, Math.max(0, Number(pct)));
-      slider.style.setProperty('--ba-pct', value);
+      slider.style.setProperty('--ba-pct', String(value));
       wrap.style.width = `${value}%`;
-      if (handle) handle.style.left = `${value}%`;
     };
 
     range.addEventListener('input', () => setPosition(range.value));
