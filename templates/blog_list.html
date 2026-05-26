@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}page-blog{% endblock %}
+
+{% block content %}
+<section style="padding: 7rem 0 3rem; background: #1c120c; position: relative;">
+ <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%, rgba(245,158,11,0.07), transparent 60%);pointer-events:none;"></div>
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8" style="position:relative;z-index:1;text-align:center;">
+  <div style="font-size:0.75rem;color:#78716c;margin-bottom:1rem;">
+   <a style="color:#78716c;text-decoration:none;" href="/">Главная</a>
+   <span style="margin:0 0.5rem;">/</span>
+   <span style="color:#fcd34d;">Блог</span>
+  </div>
+  <h1 style="font-size:clamp(2rem,5vw,3rem);font-weight:900;line-height:1.15;margin:0 0 1rem;">
+   <span style="color:#fff;">Статьи </span><span style="color:#f59e0b;">и советы</span>
+  </h1>
+  <p style="color:#9ca3af;font-size:1rem;max-width:32rem;margin:0 auto;">Полезные материалы о шлифовке, отделке и уходе за деревянным домом от специалистов ArteMadera.</p>
+ </div>
+</section>
+
+<section class="py-16 sm:py-20">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  {% if blog_posts %}
+  <div class="blog-list-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto;">
+   {% for post in blog_posts %}
+   <a href="{{ post.get_absolute_url }}" class="blog-card-link">
+    {% if post.image %}
+    <div style="aspect-ratio:16/9;overflow:hidden;background:#0f0a07;">
+     <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/>
+    </div>
+    {% elif post.static_image %}
+    <div style="aspect-ratio:16/9;overflow:hidden;background:#0f0a07;">
+     <img src="{% static post.static_image %}" alt="{{ post.title }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/>
+    </div>
+    {% endif %}
+    <div style="padding:1.25rem 1.5rem 1.5rem;display:flex;flex-direction:column;gap:0.5rem;flex:1;">
+     {% if post.published_at %}
+     <time style="font-size:0.75rem;color:#78716c;" datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:'d.m.Y' }}</time>
+     {% endif %}
+     <h2 style="font-size:1.1rem;font-weight:700;color:#fff;line-height:1.35;margin:0;">{{ post.title }}</h2>
+     <p style="font-size:0.875rem;color:#a8a29e;line-height:1.55;margin:0;flex:1;">{{ post.excerpt }}</p>
+     <span class="blog-card-read" style="margin-top:0.5rem;font-size:0.8rem;font-weight:700;color:#fbbf24;transition:color .2s;">Читать →</span>
+    </div>
+   </a>
+   {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:4rem 0;color:#78716c;">
+   <p style="font-size:1.1rem;">Статьи пока не добавлены.</p>
+   <p style="font-size:0.875rem;margin-top:0.5rem;">Добавьте статьи через <a href="/admin/" style="color:#fbbf24;">панель администратора</a>.</p>
+  </div>
+  {% endif %}
+ </div>
+</section>
+{% endblock %}

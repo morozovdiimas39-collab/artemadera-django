@@ -1,0 +1,4 @@
+{% load static %}
+<div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image:url({% if site_page.has_hero_upload %}'{{ site_page.hero_image.url }}'{% else %}{% static site_page.hero_static_image|default:'images/hero-bg.jpg' %}{% endif %})">
+ <div class="absolute inset-0 hero-bg-overlay"></div>
+</div>

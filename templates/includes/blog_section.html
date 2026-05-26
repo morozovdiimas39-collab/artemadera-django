@@ -14,7 +14,7 @@
     </h2>
     <p class="blog-desc">{{ blog_section.description }}</p>
    </div>
-   <a href="{{ blog_section.archive_url }}" target="_blank" rel="noopener noreferrer" class="blog-archive-link">
+   <a href="{{ blog_section.archive_url }}" class="blog-archive-link">
     {{ blog_section.archive_link_text }}
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
    </a>
@@ -22,7 +22,7 @@
 
   <div class="blog-grid">
    {% for post in blog_posts %}
-   <a href="{{ post.url }}" target="_blank" rel="noopener noreferrer" class="blog-card">
+   <a href="{{ post.get_absolute_url }}" {% if not post.is_internal %}target="_blank" rel="noopener noreferrer"{% endif %} class="blog-card">
     <span class="blog-card-media">
      {% if post.image %}
      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="blog-card-img" loading="lazy" />

@@ -1,0 +1,4 @@
+{% load static %}
+{% if page_service_cards and site_page.page_key != "home" and site_page.page_key != "shlifovka" %}
+{% include 'includes/site_services_section.html' with service_section_cards=page_service_cards service_section_grid_mode=page_services_grid_mode service_section_html_id="page-services" service_section_extra_section_class="scroll-mt-24" %}
+{% endif %}

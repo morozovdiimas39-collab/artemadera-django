@@ -29,6 +29,78 @@ class CalculatorConfig(models.Model):
         return "Настройки калькулятора"
 
 
+class HomeQuizSettings(models.Model):
+    """Единственная запись — картинка справа в квизе на главной (по выбору услуги)."""
+
+    default_image = models.ImageField(
+        upload_to="home_quiz/",
+        blank=True,
+        null=True,
+        verbose_name="Фото по умолчанию (до выбора)",
+    )
+    image_shlifovka = models.ImageField(
+        upload_to="home_quiz/",
+        blank=True,
+        null=True,
+        verbose_name="Шлифовка",
+    )
+    image_pokraska = models.ImageField(
+        upload_to="home_quiz/",
+        blank=True,
+        null=True,
+        verbose_name="Покраска",
+    )
+    image_teplyy_shov = models.ImageField(
+        upload_to="home_quiz/",
+        blank=True,
+        null=True,
+        verbose_name="Тёплый шов",
+    )
+    image_okosyachka = models.ImageField(
+        upload_to="home_quiz/",
+        blank=True,
+        null=True,
+        verbose_name="Окосячка",
+    )
+    image_obsada = models.ImageField(
+        upload_to="home_quiz/",
+        blank=True,
+        null=True,
+        verbose_name="Обсада",
+    )
+    image_kryshi = models.ImageField(
+        upload_to="home_quiz/",
+        blank=True,
+        null=True,
+        verbose_name="Крыши",
+    )
+    image_injeneriya = models.ImageField(
+        upload_to="home_quiz/",
+        blank=True,
+        null=True,
+        verbose_name="Инженерия",
+    )
+
+    class Meta:
+        verbose_name = "Квиз на главной — картинки"
+        verbose_name_plural = "Квиз на главной — картинки"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    @classmethod
+    def load(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def __str__(self):
+        return "Квиз на главной — картинки"
+
+
 class CalculatorMaterial(models.Model):
     key = models.SlugField(
         max_length=32,
@@ -119,6 +191,22 @@ class CalculatorProfile(models.Model):
     verbose_name_plural = "Калькуляторы по страницам"
     ordering = ["sort_order", "pk"]
 
+  def min_active_price(self):
+    agg = self.options.filter(is_active=True).aggregate(m=models.Min("price_per_unit"))
+    return agg["m"]
+
+  def home_price_tag(self):
+    """Бейдж «от …» для карточки на главной — из минимальной цены вариантов."""
+    price = self.min_active_price()
+    if price is None:
+      return ""
+    formatted = f"{price:,}".replace(",", "\u00a0")
+    if self.unit_type == self.UNIT_SQM:
+      return f"от {formatted} ₽/{self.unit_label}"
+    if self.unit_type == self.UNIT_LINEAR:
+      return f"от {formatted} ₽/{self.unit_label}"
+    return f"от {formatted} ₽"
+
   def __str__(self):
     return self.name
 
@@ -176,12 +264,72 @@ class CalculatorServiceChoice(models.Model):
 
 
 class Service(models.Model):
+    LAYOUT_DEFAULT = ""
+    LAYOUT_WIDE = "wide"
+    LAYOUT_LAST = "last"
+    LAYOUT_HALF = "half"
+    LAYOUT_CHOICES = [
+        (LAYOUT_DEFAULT, "Обычная"),
+        (LAYOUT_WIDE, "Широкая (2 колонки)"),
+        (LAYOUT_LAST, "Широкая в конце сетки"),
+        (LAYOUT_HALF, "Половина ряда (6/12)"),
+    ]
+
     name = models.CharField(max_length=200, verbose_name="Название услуги")
     slug = models.SlugField(unique=True, verbose_name="Слаг (URL)")
     short_description = models.TextField(verbose_name="Краткое описание", blank=True)
-    description = models.TextField(verbose_name="Полное описание")
-    price_from = models.IntegerField(verbose_name="Цена от", null=True, blank=True)
-    image = models.ImageField(upload_to='services/', verbose_name="Изображение", null=True, blank=True)
+    description = models.TextField(verbose_name="Полное описание", blank=True)
+    price_from = models.IntegerField(
+        verbose_name="Цена от (ручная, если нет калькулятора)",
+        null=True,
+        blank=True,
+        help_text="Используется только если не выбран калькулятор и нет бейджа вручную.",
+    )
+    calculator_profile = models.ForeignKey(
+        CalculatorProfile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="homepage_services",
+        verbose_name="Калькулятор",
+        help_text="Минимальная цена из вариантов калькулятора — в бейдж на главной.",
+    )
+    image = models.ImageField(
+        upload_to="services/",
+        verbose_name="Фото на главной",
+        null=True,
+        blank=True,
+    )
+    static_image = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Фото (static)",
+        help_text="Например images/quiz/quiz_shlifovka_1776809850085.png — если нет загрузки.",
+    )
+    home_tag_override = models.CharField(
+        max_length=64,
+        blank=True,
+        verbose_name="Бейдж на главной (вручную)",
+        help_text="Напр. «под ключ». Пусто — цена из калькулятора.",
+    )
+    page_url = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Ссылка",
+        help_text="Напр. /obsada/okna. Пусто — /slug/",
+    )
+    home_layout = models.CharField(
+        max_length=16,
+        choices=LAYOUT_CHOICES,
+        default=LAYOUT_DEFAULT,
+        blank=True,
+        verbose_name="Раскладка на главной",
+        help_text="Для страницы «Шлифовка» также задаёт ширину карточки в сетке блока услуг.",
+    )
+    show_on_homepage = models.BooleanField(
+        default=False,
+        verbose_name="Показывать на главной",
+    )
     icon = models.CharField(max_length=50, verbose_name="Иконка (Lucide name)", blank=True)
     order = models.IntegerField(default=0, verbose_name="Порядок")
     is_active = models.BooleanField(default=True, verbose_name="Активна")
@@ -189,10 +337,177 @@ class Service(models.Model):
     class Meta:
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
-        ordering = ['order', 'name']
+        ordering = ["order", "name"]
+
+    @property
+    def has_image(self):
+        return bool(self.image) or bool(self.static_image)
+
+    @property
+    def link_url(self):
+        if self.page_url.strip():
+            url = self.page_url.strip()
+            return url if url.startswith("/") else f"/{url}"
+        return f"/{self.slug}/"
+
+    def get_home_tag(self):
+        if self.home_tag_override.strip():
+            return self.home_tag_override.strip()
+        if self.calculator_profile_id:
+            tag = self.calculator_profile.home_price_tag()
+            if tag:
+                return tag
+        if self.price_from:
+            formatted = f"{self.price_from:,}".replace(",", "\u00a0")
+            return f"от {formatted} ₽"
+        return ""
 
     def __str__(self):
         return self.name
+
+
+class SitePage(models.Model):
+    """Единая настройка страницы: hero, блок услуг, привязка к URL."""
+
+    page_key = models.CharField(
+        max_length=160,
+        unique=True,
+        verbose_name="URL страницы",
+        help_text="Без начального слэша: home — главная, obsada/okna — /obsada/okna",
+    )
+    title = models.CharField(max_length=120, verbose_name="Название в админке")
+    is_active = models.BooleanField(default=True, verbose_name="Активна")
+    sort_order = models.PositiveSmallIntegerField(default=0, verbose_name="Порядок")
+
+    hero_image = models.ImageField(
+        upload_to="pages/hero/",
+        blank=True,
+        null=True,
+        verbose_name="Загрузить фон",
+        help_text="Кнопка загрузки справа — выберите файл, затем «Сохранить» внизу формы.",
+    )
+    hero_static_image = models.CharField(
+        max_length=200,
+        blank=True,
+        default="images/hero-bg.jpg",
+        verbose_name="Запасной фон (файл в static)",
+        help_text="Используется только если выше не загружено изображение.",
+    )
+    hero_h1_white = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Заголовок H1 (белая часть)",
+    )
+    hero_h1_accent = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Заголовок H1 (акцент)",
+        help_text="Можно перенос строки — отобразится как <br>",
+    )
+    hero_lead = models.TextField(blank=True, verbose_name="Подзаголовок под H1")
+
+    show_services_block = models.BooleanField(
+        default=False,
+        verbose_name="Показывать блок услуг",
+    )
+    services_badge = models.CharField(
+        max_length=64,
+        blank=True,
+        default="",
+        verbose_name="Бейдж блока услуг",
+        help_text="Пусто — в блоке на странице подставится короткая подпись из названия страницы.",
+    )
+    services_title_white = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name="Заголовок услуг (белый)",
+    )
+    services_title_accent = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name="Заголовок услуг (акцент)",
+    )
+    services_lead = models.TextField(blank=True, verbose_name="Текст под заголовком услуг")
+
+    class Meta:
+        verbose_name = "Страница"
+        verbose_name_plural = "Страницы"
+        ordering = ("sort_order", "title")
+
+    @property
+    def url_path(self):
+        return "/" if self.page_key == "home" else f"/{self.page_key}"
+
+    @property
+    def has_hero_upload(self):
+        return bool(self.hero_image and self.hero_image.name)
+
+    def __str__(self):
+        return self.title or self.page_key
+
+
+class PageServiceLink(models.Model):
+    """Услуга на конкретной странице (из общего справочника)."""
+
+    LAYOUT_DEFAULT = ""
+    LAYOUT_WIDE = "wide"
+    LAYOUT_LAST = "last"
+    LAYOUT_HALF = "half"
+    LAYOUT_CHOICES = [
+        (LAYOUT_DEFAULT, "Обычная"),
+        (LAYOUT_WIDE, "Широкая (2 колонки)"),
+        (LAYOUT_LAST, "Широкая в конце сетки"),
+        (LAYOUT_HALF, "Половина ряда (6/12)"),
+    ]
+
+    page = models.ForeignKey(
+        SitePage,
+        on_delete=models.CASCADE,
+        related_name="service_links",
+        verbose_name="Страница",
+    )
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name="page_links",
+        verbose_name="Услуга",
+    )
+    sort_order = models.PositiveSmallIntegerField(default=0, verbose_name="Порядок")
+    layout = models.CharField(
+        max_length=16,
+        choices=LAYOUT_CHOICES,
+        default=LAYOUT_DEFAULT,
+        blank=True,
+        verbose_name="Раскладка карточки",
+    )
+    tag_override = models.CharField(
+        max_length=64,
+        blank=True,
+        verbose_name="Бейдж (вручную)",
+        help_text="Пусто — из калькулятора услуги.",
+    )
+    cta_label = models.CharField(
+        max_length=80,
+        blank=True,
+        default="",
+        verbose_name="Текст кнопки на карточке",
+        help_text="Пусто — «Узнать подробнее».",
+    )
+    is_visible = models.BooleanField(default=True, verbose_name="Показывать")
+
+    class Meta:
+        verbose_name = "Услуга на странице"
+        verbose_name_plural = "Услуги на странице"
+        ordering = ("sort_order", "pk")
+        unique_together = [["page", "service"]]
+
+    def get_tag(self):
+        if self.tag_override.strip():
+            return self.tag_override.strip()
+        return self.service.get_home_tag()
+
+    def __str__(self):
+        return f"{self.page}: {self.service.name}"
 
 
 class PortfolioSection(models.Model):
@@ -279,15 +594,15 @@ class PortfolioProject(models.Model):
         upload_to="portfolio/",
         blank=True,
         null=True,
-        verbose_name="Обложка (загрузка)",
+        verbose_name="Обложка (устарело)",
+        help_text="Не используется — загружайте фото в галерею ниже.",
     )
     static_image = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name="Обложка (static)",
-        help_text="Если нет галереи: images/portfolio-1.jpg",
+        verbose_name="Обложка static (устарело)",
     )
-    alt_text = models.CharField(max_length=255, blank=True, verbose_name="Alt обложки")
+    alt_text = models.CharField(max_length=255, blank=True, verbose_name="Alt (устарело)")
     sort_order = models.IntegerField(default=0, verbose_name="Порядок")
     is_active = models.BooleanField(default=True, verbose_name="Показывать")
 
@@ -316,7 +631,7 @@ class PortfolioProject(models.Model):
         return bool(self.image) or bool(self.static_image)
 
     def get_gallery_items(self):
-        photos = list(self.photos.filter(is_active=True).order_by("-is_cover", "sort_order", "pk"))
+        photos = list(self.photos.filter(is_active=True).order_by("sort_order", "pk"))
         if photos:
             return photos
         if self.has_legacy_cover:
@@ -329,12 +644,7 @@ class PortfolioProject(models.Model):
 
     def cover_item(self):
         items = self.get_gallery_items()
-        if not items:
-            return None
-        for item in items:
-            if getattr(item, "is_cover", False):
-                return item
-        return items[0]
+        return items[0] if items else None
 
     def is_photo_model(self, item):
         return item.__class__.__name__ == "PortfolioProjectImage"
@@ -356,17 +666,26 @@ class PortfolioProjectImage(models.Model):
     static_image = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name="Фото (static)",
+        verbose_name="Static (запас)",
+        help_text="Только для старых записей: images/portfolio-1.jpg",
     )
     caption = models.CharField(max_length=200, blank=True, verbose_name="Подпись")
-    is_cover = models.BooleanField(default=False, verbose_name="Обложка")
-    sort_order = models.IntegerField(default=0, verbose_name="Порядок")
+    is_cover = models.BooleanField(
+        default=False,
+        verbose_name="Обложка (служебное)",
+        editable=False,
+    )
+    sort_order = models.IntegerField(
+        default=0,
+        verbose_name="№",
+        help_text="0 — обложка на карточке, дальше 1, 2, 3…",
+    )
     is_active = models.BooleanField(default=True, verbose_name="Показывать")
 
     class Meta:
-        verbose_name = "Фото кейса"
-        verbose_name_plural = "Фото кейса"
-        ordering = ["-is_cover", "sort_order", "pk"]
+        verbose_name = "Фото"
+        verbose_name_plural = "Фото"
+        ordering = ["sort_order", "pk"]
 
     def __str__(self):
         return self.caption or f"Фото #{self.pk}"
@@ -415,7 +734,7 @@ class ExperienceSection(models.Model):
     )
     static_image = models.CharField(
         max_length=200,
-        default="images/hero-bg.jpg",
+        default="images/team.png",
         blank=True,
         verbose_name="Фото из static",
     )
@@ -680,10 +999,48 @@ class ContactSection(models.Model):
         return "Обратная связь"
 
 
+class LeadEmailSettings(models.Model):
+    """Куда отправлять письмо при каждой новой заявке с форм сайта (ContactLead)."""
+
+    notification_emails = models.TextField(
+        blank=True,
+        verbose_name="Email для уведомлений",
+        help_text=(
+            "Один или несколько адресов — через запятую или с новой строки. "
+            "Пока поле пустое, письма не отправляются. Настройка SMTP — в переменных окружения сервера."
+        ),
+    )
+
+    class Meta:
+        verbose_name = "Уведомления о заявках (email)"
+        verbose_name_plural = "Уведомления о заявках (email)"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    @classmethod
+    def load(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def __str__(self):
+        return "Куда слать заявки"
+
+
 class ContactLead(models.Model):
     name = models.CharField(max_length=120, verbose_name="Имя")
     phone = models.CharField(max_length=32, verbose_name="Телефон")
     message = models.TextField(blank=True, verbose_name="Сообщение")
+    ym_client_id = models.CharField(
+        max_length=32,
+        blank=True,
+        verbose_name="ClientID Метрики (_ym_uid)",
+        help_text="Числовой идентификатор для офлайн-конверсий в Директе; можно передавать из формы скрытым полем.",
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата")
 
     class Meta:
@@ -819,9 +1176,11 @@ class BlogSection(models.Model):
         ),
         verbose_name="Описание",
     )
-    archive_url = models.URLField(
-        default="https://artemadera.ru/blog/",
+    archive_url = models.CharField(
+        max_length=255,
+        default="/blog/",
         verbose_name="Ссылка «Все статьи»",
+        help_text="Например /blog/ для внутреннего блога",
     )
     archive_link_text = models.CharField(
         max_length=80,
@@ -852,10 +1211,23 @@ class BlogSection(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")
+    slug = models.SlugField(
+        max_length=220,
+        unique=True,
+        blank=True,
+        verbose_name="Слаг (URL)",
+        help_text="Заполняется автоматически из заголовка. Используется для /blog/<slug>/",
+    )
     excerpt = models.TextField(verbose_name="Краткое описание")
+    content = models.TextField(
+        blank=True,
+        verbose_name="Текст статьи",
+        help_text="Полный текст статьи (поддерживает HTML). Если заполнен — статья открывается на сайте.",
+    )
     url = models.URLField(
-        verbose_name="Ссылка на статью",
-        help_text="Полный URL на artemadera.ru или другую страницу",
+        blank=True,
+        verbose_name="Внешняя ссылка",
+        help_text="Заполните, если статья на внешнем сайте. Если пусто — используется внутренняя страница /blog/<slug>/",
     )
     image = models.ImageField(
         upload_to="blog/",
@@ -884,6 +1256,15 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        if self.slug:
+            return f"/blog/{self.slug}/"
+        return "/blog/"
+
+    @property
+    def is_internal(self):
+        return True
 
     @property
     def has_image(self):

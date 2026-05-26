@@ -486,6 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputService = document.getElementById('hq-input-service');
     const inputHouse   = document.getElementById('hq-input-house');
     const inputArea    = document.getElementById('hq-input-area');
+    const quizImage    = document.getElementById('hq-quiz-image');
     const summary      = document.getElementById('hq-summary');
     const slider       = document.getElementById('hq-area-slider');
     const numInput     = document.getElementById('hq-area-num');
@@ -533,7 +534,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const val = btn.dataset.value;
         quizForm.querySelectorAll(`.hq-option[data-step="${s}"]`).forEach((b) => b.classList.remove('hq-option--active'));
         btn.classList.add('hq-option--active');
-        if (s === 1) { answers.service = val; if (inputService) inputService.value = val; }
+        if (s === 1) {
+          answers.service = val;
+          if (inputService) inputService.value = val;
+          if (quizImage) {
+            const src = quizImage.getAttribute('data-img-' + val) || quizImage.getAttribute('data-img-default');
+            if (src) quizImage.src = src;
+          }
+        }
         if (s === 2) { answers.house   = val; if (inputHouse)   inputHouse.value   = val; }
       });
     });

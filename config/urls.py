@@ -1,34 +1,36 @@
 """
 URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, re_path
-from main.views import index, shlifovka, pokraska, teplyy_shov, generic_service
-
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path
+
+from main.direct_conversions import direct_conversions_csv_view
+from main.views import (
+    blog_detail,
+    blog_list,
+    generic_service,
+    index,
+    pokraska,
+    shlifovka,
+    teplyy_shov,
+)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', index, name='index'),
-    path('shlifovka', shlifovka, name='shlifovka'),
-    path('pokraska', pokraska, name='pokraska'),
-    path('teplyy-shov', teplyy_shov, name='teplyy_shov'),
-    path('<path:path>', generic_service, name='generic_service'),
-] + static(settings.STATIC_URL, document_root=settings.BASE_DIR / "static")
+    path("admin/", admin.site.urls),
+    path("export/yandex-direct-conversions.csv", direct_conversions_csv_view, name="direct_conversions_csv"),
+    path("", index, name="index"),
+    path("shlifovka", shlifovka, name="shlifovka"),
+    path("pokraska", pokraska, name="pokraska"),
+    path("teplyy-shov", teplyy_shov, name="teplyy_shov"),
+    path("blog/", blog_list, name="blog_list"),
+    path("blog/<slug:slug>/", blog_detail, name="blog_detail"),
+]
 
-if settings.DEBUG:
+# static и media — ДО catch-all, иначе /media/... уходит в generic_service
+urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / "static")
+if settings.DEBUG or getattr(settings, "SERVE_MEDIA", False):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns.append(path("<path:path>", generic_service, name="generic_service"))

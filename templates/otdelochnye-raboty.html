@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}page-otdelochnye-raboty{% endblock %}
+
+{% block content %}
+<section class="page-hero relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#1c120c]">
+ {% include 'includes/hero_bg.html' %}
+ <div class="hero-inner relative z-10 w-full text-center px-4 sm:px-8 py-28">
+  <div class="mb-4 text-xs text-gray-400">
+   <a class="hover:text-amber-300 transition-colors" href="/">Главная</a>
+   <span class="mx-2 text-gray-600">/</span>
+   <span class="text-amber-200">Отделочные работы</span>
+  </div>
+  <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+   <span class="text-white">Отделочные</span><br/>
+   <span class="text-amber-500">работы</span>
+  </h1>
+  <p class="text-gray-300 text-base sm:text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+   Покраска, тёплый шов, конопатка и отделка деревянных домов — комплексно или отдельными видами работ.
+  </p>
+  <div class="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 mb-12">
+   <button type="button" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})"
+    class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-amber-600 text-white text-base font-bold transition-all hover:bg-amber-500 shadow-lg shadow-amber-900/20 whitespace-nowrap">
+    Рассчитать стоимость
+   </button>
+   <a href="#otdelka-hub-links"
+    class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white/10 text-white text-base font-semibold backdrop-blur-sm transition-all hover:bg-white/15 whitespace-nowrap">
+    Направления
+   </a>
+  </div>
+ </div>
+ <a href="#otdelka-hub-links" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше по странице">
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+ </a>
+</section>
+
+{% include 'includes/page_services_section.html' %}
+
+<section id="otdelka-hub-links" class="py-20 lg:py-28" style="background-color:#1c120c">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="text-center max-w-2xl mx-auto mb-14">
+   <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 text-xs font-bold tracking-wider uppercase" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d">НАПРАВЛЕНИЯ</span>
+   <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">Виды <span class="text-amber-500">отделочных работ</span></h2>
+   <p class="text-gray-400 text-base leading-relaxed">Выберите услугу — на каждой странице подробнее о сроках, этапах и стоимости.</p>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
+   <a href="/pokraska" class="block p-6 rounded-2xl transition-colors hover:border-amber-500/40" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <h3 class="text-white font-bold text-lg mb-2">Покраска</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Защитные и декоративные покрытия для сруба, бруса и бревна.</p>
+   </a>
+   <a href="/teplyy-shov" class="block p-6 rounded-2xl transition-colors hover:border-amber-500/40" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <h3 class="text-white font-bold text-lg mb-2">Тёплый шов</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Герметизация межвенцовых швов эластичными составами.</p>
+   </a>
+   <a href="/otdelka/konopatka" class="block p-6 rounded-2xl transition-colors hover:border-amber-500/40" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <h3 class="text-white font-bold text-lg mb-2">Конопатка</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Утепление и уплотнение швов натуральными материалами.</p>
+   </a>
+   <a href="/otdelka/sten" class="block p-6 rounded-2xl transition-colors hover:border-amber-500/40" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <h3 class="text-white font-bold text-lg mb-2">Отделка стен</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Подготовка и финишная отделка внутренних поверхностей.</p>
+   </a>
+   <a href="/otdelka/pola" class="block p-6 rounded-2xl transition-colors hover:border-amber-500/40" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <h3 class="text-white font-bold text-lg mb-2">Отделка пола</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Шлифовка, покрытие и защита деревянных полов.</p>
+   </a>
+  </div>
+ </div>
+</section>
+
+{% include 'includes/portfolio_section.html' %}
+{% include 'includes/contact_section.html' %}
+{% endblock %}

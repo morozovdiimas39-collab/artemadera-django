@@ -22,6 +22,8 @@ PATH_CALCULATOR_SLUG = {
     "/otdelka/shlifovka/sruba": "shlifovka",
     "/otdelka/shlifovka/lafeta": "shlifovka",
     "/otdelka/shlifovka/ocilindrovannogo-brevna": "shlifovka",
+    "/otdelka/shlifovka/konsyerzhnaya": "shlifovka",
+    "/otdelka/shlifovka/bani-i-sauny": "shlifovka",
 }
 
 

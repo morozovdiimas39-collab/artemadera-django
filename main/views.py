@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.exceptions import TemplateDoesNotExist
 from django.db.utils import OperationalError
 
-from .models import ContactLead
+from .models import ContactLead, BlogPost, BlogSection
 
 try:
     from crm.services import create_deal_from_site_lead
@@ -117,3 +117,31 @@ def generic_service(request, path):
         return render(request, template_name, {"contact_form_sent": contact_form_sent})
     except TemplateDoesNotExist:
         return render(request, "home.html")
+
+
+def blog_list(request):
+    from .context_processors import _blog_defaults
+    try:
+        section = BlogSection.load()
+        posts = list(
+            BlogPost.objects.filter(is_active=True).order_by("sort_order", "-published_at", "pk")
+        )
+    except OperationalError:
+        defaults = _blog_defaults()
+        return render(request, "blog_list.html", defaults)
+    if not posts:
+        defaults = _blog_defaults()
+        posts = defaults["blog_posts"]
+    return render(request, "blog_list.html", {"blog_section": section, "blog_posts": posts})
+
+
+def blog_detail(request, slug):
+    try:
+        post = get_object_or_404(BlogPost, slug=slug, is_active=True)
+    except OperationalError:
+        raise Http404
+    try:
+        section = BlogSection.load()
+    except OperationalError:
+        section = None
+    return render(request, "blog_detail.html", {"post": post, "blog_section": section})

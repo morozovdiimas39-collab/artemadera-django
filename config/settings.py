@@ -11,9 +11,49 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def _load_local_env():
+    """Подхватывает переменные из .env в корне проекта (файл в .gitignore)."""
+    path = BASE_DIR / ".env"
+    if not path.is_file():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, val = line.partition("=")
+        key = key.strip()
+        val = val.strip().strip('"').strip("'")
+        if key:
+            os.environ.setdefault(key, val)
+
+
+_load_local_env()
+
+
+def _direct_token_from_dotenv_file() -> str:
+    """Только ключ DIRECT_CONVERSIONS_CSV_TOKEN из .env (перебивает пустую переменную в окружении IDE)."""
+    path = BASE_DIR / ".env"
+    if not path.is_file():
+        return ""
+    for raw in path.read_text(encoding="utf-8-sig").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[7:].strip()
+        if "=" not in line:
+            continue
+        key, _, val = line.partition("=")
+        if key.strip() != "DIRECT_CONVERSIONS_CSV_TOKEN":
+            continue
+        return val.strip().strip('"').strip("'")
+    return ""
 
 
 # Quick-start development settings - unsuitable for production
@@ -38,7 +78,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
+    'main.apps.MainConfig',
     'crm',
 ]
 
@@ -75,6 +115,8 @@ TEMPLATES = [
                 'main.context_processors.faq_processor',
                 'main.context_processors.before_after_processor',
                 'main.context_processors.blog_processor',
+                'main.context_processors.site_page_processor',
+                'main.context_processors.home_quiz_processor',
             ],
         },
     },
@@ -135,6 +177,14 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+# Отдавать загрузки через Django, если nginx не настроен (демо на artemadera.su)
+SERVE_MEDIA = True
+
+# Токен для GET /export/yandex-direct-conversions.csv
+# Приоритет: непустой env → значение из .env → при DEBUG дефолт (на проде выставьте env / Secrets!)
+_env_direct = (os.environ.get("DIRECT_CONVERSIONS_CSV_TOKEN") or "").strip()
+_file_direct = _direct_token_from_dotenv_file().strip()
+DIRECT_CONVERSIONS_CSV_TOKEN = _env_direct or _file_direct or ("Qwerty22456" if DEBUG else "")
 
 # Django Vite Settings
 DJANGO_VITE_DEV_MODE = DEBUG
@@ -148,6 +198,26 @@ DJANGO_VITE_DEV_SERVER_HOST = '127.0.0.1'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Почта: заявки с сайта (send_mail), админка «Уведомления о заявках (email)»
+DEFAULT_FROM_EMAIL = (os.environ.get("DEFAULT_FROM_EMAIL") or "").strip() or "noreply@artemadera.su"
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = (os.environ.get("EMAIL_HOST") or "").strip()
+_raw_port = (os.environ.get("EMAIL_PORT") or "587").strip()
+try:
+    EMAIL_PORT = int(_raw_port) if _raw_port else 587
+except ValueError:
+    EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "1").strip() not in ("0", "false", "False")
+# SMTP без хоста на проде ничего не отправит — падаем в консоль, чтобы письма были видны в логах процесса
+if "smtp" in str(EMAIL_BACKEND).lower() and not EMAIL_HOST:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 UNFOLD = {
     "SITE_TITLE": "ArteMadera",
@@ -187,6 +257,11 @@ UNFOLD = {
                         "icon": "inbox",
                         "link": "/admin/main/contactlead/",
                     },
+                    {
+                        "title": "Почта: уведомления о заявках",
+                        "icon": "mail",
+                        "link": "/admin/main/leademailsettings/1/change/",
+                    },
                 ],
             },
             {
@@ -195,8 +270,13 @@ UNFOLD = {
                 "collapsible": False,
                 "items": [
                     {
-                        "title": "Услуги на главной",
-                        "icon": "home",
+                        "title": "Страницы",
+                        "icon": "web",
+                        "link": "/admin/main/sitepage/",
+                    },
+                    {
+                        "title": "Справочник услуг",
+                        "icon": "category",
                         "link": "/admin/main/service/",
                     },
                     {
@@ -205,12 +285,22 @@ UNFOLD = {
                         "link": "/admin/main/calculatorprofile/",
                     },
                     {
+                        "title": "Квиз на главной — фото",
+                        "icon": "photo_library",
+                        "link": "/admin/main/homequizsettings/",
+                    },
+                    {
+                        "title": "До / после",
+                        "icon": "compare",
+                        "link": "/admin/main/beforeafteritem/",
+                    },
+                    {
                         "title": "Статьи блога",
                         "icon": "article",
                         "link": "/admin/main/blogpost/",
                     },
                     {
-                        "title": "Проекты (портфолио)",
+                        "title": "Кейсы портфолио (фото)",
                         "icon": "photo_library",
                         "link": "/admin/main/portfolioproject/",
                     },
@@ -227,7 +317,7 @@ UNFOLD = {
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "О компании — текст",
+                        "title": "О компании — блок (текст и фото)",
                         "icon": "info",
                         "link": "/admin/main/experiencesection/",
                     },
@@ -240,11 +330,6 @@ UNFOLD = {
                         "title": "О компании — преимущества",
                         "icon": "verified",
                         "link": "/admin/main/experienceadvantage/",
-                    },
-                    {
-                        "title": "До / после — слайды",
-                        "icon": "compare",
-                        "link": "/admin/main/beforeafteritem/",
                     },
                     {
                         "title": "До / после — заголовок",
@@ -302,6 +387,11 @@ UNFOLD = {
                         "title": "Слайдер площади",
                         "icon": "tune",
                         "link": "/admin/main/calculatorconfig/",
+                    },
+                    {
+                        "title": "Почта: заявки с форм",
+                        "icon": "forward_to_inbox",
+                        "link": "/admin/main/leademailsettings/1/change/",
                     },
                 ],
             },

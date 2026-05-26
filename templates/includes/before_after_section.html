@@ -1,4 +1,3 @@
-{% load static %}
 {% if before_after_section.is_visible and before_after_items %}
 <section id="comparison" class="comparison-section">
  <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -17,17 +16,9 @@
   <div class="comparison-grid">
    {% for item in before_after_items %}
    <figure class="ba-compare" data-ba-slider>
-    {% if item.after_image %}
-    <img src="{{ item.after_image.url }}" alt="{{ item.title }} — после" class="ba-after" loading="lazy" />
-    {% else %}
-    <img src="{% static item.after_static %}" alt="{{ item.title }} — после" class="ba-after" loading="lazy" />
-    {% endif %}
+    <img src="{{ item.after_src }}" alt="{{ item.title }} — после" class="ba-after" loading="lazy" />
     <div class="ba-before-wrap">
-     {% if item.before_image %}
-     <img src="{{ item.before_image.url }}" alt="{{ item.title }} — до" class="ba-before" loading="lazy" />
-     {% else %}
-     <img src="{% static item.before_static %}" alt="{{ item.title }} — до" class="ba-before" loading="lazy" />
-     {% endif %}
+     <img src="{{ item.before_src }}" alt="{{ item.title }} — до" class="ba-before" loading="lazy" />
     </div>
     <div class="ba-handle" aria-hidden="true">
      <span class="ba-handle-line"></span>

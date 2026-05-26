@@ -4,11 +4,9 @@
 {% block body_class %}page-plintusy{% endblock %}
 
 {% block content %}
-<section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-[#1c120c]">
- <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image:url({% static 'images/hero-bg.jpg' %})">
-  <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.45) 60%, #1c120c 100%)"></div>
- </div>
- <div class="relative z-10 w-full text-center px-4 sm:px-8 py-32">
+<section class="page-hero relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-[#1c120c]">
+ {% include 'includes/hero_bg.html' %}
+ <div class="hero-inner relative z-10 w-full text-center px-4 sm:px-8 py-32">
   <div class="mb-4 text-xs text-gray-400">
    <a class="hover:text-amber-300 transition-colors" href="/">Главная</a>
    <span class="mx-2 text-gray-600">/</span>
@@ -29,6 +27,8 @@
   </div>
  </div>
 </section>
+
+{% include 'includes/page_services_section.html' %}
 
 <section class="py-20 lg:py-28" style="background-color:#1c120c">
  <div class="container mx-auto px-4 sm:px-6 lg:px-8">

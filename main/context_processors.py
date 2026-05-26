@@ -36,12 +36,221 @@ def _calculator_defaults():
     return _legacy_context()
 
 
-def services_processor(request):
+def _home_services_defaults():
+    """Fallback if DB empty — mirrors migration seed (tags/prices from calculator slugs)."""
+    from .models import CalculatorProfile
+
+    seeds = [
+        ("shlifovka", "Шлифовка деревянных домов", "Срубы, брус, оцилиндровка и лафет.", "/shlifovka", "wide", "", "images/quiz/quiz_shlifovka_1776809850085.png"),
+        ("pokraska", "Покраска", "Грунт, масла и лазури для фасада и интерьера.", "/pokraska", "", "под ключ", "images/quiz/quiz_pokraska_1776809864700.png"),
+        ("teplyy-shov", "Тёплый шов", "Заполнение межвенцовых швов эластичным составом.", "/teplyy-shov", "", "герметизация", "images/quiz/quiz_konopatka_1776809894304.png"),
+        ("okosyachka", "Окосячка", "Компенсация усадки, углы и каркас сруба.", "/obsada", "", "усадка", "images/quiz/quiz_srub_1776809774832.png"),
+        ("obsada-okna", "Обсада", "Короба под окна и двери.", "/obsada/okna", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
+        ("kryshi", "Крыши", "Монтаж и ремонт кровли.", "/kryshi", "", "кровля", "images/portfolio-3.jpg"),
+        ("injeneriya", "Инженерия", "Проект и монтаж инженерных систем.", "/injeneriya", "last", "коммуникации", "images/after.jpg"),
+    ]
+    calc_slugs = {
+        "shlifovka": "shlifovka",
+        "pokraska": "pokraska",
+        "teplyy-shov": "teplyy-shov",
+        "okosyachka": "obsada",
+        "obsada-okna": "obsada",
+        "kryshi": "kryshi",
+        "injeneriya": "injeneriya",
+    }
+    profiles = {}
     try:
-        services = Service.objects.filter(is_active=True).order_by('order')
+        for p in CalculatorProfile.objects.filter(slug__in=set(calc_slugs.values())):
+            profiles[p.slug] = p
+    except OperationalError:
+        pass
+
+    items = []
+    for slug, name, desc, url, layout, tag_override, static_image in seeds:
+        calc_slug = calc_slugs.get(slug, slug)
+        calc = profiles.get(calc_slug)
+        tag = tag_override
+        if not tag and calc:
+            tag = calc.home_price_tag()
+        items.append(
+            SimpleNamespace(
+                name=name,
+                short_description=desc,
+                link_url=url,
+                home_layout=layout,
+                get_home_tag=lambda t=tag: t,
+                has_image=True,
+                image=None,
+                static_image=static_image,
+            )
+        )
+    return items
+
+
+class _ShlifovkaFallbackCard:
+    """Те же поля, что у _ServiceCard, если в БД ещё нет привязок для /shlifovka."""
+
+    __slots__ = (
+        "name",
+        "short_description",
+        "link_url",
+        "home_layout",
+        "static_image",
+        "image",
+        "cta_label",
+        "_tag",
+    )
+
+    def __init__(
+        self,
+        *,
+        name,
+        short_description,
+        link_url,
+        home_layout,
+        tag,
+        static_image,
+        cta_label="",
+    ):
+        self.name = name
+        self.short_description = short_description
+        self.link_url = link_url
+        self.home_layout = home_layout
+        self.static_image = static_image
+        self.image = None
+        self.cta_label = (cta_label or "").strip()
+        self._tag = tag
+
+    def get_home_tag(self):
+        return self._tag
+
+
+def _shlifovka_services_defaults():
+    rows = [
+        {
+            "name": "Шлифовка срубов",
+            "short_description": (
+                "Шлифовка бревенчатых срубов: удаление старого покрытия, "
+                "выравнивание и подготовка под финиш."
+            ),
+            "link_url": "/otdelka/shlifovka/sruba",
+            "static_image": "images/service-1.jpg",
+            "home_layout": "wide",
+            "tag": "от 1 200 ₽/м²",
+        },
+        {
+            "name": "Шлифовка бруса",
+            "short_description": (
+                "Шлифовка домов из профилированного и клееного бруса без повреждения геометрии."
+            ),
+            "link_url": "/otdelka/shlifovka/brusa",
+            "static_image": "images/service-2.jpg",
+            "home_layout": "",
+            "tag": "от 1 100 ₽/м²",
+        },
+        {
+            "name": "Шлифовка оцилиндровки",
+            "short_description": (
+                "Шлифовка дома из оцилиндрованного бревна с сохранением естественной фактуры дерева."
+            ),
+            "link_url": "/otdelka/shlifovka/ocilindrovannogo-brevna",
+            "static_image": "images/portfolio-1.jpg",
+            "home_layout": "",
+            "tag": "от 1 150 ₽/м²",
+        },
+        {
+            "name": "Шлифовка лафета",
+            "short_description": (
+                "Аккуратная шлифовка домов из лафета и плоскогранного бруса — ровная поверхность без сколов."
+            ),
+            "link_url": "/otdelka/shlifovka/lafeta",
+            "static_image": "images/portfolio-2.jpg",
+            "home_layout": "wide",
+            "tag": "от 1 250 ₽/м²",
+        },
+        {
+            "name": "Консьержная шлифовка",
+            "short_description": (
+                "Финишная тонкая шлифовка перед покраской или пропиткой — идеально гладкая поверхность."
+            ),
+            "link_url": "/otdelka/shlifovka/konsyerzhnaya",
+            "static_image": "images/service-3.jpg",
+            "home_layout": "half",
+            "tag": "от 800 ₽/м²",
+        },
+        {
+            "name": "Шлифовка бань и саун",
+            "short_description": (
+                "Шлифовка деревянных бань и саун с учётом высоких температур и влажности."
+            ),
+            "link_url": "/otdelka/shlifovka/bani-i-sauny",
+            "static_image": "images/portfolio-3.jpg",
+            "home_layout": "half",
+            "tag": "от 900 ₽/м²",
+            "cta_label": "Рассчитать стоимость",
+        },
+    ]
+    return [_ShlifovkaFallbackCard(**{**r, "cta_label": r.get("cta_label", "")}) for r in rows]
+
+
+def _service_cards_grid_mode(cards):
+    """
+    equal — до 4 карточек без wide/half/last: фиксированные колонки.
+    twelve — иначе сетка 12 колонок с col-span (как было на шлифовке).
+    """
+    if not cards:
+        return "twelve"
+    if len(cards) > 4:
+        return "twelve"
+    for c in cards:
+        if (getattr(c, "home_layout", None) or "").strip():
+            return "twelve"
+    return "equal"
+
+
+def _service_cards_dense_order(cards):
+    """Только внутренние страницы: порядок для dense; список шлифовки не трогаем — порядок из админки."""
+    if not cards:
+        return []
+    seq = list(cards)
+
+    def is_wideish(c):
+        return (getattr(c, "home_layout", None) or "").strip() in ("wide", "last")
+
+    return [c for c in seq if not is_wideish(c)] + [c for c in seq if is_wideish(c)]
+
+
+def services_processor(request):
+    from .site_page import (
+        get_page_service_cards,
+        get_shlifovka_page_service_cards,
+        normalize_page_key,
+    )
+
+    page_key = normalize_page_key(request.path)
+    try:
+        services = Service.objects.filter(is_active=True).order_by("order")
+        home_services = get_page_service_cards("home")
+        shlifovka_page_services = get_shlifovka_page_service_cards()
+        page_service_cards = get_page_service_cards(page_key)
     except OperationalError:
         services = []
-    return {'all_services': services}
+        home_services = []
+        shlifovka_page_services = []
+        page_service_cards = []
+    if not home_services:
+        home_services = _home_services_defaults()
+    if not shlifovka_page_services:
+        shlifovka_page_services = _shlifovka_services_defaults()
+    page_service_cards = _service_cards_dense_order(page_service_cards)
+    return {
+        "all_services": services,
+        "home_services": home_services,
+        "shlifovka_page_services": shlifovka_page_services,
+        "shlifovka_services_grid_mode": _service_cards_grid_mode(shlifovka_page_services),
+        "page_service_cards": page_service_cards,
+        "page_services_grid_mode": _service_cards_grid_mode(page_service_cards),
+    }
 
 
 def calculator_processor(request):
@@ -198,7 +407,7 @@ def _experience_defaults():
             "на участке вашего дома."
         ),
         image=None,
-        static_image="images/hero-bg.jpg",
+        static_image="images/team.png",
         is_visible=True,
     )
     stats = [
@@ -257,8 +466,12 @@ def experience_processor(request):
             "experience_advantages": [],
         }
 
-    if not section.image and section.static_image == "images/service-2.jpg":
-        section.static_image = "images/hero-bg.jpg"
+    if not section.image and section.static_image in (
+        "images/service-2.jpg",
+        "images/hero-bg.jpg",
+        "images/after.jpg",
+    ):
+        section.static_image = "images/team.png"
 
     defaults = _experience_defaults()
     return {
@@ -355,29 +568,40 @@ def _process_defaults():
         badge_text="КАК МЫ РАБОТАЕМ",
         title_prefix="Этапы",
         title_highlight="нашей работы",
-        description="Прозрачный и отлаженный процесс — от первого звонка до сдачи готового объекта.",
+        description=(
+            "От первого выезда до передачи объекта — четыре последовательных шага, "
+            "понятных ещё до начала работ."
+        ),
         is_visible=True,
     )
     steps = [
         SimpleNamespace(
             step_number="01",
-            title="Замер и выкрас",
-            description="Бесплатная тестовая покраска на вашем доме при замере.",
+            title="Выезд на объект",
+            description=(
+                "Осматриваем задачу и объём: замеры, фото, фиксация пожеланий — отправная точка для сметы."
+            ),
         ),
         SimpleNamespace(
             step_number="02",
-            title="Без проживания",
-            description="Мобильные бригады — без необходимости предоставлять жильё.",
+            title="Смета и договор",
+            description=(
+                "Считаем работы по этапам, согласуем сроки и цену, закрепляем всё в договоре — без скрытых условий."
+            ),
         ),
         SimpleNamespace(
             step_number="03",
-            title="Честная цена",
-            description="Фиксированная смета в договоре без изменений.",
+            title="Работы на объекте",
+            description=(
+                "Выполняем этапы по плану: технология, безопасность, порядок и промежуточные согласования по ходу."
+            ),
         ),
         SimpleNamespace(
             step_number="04",
-            title="Многоуровневый контроль",
-            description="Контроль качества на каждом этапе работ.",
+            title="Сдача объекта",
+            description=(
+                "Передаём результат: совместная приёмка, акты, рекомендации по уходу и гарантия на выполненные работы."
+            ),
         ),
     ]
     return {"work_process_section": section, "work_process_steps": steps}
@@ -475,7 +699,27 @@ def faq_processor(request):
     return {"faq_section": section, "faq_items": items}
 
 
+def _before_after_attach_src(item):
+    """URL для <img>: загрузка из админки или путь в static."""
+    from django.templatetags.static import static
+
+    if getattr(item, "before_image", None):
+        before_src = item.before_image.url
+    else:
+        p = (getattr(item, "before_static", None) or "").strip() or "images/before.jpg"
+        before_src = static(p)
+    if getattr(item, "after_image", None):
+        after_src = item.after_image.url
+    else:
+        p = (getattr(item, "after_static", None) or "").strip() or "images/after.jpg"
+        after_src = static(p)
+    item.before_src = before_src
+    item.after_src = after_src
+
+
 def _before_after_defaults():
+    from django.templatetags.static import static
+
     section = SimpleNamespace(
         badge_text="РЕЗУЛЬТАТ",
         title_prefix="До и",
@@ -493,6 +737,8 @@ def _before_after_defaults():
             after_static="images/after.jpg",
             is_active=True,
             is_ready=True,
+            before_src=static("images/before.jpg"),
+            after_src=static("images/after.jpg"),
         ),
     ]
     return {"before_after_section": section, "before_after_items": items}
@@ -514,6 +760,9 @@ def before_after_processor(request):
     if not items:
         return _before_after_defaults()
 
+    for item in items:
+        _before_after_attach_src(item)
+
     return {"before_after_section": section, "before_after_items": items}
 
 
@@ -526,46 +775,31 @@ def _blog_defaults():
             "Полезные материалы о шлифовке, отделке и уходе за деревянным домом — "
             "от специалистов ArteMadera."
         ),
-        archive_url="https://artemadera.ru/blog/",
+        archive_url="/blog/",
         archive_link_text="Все статьи блога",
         is_visible=True,
     )
+    def _make_post(pk, title, excerpt, slug, static_image):
+        ns = SimpleNamespace(
+            pk=pk, title=title, excerpt=excerpt,
+            url="", slug=slug, image=None, static_image=static_image,
+            published_at=None, has_image=True, is_internal=True,
+        )
+        _slug = slug
+        ns.get_absolute_url = lambda: f"/blog/{_slug}/"
+        return ns
+
     posts = [
-        SimpleNamespace(
-            pk=1,
-            title="Можно ли шлифовать сруб зимой?",
-            excerpt=(
-                "Как создают тепловой контур на объекте и почему профессиональная шлифовка "
-                "возможна не только в тёплый сезон."
-            ),
-            url="https://artemadera.ru/blog/",
-            image=None,
-            static_image="images/portfolio-2.jpg",
-            published_at=None,
-            has_image=True,
-        ),
-        SimpleNamespace(
-            pk=2,
-            title='Что такое «тёплый шов» для деревянного дома',
-            excerpt=(
-                "Зачем нужен эластичный герметик в межвенцовых швах и как он защищает древесину."
-            ),
-            url="https://artemadera.ru/blog/",
-            image=None,
-            static_image="images/service-1.jpg",
-            published_at=None,
-            has_image=True,
-        ),
-        SimpleNamespace(
-            pk=3,
-            title="Как подготовить дом из бруса к покраске",
-            excerpt="Этапы шлифовки, удаления пыли и выбора системы покрытия для фасада.",
-            url="https://artemadera.ru/blog/",
-            image=None,
-            static_image="images/service-2.jpg",
-            published_at=None,
-            has_image=True,
-        ),
+        _make_post(1, "Можно ли шлифовать сруб зимой?",
+            "Как создают тепловой контур на объекте и почему профессиональная шлифовка "
+            "возможна не только в тёплый сезон.",
+            "mozhno-li-shlifovat-srub-zimoy", "images/quiz/quiz_shlifovka_1776809850085.png"),
+        _make_post(2, "Что такое «тёплый шов» для деревянного дома",
+            "Зачем нужен эластичный герметик в межвенцовых швах и как он защищает древесину.",
+            "chto-takoe-teplyy-shov", "images/quiz/quiz_konopatka_1776809894304.png"),
+        _make_post(3, "Как подготовить дом из бруса к покраске",
+            "Этапы шлифовки, удаления пыли и выбора системы покрытия для фасада.",
+            "kak-podgotovit-dom-iz-brusa-k-pokraske", "images/quiz/quiz_pokraska_1776809864700.png"),
     ]
     return {"blog_section": section, "blog_posts": posts}
 
@@ -586,3 +820,68 @@ def blog_processor(request):
         return _blog_defaults()
 
     return {"blog_section": section, "blog_posts": posts}
+
+
+def site_page_processor(request):
+    from .site_page import get_site_page, services_block_captions
+
+    page = get_site_page(request)
+    return {
+        "site_page": page,
+        "page_hero": page,
+        "services_block_captions": services_block_captions(page),
+    }
+
+
+# (data-value кнопки, атрибут HomeQuizSettings, путь в static при пустой загрузке)
+_HOME_QUIZ_IMAGE_ROWS = [
+    ("shlifovka", "image_shlifovka", "images/quiz/quiz_shlifovka_1776809850085.png"),
+    ("pokraska", "image_pokraska", "images/quiz/quiz_pokraska_1776809864700.png"),
+    ("teplyy-shov", "image_teplyy_shov", "images/quiz/quiz_konopatka_1776809894304.png"),
+    ("okosyachka", "image_okosyachka", "images/quiz/quiz_srub_1776809774832.png"),
+    ("obsada", "image_obsada", "images/quiz/quiz_brus_1776809793588.png"),
+    ("kryshi", "image_kryshi", "images/portfolio-3.jpg"),
+    ("injeneriya", "image_injeneriya", "images/after.jpg"),
+]
+_HOME_QUIZ_DEFAULT_STATIC = "images/hero-bg.jpg"
+
+
+def _home_quiz_fallback_urls():
+    """Те же пути, что раньше были в шаблоне квиза (static)."""
+    from django.templatetags.static import static
+
+    return {
+        "home_quiz_default_url": static(_HOME_QUIZ_DEFAULT_STATIC),
+        "home_quiz_service_images": [
+            {"key": k, "url": static(p)} for k, _attr, p in _HOME_QUIZ_IMAGE_ROWS
+        ],
+    }
+
+
+def home_quiz_processor(request):
+    from django.templatetags.static import static
+
+    from .models import HomeQuizSettings
+
+    fb = _home_quiz_fallback_urls()
+
+    def pick_url(field, static_path):
+        if field:
+            return field.url
+        return static(static_path)
+
+    try:
+        cfg = HomeQuizSettings.load()
+    except OperationalError:
+        return fb
+
+    default_url = pick_url(cfg.default_image, _HOME_QUIZ_DEFAULT_STATIC)
+    rows = [
+        {"key": data_key, "url": pick_url(getattr(cfg, attr, None), static_path)}
+        for data_key, attr, static_path in _HOME_QUIZ_IMAGE_ROWS
+    ]
+
+    return {
+        "home_quiz_default_url": default_url,
+        "home_quiz_service_images": rows,
+    }

@@ -8,6 +8,8 @@ class MainConfig(AppConfig):
     name = 'main'
 
     def ready(self):
+        from . import signals  # noqa: F401 — уведомления о ContactLead
+
         # Only auto-migrate on runserver — avoids SQLite locks during makemigrations/migrate
         if 'runserver' not in sys.argv:
             return

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}page-proizvodstvo{% endblock %}
+
+{% block content %}
+<section class="page-hero relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#1c120c]">
+ {% include 'includes/hero_bg.html' %}
+ <div class="hero-inner relative z-10 w-full text-center px-4 sm:px-8 py-28">
+  <div class="mb-4 text-xs text-gray-400">
+   <a class="hover:text-amber-300 transition-colors" href="/">Главная</a>
+   <span class="mx-2 text-gray-600">/</span>
+   <span class="text-amber-200">Производство</span>
+  </div>
+  <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+   <span class="text-white">Деревянное</span><br/>
+   <span class="text-amber-500">производство</span>
+  </h1>
+  <p class="text-gray-300 text-base sm:text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+   Беседки, фальшбалки, плинтусы и другие изделия из дерева — в мастерской ArteMadera под ваш размер и проект.
+  </p>
+  <div class="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 mb-12">
+   <a href="#proizvodstvo-hub-links"
+    class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-amber-600 text-white text-base font-bold transition-all hover:bg-amber-500 shadow-lg shadow-amber-900/20 whitespace-nowrap">
+    Каталог изделий
+   </a>
+   <button type="button" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})"
+    class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white/10 text-white text-base font-semibold backdrop-blur-sm transition-all hover:bg-white/15 whitespace-nowrap">
+    Запросить расчёт
+   </button>
+  </div>
+ </div>
+ <a href="#proizvodstvo-hub-links" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше по странице">
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+ </a>
+</section>
+
+{% include 'includes/page_services_section.html' %}
+
+<section id="proizvodstvo-hub-links" class="py-20 lg:py-28" style="background-color:#1c120c">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="text-center max-w-2xl mx-auto mb-14">
+   <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 text-xs font-bold tracking-wider uppercase" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d">ИЗДЕЛИЯ</span>
+   <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">Направления <span class="text-amber-500">производства</span></h2>
+   <p class="text-gray-400 text-base leading-relaxed">Готовые решения и изготовление на заказ в Москве и области.</p>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-5xl mx-auto">
+   <a href="/proizvodstvo/besedki" class="block p-6 rounded-2xl transition-colors hover:border-amber-500/40" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <h3 class="text-white font-bold text-lg mb-2">Беседки</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Деревянные беседки под ключ — открытые и закрытые форматы.</p>
+   </a>
+   <a href="/proizvodstvo/falshbalki" class="block p-6 rounded-2xl transition-colors hover:border-amber-500/40" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <h3 class="text-white font-bold text-lg mb-2">Фальшбалки</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Декоративные балки для потолка и фасада.</p>
+   </a>
+   <a href="/proizvodstvo/plintusy" class="block p-6 rounded-2xl transition-colors hover:border-amber-500/40" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+    <h3 class="text-white font-bold text-lg mb-2">Плинтусы</h3>
+    <p class="text-gray-400 text-sm leading-relaxed">Погонаж из массива под интерьер деревянного дома.</p>
+   </a>
+  </div>
+ </div>
+</section>
+
+{% include 'includes/portfolio_section.html' %}
+{% include 'includes/contact_section.html' %}
+{% endblock %}

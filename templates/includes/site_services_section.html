@@ -1,0 +1,120 @@
+{% load static %}
+{# Единый блок карточек услуг (сетка как на шлифовке). Параметры через {% include ... with %}: service_section_cards, service_section_grid_mode, service_section_html_id, опционально service_section_extra_section_class, service_section_show_calculator #}
+<section id="{{ service_section_html_id|default:'site-services' }}" class="relative overflow-hidden bg-[#1c120c] pt-16 lg:pt-20 pb-20 lg:pb-28 {{ service_section_extra_section_class }}">
+ <div class="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none">
+  <div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] bg-amber-500/10 blur-[120px] rounded-full"></div>
+  <div class="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-white/5 blur-[100px] rounded-full"></div>
+ </div>
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <div class="max-w-3xl mb-12 lg:mb-16">
+   <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-amber-400" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
+    {% if site_page.page_key == "shlifovka" %}
+    <span class="text-xs text-amber-300 font-black">{% firstof site_page.services_badge "Виды шлифовки" %}</span>
+    {% else %}
+    <span class="text-xs text-amber-300 font-black">{{ services_block_captions.badge }}</span>
+    {% endif %}
+   </div>
+   <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight">
+    {% if site_page.page_key == "shlifovka" %}
+     {% if site_page.services_title_white or site_page.services_title_accent %}
+     <span class="text-white">{{ site_page.services_title_white }}</span><br class="hidden sm:block"/>
+     <span class="text-gradient">{{ site_page.services_title_accent }}</span>
+     {% else %}
+     <span class="text-white">Комплексная </span><br class="hidden sm:block"/>
+     <span class="text-gradient">шлифовка домов</span>
+     {% endif %}
+    {% else %}
+     <span class="text-white">{{ services_block_captions.title_white }}</span>
+     {% if services_block_captions.title_accent %}<br class="hidden sm:block"/>
+     <span class="text-gradient">{{ services_block_captions.title_accent }}</span>{% endif %}
+    {% endif %}
+   </h2>
+   {% if site_page.page_key == "shlifovka" %}
+   <p class="text-gray-400 text-lg sm:text-xl font-light max-w-2xl leading-relaxed">
+    {% if site_page.services_lead %}
+    {{ site_page.services_lead }}
+    {% else %}
+    Профессиональная шлифовка деревянных домов любой сложности — подготовим сруб, брус, бревно или лафет к покраске и долгой эксплуатации.
+    {% endif %}
+   </p>
+   {% elif site_page.services_lead %}
+   <p class="text-gray-400 text-lg sm:text-xl font-light max-w-2xl leading-relaxed">{{ site_page.services_lead }}</p>
+   {% endif %}
+  </div>
+
+  {% if service_section_cards %}
+  {% with n=service_section_cards|length mode=service_section_grid_mode|default:"twelve" %}
+  {% if mode == "equal" %}
+  <div class="grid gap-6 mb-20 {% if n == 1 %}grid-cols-1 max-w-5xl mx-auto{% elif n == 2 %}grid-cols-1 md:grid-cols-2{% elif n == 3 %}grid-cols-1 md:grid-cols-2 lg:grid-cols-3{% else %}grid-cols-1 sm:grid-cols-2 lg:grid-cols-4{% endif %}">
+   {% for card in service_section_cards %}
+   <a href="{{ card.link_url }}" class="group relative w-full bg-card/40 border border-white/5 hover:border-amber-500/40 rounded-[2rem] overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(245,158,11,0.2)]">
+    <div class="absolute inset-0">
+     {% if card.image %}
+     <img src="{{ card.image.url }}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60"/>
+     {% elif card.static_image %}
+     <img src="{% static card.static_image %}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60"/>
+     {% endif %}
+     <div class="absolute inset-0 bg-gradient-to-t from-[#1c120c]/95 via-[#1c120c]/50 to-[#1c120c]/20 group-hover:via-[#1c120c]/40 transition-colors duration-500"></div>
+    </div>
+    <div class="relative p-8 sm:p-10 h-full flex flex-col justify-end min-h-[360px]">
+     {% with tag=card.get_home_tag %}
+     {% if tag %}
+     <div class="absolute top-8 right-8 px-4 py-2 rounded-full bg-black/50 border border-white/10"><span class="text-amber-400 text-sm font-black">{{ tag }}</span></div>
+     {% endif %}
+     {% endwith %}
+     <h3 class="text-2xl sm:text-3xl font-bold text-white mb-4 tracking-tight group-hover:text-amber-300 transition-colors">{{ card.name }}</h3>
+     {% if card.short_description %}
+     <p class="shlifovka-service-desc text-white mb-8 text-base leading-relaxed max-w-md">{{ card.short_description }}</p>
+     {% endif %}
+     <span class="shlifovka-service-cta inline-flex items-center gap-3 text-amber-400 group-hover:text-amber-300 w-fit">
+      {% if card.cta_label %}{{ card.cta_label }}{% else %}Узнать подробнее{% endif %}
+      <span class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center group-hover:bg-amber-500 group-hover:border-amber-500 group-hover:text-white transition-all duration-300">
+       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-rotate-45 transition-transform duration-300" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+      </span>
+     </span>
+    </div>
+   </a>
+   {% endfor %}
+  </div>
+  {% else %}
+  <div class="grid grid-flow-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 mb-20">
+   {% for card in service_section_cards %}
+   <a href="{{ card.link_url }}" class="group relative min-w-0 bg-card/40 border border-white/5 hover:border-amber-500/40 rounded-[2rem] overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(245,158,11,0.2)]{% if card.home_layout == 'wide' or card.home_layout == 'last' %} lg:col-span-8 md:col-span-2{% elif card.home_layout == 'half' %} lg:col-span-6 md:col-span-1{% else %} lg:col-span-4 md:col-span-1{% endif %}">
+    <div class="absolute inset-0">
+     {% if card.image %}
+     <img src="{{ card.image.url }}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60"/>
+     {% elif card.static_image %}
+     <img src="{% static card.static_image %}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60"/>
+     {% endif %}
+     <div class="absolute inset-0 bg-gradient-to-t from-[#1c120c]/95 via-[#1c120c]/50 to-[#1c120c]/20 group-hover:via-[#1c120c]/40 transition-colors duration-500"></div>
+    </div>
+    <div class="relative p-8 sm:p-10 h-full flex flex-col justify-end min-h-[360px]">
+     {% with tag=card.get_home_tag %}
+     {% if tag %}
+     <div class="absolute top-8 right-8 px-4 py-2 rounded-full bg-black/50 border border-white/10"><span class="text-amber-400 text-sm font-black">{{ tag }}</span></div>
+     {% endif %}
+     {% endwith %}
+     <h3 class="text-2xl sm:text-3xl font-bold text-white mb-4 tracking-tight group-hover:text-amber-300 transition-colors">{{ card.name }}</h3>
+     {% if card.short_description %}
+     <p class="shlifovka-service-desc text-white mb-8 text-base leading-relaxed max-w-md">{{ card.short_description }}</p>
+     {% endif %}
+     <span class="shlifovka-service-cta inline-flex items-center gap-3 text-amber-400 group-hover:text-amber-300 w-fit">
+      {% if card.cta_label %}{{ card.cta_label }}{% else %}Узнать подробнее{% endif %}
+      <span class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center group-hover:bg-amber-500 group-hover:border-amber-500 group-hover:text-white transition-all duration-300">
+       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-rotate-45 transition-transform duration-300" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+      </span>
+     </span>
+    </div>
+   </a>
+   {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+  {% endif %}
+
+  {% if service_section_show_calculator %}
+  {% include 'includes/calculator_section.html' %}
+  {% endif %}
+ </div>
+</section>
