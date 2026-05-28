@@ -105,6 +105,21 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', openModal);
     });
 
+    document.querySelectorAll('a[href="#contact"], a[href$="#contact"]').forEach((link) => {
+      if (
+        link.classList.contains('nav-link') ||
+        link.classList.contains('mob-nav-link') ||
+        link.closest('.site-footer') ||
+        link.closest('.contact-section')
+      ) {
+        return;
+      }
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    });
+
     const callbackOpenBtn = document.getElementById('callback-open');
     if (callbackOpenBtn) callbackOpenBtn.addEventListener('click', openModal);
 
@@ -117,7 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     modal.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', closeModal));
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal || e.target.classList.contains('cb-modal__backdrop')) closeModal();
+    });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
   }
 

@@ -23,6 +23,7 @@ from .models import (
     BeforeAfterItem,
     BlogSection,
     BlogPost,
+    SitePage,
 )
 
 
@@ -209,15 +210,8 @@ def _service_cards_grid_mode(cards):
 
 
 def _service_cards_dense_order(cards):
-    """Только внутренние страницы: порядок для dense; список шлифовки не трогаем — порядок из админки."""
-    if not cards:
-        return []
-    seq = list(cards)
-
-    def is_wideish(c):
-        return (getattr(c, "home_layout", None) or "").strip() in ("wide", "last")
-
-    return [c for c in seq if not is_wideish(c)] + [c for c in seq if is_wideish(c)]
+    """Внутренние страницы: сохраняем порядок из админки, чтобы wide-карточки собирали ритм как на шлифовке."""
+    return list(cards or [])
 
 
 def services_processor(request):
@@ -745,10 +739,21 @@ def _before_after_defaults():
 
 
 def before_after_processor(request):
+    page_key = (request.path or "/").strip("/") or "home"
     try:
         section = BeforeAfterSection.load()
-        items = list(
-            BeforeAfterItem.objects.filter(is_active=True).order_by("sort_order", "pk")
+        page = SitePage.objects.filter(page_key=page_key, is_active=True).first()
+        page_items = []
+        if page:
+            page_items = list(
+                BeforeAfterItem.objects.filter(page=page, is_active=True).order_by(
+                    "sort_order", "pk"
+                )
+            )
+        items = page_items or list(
+            BeforeAfterItem.objects.filter(page__isnull=True, is_active=True).order_by(
+                "sort_order", "pk"
+            )
         )
         items = [i for i in items if i.is_ready]
     except OperationalError:

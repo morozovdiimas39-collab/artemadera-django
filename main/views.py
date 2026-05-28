@@ -33,8 +33,7 @@ def _handle_contact_post(request, base_path):
                 )
             except Exception:
                 pass
-        anchor = "quiz" if request.POST.get("from_block") == "calculator" else "contact"
-        return redirect(f"{base_path}?sent=1#{anchor}")
+        return redirect(f"{base_path}?sent=1")
     except OperationalError:
         return None
 
@@ -71,8 +70,8 @@ def shlifovka(request):
                     except Exception:
                         pass
                 if request.POST.get("from_block") == "measure":
-                    return redirect("/shlifovka?sent=1&from=measure#zamer")
-                return redirect("/shlifovka?sent=1#contact")
+                    return redirect("/shlifovka?sent=1&from=measure")
+                return redirect("/shlifovka?sent=1")
             except OperationalError:
                 pass
     contact_form_sent = False

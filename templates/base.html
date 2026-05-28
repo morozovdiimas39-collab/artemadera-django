@@ -302,6 +302,29 @@
   margin-right: auto !important;
   width: max-content;
  }
+ /* Нижний край фото: маска растворяет картинку+оверлей в фон #1c120c секции */
+ .page-hero > .absolute.inset-0.bg-cover {
+  -webkit-mask-image: linear-gradient(
+   to bottom,
+   #000 0%,
+   #000 max(0%, calc(100% - clamp(6.5rem, 26vmin, 14rem))),
+   rgba(0, 0, 0, 0.88) calc(100% - clamp(3.25rem, 12vmin, 6rem)),
+   rgba(0, 0, 0, 0.45) calc(100% - clamp(1.5rem, 5vmin, 2.5rem)),
+   transparent 100%
+  );
+  mask-image: linear-gradient(
+   to bottom,
+   #000 0%,
+   #000 max(0%, calc(100% - clamp(6.5rem, 26vmin, 14rem))),
+   rgba(0, 0, 0, 0.88) calc(100% - clamp(3.25rem, 12vmin, 6rem)),
+   rgba(0, 0, 0, 0.45) calc(100% - clamp(1.5rem, 5vmin, 2.5rem)),
+   transparent 100%
+  );
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+ }
  /* Вертикальный зазор между первым экраном и следующим блоком (section сразу после hero) */
  .page-hero + section {
   margin-top: clamp(2.25rem, 6vw, 4.5rem);
@@ -627,12 +650,12 @@
  .hq-options.hq-options--3col {
   grid-template-columns: 1fr;
  }
- @media (min-width: 640px) and (max-width: 1199px) {
+ @media (min-width: 640px) and (max-width: 1279px) {
   .hq-options.hq-options--3col {
    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
  }
- @media (min-width: 1200px) {
+ @media (min-width: 1280px) {
   .hq-options.hq-options--3col {
    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1087,6 +1110,11 @@
  @media (min-width: 640px) {
   #shlifovka-services .shlifovka-service-cta {
    font-size: 1.1rem;
+  }
+ }
+ @media (min-width: 1024px) {
+  .site-service-card--last {
+   grid-column: 3 / span 8 !important;
   }
  }
  /* Отступ калькулятора после сетки услуг (классы mt-28+ не в сборке Tailwind) */
@@ -2951,28 +2979,42 @@
  }
 
  /*
-  * Квиз #quiz — мобильная вёрстка (в конце файла: максимальный приоритет).
-  * Специфичность section#quiz перебивает конфликты с Tailwind/старым кэшем.
+  * Квиз #quiz — правки сетки (в конце файла). Не снимаем max-width у .container/.hq-card
+  * на планшетах/ноутбуках — иначе блок тянется на всю ширину экрана.
   */
  section#quiz.hq-section {
   overflow-x: clip;
  }
- section#quiz.hq-section .container {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  padding-left: max(1rem, env(safe-area-inset-left, 0px));
-  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+ @media (max-width: 767px) {
+  section#quiz.hq-section .container {
+   width: 100%;
+   box-sizing: border-box;
+   padding-left: max(1rem, env(safe-area-inset-left, 0px));
+   padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  }
  }
- section#quiz.hq-section .hq-card,
+ section#quiz.hq-section .hq-card {
+  max-width: min(1060px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+ }
  section#quiz.hq-section .hq-card__body,
  section#quiz.hq-section #home-quiz {
   min-width: 0;
-  max-width: 100%;
   box-sizing: border-box;
+ }
+ section#quiz.hq-section #home-quiz {
+  flex: 1 1 auto;
  }
  section#quiz.hq-section .hq-card__body {
   overflow-x: clip;
+ }
+ section#quiz.hq-section .hq-step {
+  flex: 1 1 auto;
+  min-height: 0;
+ }
+ section#quiz.hq-section .hq-step__footer {
+  margin-top: auto !important;
  }
  section#quiz.hq-section .hq-options {
   display: grid !important;
@@ -2980,16 +3022,16 @@
   min-width: 0 !important;
   box-sizing: border-box !important;
  }
- /* Шаг 1: только одна колонка на телефонах */
+ /* Шаг 1: 1 колонка на телефоне, 2 — до широкого экрана, 3 — только когда хватает места */
  section#quiz.hq-section .hq-options.hq-options--3col {
   grid-template-columns: 1fr !important;
  }
- @media (min-width: 640px) {
+ @media (min-width: 640px) and (max-width: 1279px) {
   section#quiz.hq-section .hq-options.hq-options--3col {
    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
  }
- @media (min-width: 1200px) {
+ @media (min-width: 1280px) {
   section#quiz.hq-section .hq-options.hq-options--3col {
    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
@@ -3155,7 +3197,7 @@
   <h3 class="cb-modal__title">Обратный звонок</h3>
   <p class="cb-modal__sub">Оставьте номер — перезвоним в течение 15 минут</p>
 
-  <form class="cb-modal__form" method="post" action="/#contact">
+  <form class="cb-modal__form" method="post" action="{{ request.path }}">
    {% csrf_token %}
    <input type="hidden" name="form_type" value="contact"/>
    <input type="hidden" name="from_block" value="callback_modal"/>
@@ -3189,6 +3231,6 @@
  </div>
 </div>
  
- <script src="{% static 'js/main.js' %}?v=11"></script>
+ <script src="{% static 'js/main.js' %}?v=12"></script>
  </body>
 </html>

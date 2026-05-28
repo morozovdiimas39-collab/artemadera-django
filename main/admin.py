@@ -118,9 +118,9 @@ class SitePageAdmin(ModelAdmin):
                     ),
                     "description": (
                         "Тексты шапки блока карточек. На главной — при включённом «Показывать блок услуг». "
-                        "На странице «Шлифовка» (/shlifovka) — над сеткой; в сетку попадают только услуги из "
-                        "таблицы «Услуги на странице» ниже (порядок — колонка «Порядок»). Если таблица пуста, "
-                        "на сайте показывается запасной набор карточек вида шлифовки."
+                        "На внутренних страницах — над сеткой в стиле страницы «Шлифовка»; в сетку попадают "
+                        "только услуги из таблицы «Услуги на странице» ниже (порядок — колонка «Порядок»). "
+                        "Если таблица пуста, страница использует свой старый статичный блок."
                     ),
                 },
             ),
@@ -808,8 +808,10 @@ class BeforeAfterSectionAdmin(ModelAdmin):
 
 @admin.register(BeforeAfterItem)
 class BeforeAfterItemAdmin(ModelAdmin):
-    list_display = ("title", "sort_order", "is_active")
+    list_display = ("title", "page", "sort_order", "is_active")
     list_editable = ("sort_order", "is_active")
+    list_filter = ("page", "is_active")
+    search_fields = ("title", "page__title", "page__page_key")
     ordering = ("sort_order", "pk")
     formfield_overrides = {
         models.ImageField: {
@@ -819,7 +821,16 @@ class BeforeAfterItemAdmin(ModelAdmin):
         },
     }
     fieldsets = (
-        (None, {"fields": ("title", "sort_order", "is_active")}),
+        (
+            None,
+            {
+                "fields": ("title", "page", "sort_order", "is_active"),
+                "description": (
+                    "Выберите страницу услуги, если это сравнение должно показываться только там. "
+                    "Оставьте поле пустым для общего блока на всех страницах."
+                ),
+            },
+        ),
         (
             "Фото для слайдера на сайте",
             {

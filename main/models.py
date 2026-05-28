@@ -1132,6 +1132,15 @@ class BeforeAfterSection(models.Model):
 
 
 class BeforeAfterItem(models.Model):
+    page = models.ForeignKey(
+        SitePage,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="before_after_items",
+        verbose_name="Страница услуги",
+        help_text="Пусто — показывать как общий пример на всех страницах.",
+    )
     title = models.CharField(max_length=200, verbose_name="Подпись")
     before_image = models.ImageField(
         upload_to="before_after/", blank=True, null=True, verbose_name="Фото «До»"
