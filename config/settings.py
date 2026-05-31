@@ -65,7 +65,9 @@ SECRET_KEY = 'django-insecure-1goiny6m8_ispgx=gabm+g9a50aq$)rkuwgtkd%qr+*p^xh^ip
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
+# Хосты запроса (Host header). На проде после смены домена: git pull + restart gunicorn.
+# Дополнительно без деплоя: переменная DJANGO_ALLOWED_HOSTS=foo.ru,bar.ru (через запятую).
+_BASE_ALLOWED_HOSTS = [
     "artemadera.su",
     "www.artemadera.su",
     "artemadera.ru",
@@ -73,6 +75,12 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
 ]
+_extra_allowed = (os.environ.get("DJANGO_ALLOWED_HOSTS") or "").strip()
+if _extra_allowed:
+    _from_env = [h.strip() for h in _extra_allowed.split(",") if h.strip()]
+    ALLOWED_HOSTS = list(dict.fromkeys(_BASE_ALLOWED_HOSTS + _from_env))
+else:
+    ALLOWED_HOSTS = list(_BASE_ALLOWED_HOSTS)
 
 
 # Application definition
