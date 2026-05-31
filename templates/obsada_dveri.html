@@ -62,53 +62,14 @@
    </div>
   </div>
  </div>
- <a href="{% if page_service_cards %}#page-services{% else %}#dveri-services{% endif %}" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше">
+ <a href="{% if page_service_cards %}#page-services{% else %}#quiz{% endif %}" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше">
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
  </a>
 </section>
 
 {% include 'includes/page_services_section.html' %}
 
-<section id="dveri-services" class="py-20 lg:py-28" style="background-color:#1c120c">
- <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="text-center max-w-2xl mx-auto mb-14">
-   <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 text-xs font-bold tracking-wider uppercase" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d">ЧТО ВХОДИТ</span>
-   <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
-    Комплектация <span class="text-amber-500">дверной обсады</span>
-   </h2>
-  </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Боковые стойки</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Скользящие в пазу бревна стойки с компенсационным зазором сверху 7–10 см.</p>
-   </div>
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M5 9h14"/><path d="M5 15h14"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Вершник</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Горизонтальная верхняя перемычка — фиксирует геометрию проёма и несёт нагрузку.</p>
-   </div>
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M3 20h18"/><path d="M5 20V10l7-7 7 7v10"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Порог / подоконник</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Нижняя горизонтальная часть с защитой от влаги и проникновения холода снизу.</p>
-   </div>
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M12 2v3"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Наличники и отделка</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">По желанию изготавливаем и монтируем наличники — оформляем проём под ключ.</p>
-   </div>
-  </div>
- </div>
-</section>
+{% include 'includes/page_calculator_section.html' %}
 
 {% include 'includes/portfolio_section.html' %}
 {% include 'includes/work_process_section.html' %}

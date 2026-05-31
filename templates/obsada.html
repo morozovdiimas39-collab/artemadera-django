@@ -61,54 +61,14 @@
    </div>
   </div>
  </div>
- <a href="{% if page_service_cards %}#page-services{% else %}#obsada-services{% endif %}" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше по странице">
+ <a href="{% if page_service_cards %}#page-services{% else %}#quiz{% endif %}" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше по странице">
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
  </a>
 </section>
 
 {% include 'includes/page_services_section.html' %}
 
-<section id="obsada-services" class="py-20 lg:py-28" style="background-color:#1c120c">
- <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="text-center max-w-2xl mx-auto mb-14">
-   <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 text-xs font-bold tracking-wider uppercase" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d">ВИДЫ ОБСАДЫ</span>
-   <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
-    Что мы <span class="text-amber-500">делаем</span>
-   </h2>
-   <p class="text-gray-400 text-base leading-relaxed">Изготавливаем и монтируем обсаду для всех типов проёмов в деревянных домах.</p>
-  </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-   <a href="/obsada/okna" class="block p-6 rounded-2xl transition-all hover:scale-[1.02]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Обсада окон →</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">П-образная или Т-образная обсада под деревянные и пластиковые окна. Компенсация усадки 5–8 см.</p>
-   </a>
-   <a href="/obsada/dveri" class="block p-6 rounded-2xl transition-all hover:scale-[1.02]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/><path d="M2 20h20"/><path d="M14 12v.01"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Обсада дверей →</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Обсада входных и межкомнатных дверей. Порог, вершник и боковины — полный комплект.</p>
-   </a>
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M3 12h18"/><path d="M3 12a9 9 0 0 1 9-9"/><path d="M21 12a9 9 0 0 1-9 9"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Обсада арок</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Скруглённые проёмы и арки — изготавливаем по индивидуальным размерам в нашем производстве.</p>
-   </div>
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Обсада под ключ</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Изготовление + монтаж по всему дому. Работаем с новыми домами и в рамках реконструкции.</p>
-   </div>
-  </div>
- </div>
-</section>
+{% include 'includes/page_calculator_section.html' %}
 
 {% include 'includes/portfolio_section.html' %}
 

@@ -1,3 +1,9 @@
+# Собранная статика (admin, unfold, collectstatic) — на сервере генерируется при деплое
+staticfiles/
+
+.venv/
+venv/
+
 node_modules/
 .next/
 build/

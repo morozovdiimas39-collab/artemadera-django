@@ -61,52 +61,14 @@
    </div>
   </div>
  </div>
- <a href="{% if page_service_cards %}#page-services{% else %}#konsyerzh-content{% endif %}" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше">
+ <a href="{% if page_service_cards %}#page-services{% else %}#quiz{% endif %}" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше">
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
  </a>
 </section>
 
 {% include 'includes/page_services_section.html' %}
 
-<section id="konsyerzh-content" class="py-20 lg:py-28" style="background-color:#1c120c">
- <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="text-center max-w-2xl mx-auto mb-14">
-   <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 text-xs font-bold tracking-wider uppercase" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d">ФИНИШ</span>
-   <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
-    Зачем нужна <span class="text-amber-500">консьержная шлифовка</span>
-   </h2>
-  </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Перед покраской</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Убираем микронеровности после черновой шлифовки — лак и масло ложатся ровно, без просветов.</p>
-   </div>
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400"><path d="m15 12-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0-.83.83-2.17.83-3 0L3 12"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Пропитка и масла</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Открываем поры контролируемо — состав впитывается глубже, срок службы покрытия выше.</p>
-   </div>
-   <div class="p-6 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-    <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2)">
-     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-    </div>
-    <h3 class="text-white font-bold text-base mb-2">Контроль качества</h3>
-    <p class="text-gray-400 text-sm leading-relaxed">Освещение под углом, тактильная проверка — поверхность должна быть однородной на всей площади.</p>
-   </div>
-  </div>
- </div>
-</section>
-
-<section class="py-16 lg:py-20 bg-[#1c120c] border-t border-white/5">
- <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-  {% include 'includes/calculator_section.html' %}
- </div>
-</section>
+{% include 'includes/page_calculator_section.html' %}
 
 {% include 'includes/portfolio_section.html' %}
 {% include 'includes/work_process_section.html' %}

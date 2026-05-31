@@ -24,6 +24,11 @@ PATH_CALCULATOR_SLUG = {
     "/otdelka/shlifovka/ocilindrovannogo-brevna": "shlifovka",
     "/otdelka/shlifovka/konsyerzhnaya": "shlifovka",
     "/otdelka/shlifovka/bani-i-sauny": "shlifovka",
+    "/otdelochnye-raboty": "pokraska",
+    "/proizvodstvo": "obsada",
+    "/proizvodstvo/besedki": "obsada",
+    "/proizvodstvo/falshbalki": "obsada",
+    "/proizvodstvo/plintusy": "obsada",
 }
 
 
@@ -170,9 +175,6 @@ def build_calculator_context(request, slug=None):
                     continue
                 profiles_json[p.slug] = _build_profile_payload(p, p_options)
 
-        path = request.path.rstrip("/") or "/"
-        embedded_paths = {"/", "/shlifovka"}
-
         return {
             "calculator_profile": profile,
             "calculator_config": config,
@@ -184,9 +186,7 @@ def build_calculator_context(request, slug=None):
             "calculator_initial_total": _format_rub(initial_total),
             "calculator_service_choices": service_choices,
             "calculator_profiles_json": json.dumps(profiles_json, ensure_ascii=False),
-            "calculator_show_standalone": (
-                path in PATH_CALCULATOR_SLUG and path not in embedded_paths
-            ),
+            "calculator_show_standalone": False,
         }
     except OperationalError:
         return _legacy_context()

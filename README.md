@@ -19,3 +19,13 @@ View your app in AI Studio: https://ai.studio/apps/31b6820c-83a7-423c-92ba-81388
 3. Run the app:
    `npm run dev`
 # artemadera-django
+
+## Деплой (статика и админка)
+
+При `DEBUG=False` Django **не** отдаёт CSS/JS админки сам. В проекте включён **WhiteNoise** и задан `STATIC_ROOT`. На каждом деплое после установки зависимостей выполните:
+
+```bash
+python manage.py collectstatic --noinput
+```
+
+Иначе страница `/admin/` будет без стилей (Unfold и стандартная админка лежат в пакетах и попадают в ответ только через собранные файлы в `staticfiles/`).
