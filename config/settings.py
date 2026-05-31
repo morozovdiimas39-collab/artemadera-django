@@ -65,7 +65,14 @@ SECRET_KEY = 'django-insecure-1goiny6m8_ispgx=gabm+g9a50aq$)rkuwgtkd%qr+*p^xh^ip
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["artemadera.su", "www.artemadera.su", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "artemadera.su",
+    "www.artemadera.su",
+    "artemadera.ru",
+    "www.artemadera.ru",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
