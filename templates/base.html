@@ -1137,6 +1137,16 @@
    padding-bottom: 2.5rem;
   }
  }
+ .portfolio-section--home {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+ }
+ @media (min-width: 1024px) {
+  .portfolio-section--home {
+   padding-top: 5rem;
+   padding-bottom: 5rem;
+  }
+ }
  .portfolio-cases-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1147,6 +1157,22 @@
  }
  @media (min-width: 1024px) {
   .portfolio-cases-grid { grid-template-columns: repeat(3, 1fr); }
+ }
+ .portfolio-cases-grid--home {
+  grid-template-columns: 1fr;
+  grid-auto-flow: dense;
+  gap: 0.85rem;
+ }
+ @media (min-width: 640px) {
+  .portfolio-cases-grid--home {
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+ }
+ @media (min-width: 1024px) {
+  .portfolio-cases-grid--home {
+   grid-template-columns: repeat(3, minmax(0, 1fr));
+   gap: 1rem;
+  }
  }
  .portfolio-case-card {
   display: flex;
@@ -1161,6 +1187,20 @@
   cursor: pointer;
   transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
  }
+ .portfolio-case-card.is-hidden {
+  display: none;
+ }
+ .portfolio-case-card--photo {
+  position: relative;
+  border-radius: 1rem;
+  background: #0f0a07;
+  min-height: 16rem;
+ }
+ @media (min-width: 1024px) {
+  .portfolio-case-card--photo {
+   min-height: 22rem;
+  }
+ }
  .portfolio-case-card:hover,
  .portfolio-case-card.is-active {
   border-color: rgba(245,158,11,0.45);
@@ -1172,6 +1212,11 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #0f0a07;
+ }
+ .portfolio-case-card--photo .portfolio-case-card-media {
+  flex: 1;
+  aspect-ratio: auto;
+  min-height: inherit;
  }
  .portfolio-case-card-img {
   width: 100%;
@@ -1189,12 +1234,43 @@
   background: linear-gradient(180deg, transparent 35%, rgba(28,18,12,0.85) 100%);
   pointer-events: none;
  }
+ .portfolio-case-card--photo .portfolio-case-card-overlay {
+  background: linear-gradient(180deg, rgba(15,10,7,0.08) 0%, rgba(15,10,7,0.12) 45%, rgba(15,10,7,0.82) 100%);
+  opacity: 0.72;
+  transition: opacity 0.25s ease;
+ }
+ .portfolio-case-card--photo:hover .portfolio-case-card-overlay,
+ .portfolio-case-card--photo.is-active .portfolio-case-card-overlay {
+  opacity: 1;
+ }
+ .portfolio-photo-count {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(15,10,7,0.66);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+ }
  .portfolio-case-card-body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.45rem;
   padding: 1rem 1.1rem 1.15rem;
+ }
+ .portfolio-case-card--photo .portfolio-case-card-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 1rem;
+  gap: 0.35rem;
  }
  .portfolio-case-tag {
   display: inline-block;
@@ -1224,6 +1300,10 @@
   font-weight: 700;
   line-height: 1.3;
  }
+ .portfolio-case-card--photo .portfolio-case-card-title {
+  font-size: 1rem;
+  text-shadow: 0 1px 16px rgba(0,0,0,0.45);
+ }
  .portfolio-case-card-summary {
   color: #fff;
   font-size: 0.85rem;
@@ -1240,8 +1320,37 @@
   font-size: 0.85rem;
   font-weight: 700;
  }
+ .portfolio-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+ }
+ .portfolio-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(245,158,11,0.35);
+  background: rgba(245,158,11,0.12);
+  color: #fcd34d;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+ }
+ .portfolio-more-btn:hover {
+  background: rgba(245,158,11,0.2);
+  border-color: rgba(245,158,11,0.55);
+  color: #fff;
+ }
+ .portfolio-more-btn[hidden] {
+  display: none;
+ }
  .portfolio-detail {
   margin-top: 1.5rem;
+  grid-column: 1 / -1;
  }
  .portfolio-detail-pane {
   animation: portfolioDetailIn 0.35s ease;
@@ -1280,11 +1389,17 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
  }
+ .portfolio-detail-layout--media-only {
+  display: block;
+ }
  @media (min-width: 1024px) {
   .portfolio-detail-layout {
    grid-template-columns: 1.15fr 0.85fr;
    gap: 2rem;
    align-items: start;
+  }
+  .portfolio-detail-layout--media-only {
+   display: block;
   }
  }
  .portfolio-detail-gallery {
@@ -3223,7 +3338,20 @@
   </div>
  </div>
 </div>
- 
- <script src="{% static 'js/main.js' %}?v=12"></script>
+
+ <!-- Успешная заявка (калькулятор, квиз, контакты, модалка — после AJAX) -->
+ <div id="lead-success-modal" class="cb-modal" aria-hidden="true">
+  <div class="cb-modal__backdrop lead-modal-close"></div>
+  <div class="cb-modal__card">
+   <button type="button" class="cb-modal__close lead-modal-close" aria-label="Закрыть">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+   </button>
+   <h3 class="cb-modal__title">Заявка отправлена</h3>
+   <p class="cb-modal__sub">Перезвоним в течение 30 минут</p>
+   <button type="button" class="cb-modal__btn lead-modal-close">Понятно</button>
+  </div>
+ </div>
+
+ <script src="{% static 'js/main.js' %}?v=17"></script>
  </body>
 </html>

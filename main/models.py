@@ -563,7 +563,13 @@ class PortfolioProject(models.Model):
         (HOUSE_OTHER, "Другое"),
     ]
 
-    title = models.CharField(max_length=200, verbose_name="Название кейса")
+    title = models.CharField(
+        max_length=200,
+        blank=True,
+        default="",
+        verbose_name="Название (необязательно)",
+        help_text="Можно оставить пустым: на сайте будет показано только фото.",
+    )
     summary = models.CharField(
         max_length=300,
         blank=True,
@@ -612,7 +618,31 @@ class PortfolioProject(models.Model):
         ordering = ["sort_order", "pk"]
 
     def __str__(self):
-        return self.title
+        return self.display_title
+
+    @property
+    def display_title(self):
+        title = (self.title or "").strip()
+        if title:
+            return title
+        cover = self.cover_item()
+        if cover and getattr(cover, "caption", ""):
+            return cover.caption.strip()
+        return f"Работа #{self.pk or ''}".strip()
+
+    @property
+    def has_text_content(self):
+        return any(
+            [
+                (self.title or "").strip(),
+                (self.summary or "").strip(),
+                (self.description or "").strip(),
+                (self.location or "").strip(),
+                (self.house_type or "").strip(),
+                (self.work_types or "").strip(),
+                self.has_before_after,
+            ]
+        )
 
     @property
     def house_type_label(self):
@@ -631,7 +661,15 @@ class PortfolioProject(models.Model):
         return bool(self.image) or bool(self.static_image)
 
     def get_gallery_items(self):
-        photos = list(self.photos.filter(is_active=True).order_by("sort_order", "pk"))
+        if hasattr(self, "_prefetched_objects_cache") and "photos" in self._prefetched_objects_cache:
+            photos = [
+                photo
+                for photo in self._prefetched_objects_cache["photos"]
+                if photo.is_active
+            ]
+            photos.sort(key=lambda photo: (photo.sort_order, photo.pk or 0))
+        else:
+            photos = list(self.photos.filter(is_active=True).order_by("sort_order", "pk"))
         if photos:
             return photos
         if self.has_legacy_cover:
@@ -1007,9 +1045,29 @@ class LeadEmailSettings(models.Model):
         verbose_name="Email для уведомлений",
         help_text=(
             "Один или несколько адресов — через запятую или с новой строки. "
-            "Пока поле пустое, письма не отправляются. Настройка SMTP — в переменных окружения сервера."
+            "Пока поле пустое, письма не отправляются."
         ),
     )
+    smtp_login = models.EmailField(
+        blank=True,
+        verbose_name="Логин SMTP",
+        help_text="Например morozov.diimas39@yandex.ru. Если пусто — берётся EMAIL_HOST_USER из окружения.",
+    )
+    smtp_password = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Пароль приложения SMTP",
+        help_text="Пароль приложения из Яндекс ID. Хранится в базе как обычная строка.",
+    )
+    smtp_host = models.CharField(
+        max_length=120,
+        blank=True,
+        default="smtp.yandex.ru",
+        verbose_name="SMTP host",
+    )
+    smtp_port = models.PositiveIntegerField(default=587, verbose_name="SMTP port")
+    smtp_use_tls = models.BooleanField(default=True, verbose_name="TLS")
+    smtp_use_ssl = models.BooleanField(default=False, verbose_name="SSL")
 
     class Meta:
         verbose_name = "Уведомления о заявках (email)"
@@ -1032,6 +1090,17 @@ class LeadEmailSettings(models.Model):
 
 
 class ContactLead(models.Model):
+    DIRECT_STATUS_IN_PROGRESS = "IN_PROGRESS"
+    DIRECT_STATUS_PAID = "PAID"
+    DIRECT_STATUS_CANCELLED = "CANCELLED"
+    DIRECT_STATUS_SPAM = "SPAM"
+    DIRECT_STATUS_CHOICES = [
+        (DIRECT_STATUS_IN_PROGRESS, "Целевой"),
+        (DIRECT_STATUS_PAID, "Оплачен"),
+        (DIRECT_STATUS_CANCELLED, "Нецелевой"),
+        (DIRECT_STATUS_SPAM, "Спам"),
+    ]
+
     name = models.CharField(max_length=120, verbose_name="Имя")
     phone = models.CharField(max_length=32, verbose_name="Телефон")
     message = models.TextField(blank=True, verbose_name="Сообщение")
@@ -1040,6 +1109,18 @@ class ContactLead(models.Model):
         blank=True,
         verbose_name="ClientID Метрики (_ym_uid)",
         help_text="Числовой идентификатор для офлайн-конверсий в Директе; можно передавать из формы скрытым полем.",
+    )
+    direct_status = models.CharField(
+        max_length=16,
+        choices=DIRECT_STATUS_CHOICES,
+        default=DIRECT_STATUS_IN_PROGRESS,
+        verbose_name="Статус для CSV Директа",
+        help_text="Меняется из письма кнопками: целевой, нецелевой, спам, оплачен.",
+    )
+    direct_status_updated_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Статус CSV обновлён",
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата")
 

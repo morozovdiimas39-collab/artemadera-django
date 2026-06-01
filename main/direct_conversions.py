@@ -50,6 +50,17 @@ REVENUE_OPEN = 300
 REVENUE_WON = 15000
 
 
+def _lead_status_revenue(lead: ContactLead) -> tuple[str, int]:
+    status = (getattr(lead, "direct_status", "") or ContactLead.DIRECT_STATUS_IN_PROGRESS).strip()
+    if status == ContactLead.DIRECT_STATUS_PAID:
+        return "PAID", REVENUE_WON
+    if status == ContactLead.DIRECT_STATUS_CANCELLED:
+        return "CANCELLED", 0
+    if status == ContactLead.DIRECT_STATUS_SPAM:
+        return "SPAM", 0
+    return "IN_PROGRESS", REVENUE_OPEN
+
+
 def _normalize_phone(phone: str) -> str:
     """Телефон: только цифры, код страны, 11 знаков с 7 для РФ."""
     if not phone:
@@ -90,6 +101,11 @@ def _format_direct_datetime(dt) -> str:
 
 
 def _deal_status_revenue(deal: CrmDeal) -> tuple[str, int]:
+    if getattr(deal, "site_lead_id", None):
+        lead_status = (getattr(deal.site_lead, "direct_status", "") or "").strip()
+        if lead_status and lead_status != ContactLead.DIRECT_STATUS_IN_PROGRESS:
+            return _lead_status_revenue(deal.site_lead)
+
     st = deal.stage.stage_type
     if st == CrmStage.TYPE_WON:
         return "PAID", REVENUE_WON
@@ -171,8 +187,8 @@ def _iter_rows() -> Iterator[list[Any]]:
         if not ym and not phone:
             continue
 
-        revenue_val = REVENUE_OPEN
-        revenue = f"{float(revenue_val):.1f}"
+        order_status, revenue_val = _lead_status_revenue(lead)
+        revenue = f"{float(revenue_val):.1f}" if revenue_val else ""
 
         yield [
             _format_direct_datetime(dt),
@@ -183,7 +199,7 @@ def _iter_rows() -> Iterator[list[Any]]:
             phone,
             "",
             _phone_md5(phone),
-            "IN_PROGRESS",
+            order_status,
             revenue,
             "",
         ]

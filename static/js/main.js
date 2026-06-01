@@ -138,6 +138,91 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
   }
 
+  // --- 4b. Успешная заявка (все формы с form_type=contact — AJAX, без перезагрузки) ---
+  const leadSuccessModal = document.getElementById('lead-success-modal');
+  const closeLeadSuccess = () => {
+    if (!leadSuccessModal) return;
+    leadSuccessModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+  };
+  const openLeadSuccess = () => {
+    if (!leadSuccessModal) return;
+    document.getElementById('callback-modal')?.classList.remove('is-open');
+    leadSuccessModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  };
+  if (leadSuccessModal) {
+    leadSuccessModal.querySelectorAll('.lead-modal-close').forEach((btn) => {
+      btn.addEventListener('click', closeLeadSuccess);
+    });
+    leadSuccessModal.addEventListener('click', (e) => {
+      if (e.target === leadSuccessModal || e.target.classList.contains('cb-modal__backdrop')) {
+        closeLeadSuccess();
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && leadSuccessModal.classList.contains('is-open')) closeLeadSuccess();
+    });
+  }
+
+  document.addEventListener('submit', async (e) => {
+    const form = e.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    if (!form.querySelector('input[name="form_type"][value="contact"]')) return;
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+    const fd = new FormData(form);
+    let postPath = form.getAttribute('action') || window.location.pathname;
+    if (postPath) {
+      try {
+        const u = new URL(postPath, window.location.origin);
+        postPath = u.pathname + u.search;
+      } catch {
+        postPath = window.location.pathname;
+      }
+    } else {
+      postPath = window.location.pathname;
+    }
+    const csrf = form.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
+    if (submitBtn) submitBtn.disabled = true;
+    try {
+      const res = await fetch(postPath, {
+        method: 'POST',
+        body: fd,
+        credentials: 'same-origin',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          ...(csrf ? { 'X-CSRFToken': csrf } : {}),
+        },
+      });
+      const ct = res.headers.get('content-type') || '';
+      if (res.ok && ct.includes('application/json')) {
+        const data = await res.json();
+        if (data.ok) {
+          form.reset();
+          openLeadSuccess();
+        }
+      } else if (res.status === 400 && ct.includes('application/json')) {
+        try {
+          const err = await res.json();
+          if (err.error === 'phone_required') {
+            window.alert('Укажите номер телефона.');
+          } else {
+            window.alert('Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.');
+          }
+        } catch {
+          window.alert('Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.');
+        }
+      } else {
+        window.alert('Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.');
+      }
+    } catch {
+      window.alert('Ошибка сети. Проверьте подключение и попробуйте снова.');
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+
   // --- 5. Online calculator (per-page profiles + home service picker) ---
   const calcRoot = document.getElementById('quiz');
   if (calcRoot) {
@@ -405,8 +490,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const portfolioDetail = document.getElementById('portfolio-detail');
   if (portfolioDetail) {
     const triggers = document.querySelectorAll('[data-portfolio-case-trigger]');
+    const portfolioItems = document.querySelectorAll('[data-portfolio-item]');
+    const showMoreBtn = document.querySelector('[data-portfolio-show-more]');
     const panes = portfolioDetail.querySelectorAll('[data-portfolio-case-panel]');
     let activeId = null;
+    const revealStep = 9;
 
     const setGallerySlide = (pane, index) => {
       const slides = pane.querySelectorAll('.portfolio-detail-slide');
@@ -462,6 +550,10 @@ document.addEventListener('DOMContentLoaded', () => {
         closeDetail();
         return;
       }
+      const activeTrigger = Array.from(triggers).find((btn) => btn.getAttribute('data-portfolio-case-trigger') === id);
+      if (activeTrigger) {
+        activeTrigger.insertAdjacentElement('afterend', portfolioDetail);
+      }
       activeId = id;
       portfolioDetail.hidden = false;
       panes.forEach((pane) => {
@@ -489,6 +581,23 @@ document.addEventListener('DOMContentLoaded', () => {
     portfolioDetail.querySelectorAll('[data-portfolio-case-close]').forEach((btn) => {
       btn.addEventListener('click', closeDetail);
     });
+
+    const updateShowMore = () => {
+      if (!showMoreBtn) return;
+      const hiddenCount = Array.from(portfolioItems).filter((item) => item.classList.contains('is-hidden')).length;
+      showMoreBtn.hidden = hiddenCount === 0;
+    };
+
+    if (showMoreBtn) {
+      showMoreBtn.addEventListener('click', () => {
+        const hiddenItems = Array.from(portfolioItems).filter((item) => item.classList.contains('is-hidden'));
+        hiddenItems.slice(0, revealStep).forEach((item) => {
+          item.classList.remove('is-hidden');
+        });
+        updateShowMore();
+      });
+      updateShowMore();
+    }
   }
 
   // --- Home Quiz ---

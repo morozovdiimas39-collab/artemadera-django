@@ -12,6 +12,7 @@ from main.views import (
     blog_list,
     generic_service,
     index,
+    lead_direct_status,
     pokraska,
     shlifovka,
     teplyy_shov,
@@ -20,6 +21,7 @@ from main.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("export/yandex-direct-conversions.csv", direct_conversions_csv_view, name="direct_conversions_csv"),
+    path("lead-status/<path:token>/", lead_direct_status, name="lead_direct_status"),
     path("", index, name="index"),
     path("shlifovka", shlifovka, name="shlifovka"),
     path("pokraska", pokraska, name="pokraska"),

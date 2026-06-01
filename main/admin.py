@@ -459,7 +459,7 @@ class PortfolioProjectImageInline(admin.TabularInline):
 
 @admin.register(PortfolioProject)
 class PortfolioProjectAdmin(ModelAdmin):
-    list_display = ("preview", "title", "house_type", "location", "photos_count", "sort_order", "is_active")
+    list_display = ("preview", "admin_title", "photos_count", "house_type", "location", "sort_order", "is_active")
     list_editable = ("sort_order", "is_active")
     list_filter = ("is_active", "house_type", "has_before_after")
     search_fields = ("title", "summary", "location", "work_types")
@@ -473,25 +473,37 @@ class PortfolioProjectAdmin(ModelAdmin):
                 {
                     "fields": (
                         "title",
+                        ("sort_order", "is_active"),
+                    ),
+                    "description": (
+                        "Минимум для публикации — одна фотография в таблице ниже. "
+                        "Название, описание, тип дома, область и услуги можно не заполнять."
+                    ),
+                },
+            ),
+            (
+                "Подписи и детали",
+                {
+                    "fields": (
                         "summary",
                         "description",
                         ("house_type", "location"),
                         "work_types",
                         "has_before_after",
-                        ("sort_order", "is_active"),
                     ),
+                    "classes": ("collapse",),
                 },
             ),
         ]
         if obj:
             blocks.append(
                 (
-                    "Фото на сайте",
+                    "Фото проекта",
                     {
                         "fields": ("gallery_preview",),
                         "description": (
-                            "Обложка на карточке — фото с № 0. Остальные по порядку в галерее. "
-                            "Добавьте строки в таблице ниже, загрузите файл, нажмите «Сохранить»."
+                            "Фото с № 0 будет обложкой. Если есть только одно фото — этого достаточно. "
+                            "Если фото несколько, они появятся в галерее проекта."
                         ),
                     },
                 )
@@ -559,6 +571,10 @@ class PortfolioProjectAdmin(ModelAdmin):
     def photos_count(self, obj):
         n = obj.photos.filter(is_active=True).count()
         return n or "—"
+
+    @admin.display(description="Проект")
+    def admin_title(self, obj):
+        return obj.display_title
 
     @admin.display(description="Превью")
     def preview(self, obj):
@@ -919,10 +935,10 @@ class BlogPostAdmin(ModelAdmin):
 
 @admin.register(ContactLead)
 class ContactLeadAdmin(ModelAdmin):
-    list_display = ("name", "phone", "ym_client_id", "crm_deal_link", "created_at")
-    list_filter = ("created_at",)
+    list_display = ("name", "phone", "direct_status", "ym_client_id", "crm_deal_link", "created_at")
+    list_filter = ("direct_status", "created_at")
     search_fields = ("name", "phone", "message", "ym_client_id")
-    readonly_fields = ("created_at", "crm_deal_link")
+    readonly_fields = ("created_at", "direct_status_updated_at", "crm_deal_link")
     ordering = ("-created_at",)
     actions = ("create_crm_deals",)
 
@@ -953,18 +969,73 @@ class ContactLeadAdmin(ModelAdmin):
 class LeadEmailSettingsAdmin(ModelAdmin):
     fieldsets = (
         (
-            None,
+            "Получатели",
             {
-                "fields": ("notification_emails",),
+                "fields": ("notification_emails", "test_email_link"),
                 "description": (
                     "Сюда — адреса, куда уходит письмо при каждой новой заявке "
-                    "(все формы с кнопкой отправки на сайте). Пустое поле = письма не шлются. "
-                    "Отправитель: DEFAULT_FROM_EMAIL из настроек сервера; при DEBUG по умолчанию "
-                    "письма выводятся в консоль (EMAIL_BACKEND=console), без SMTP."
+                    "(все формы с кнопкой отправки на сайте). Пустое поле = письма не шлются."
+                ),
+            },
+        ),
+        (
+            "SMTP",
+            {
+                "fields": (
+                    "smtp_login",
+                    "smtp_password",
+                    ("smtp_host", "smtp_port"),
+                    ("smtp_use_tls", "smtp_use_ssl"),
+                ),
+                "description": (
+                    "Для Яндекса: логин почты + пароль приложения. Обычно host=smtp.yandex.ru, "
+                    "port=587, TLS включён. Если 587 закрыт на хостинге — port=465, TLS выключить, SSL включить."
                 ),
             },
         ),
     )
+    readonly_fields = ("test_email_link",)
+
+    def get_urls(self):
+        from django.urls import path
+
+        urls = super().get_urls()
+        custom = [
+            path(
+                "<path:object_id>/test-email/",
+                self.admin_site.admin_view(self.test_email_view),
+                name="main_leademailsettings_test_email",
+            ),
+        ]
+        return custom + urls
+
+    @admin.display(description="Проверка")
+    def test_email_link(self, obj):
+        if not obj or not obj.pk:
+            return "Сначала сохраните настройки."
+        from django.urls import reverse
+
+        url = reverse("admin:main_leademailsettings_test_email", args=[obj.pk])
+        return format_html(
+            '<a class="button" href="{}" style="display:inline-flex;align-items:center;'
+            'padding:8px 12px;border-radius:6px;background:#f59e0b;color:#111827;'
+            'font-weight:700;text-decoration:none">Отправить тестовое письмо</a>',
+            url,
+        )
+
+    def test_email_view(self, request, object_id):
+        from django.contrib import messages
+        from django.shortcuts import redirect
+        from django.urls import reverse
+        from .lead_notifications import send_lead_test_email
+
+        try:
+            sent_count = send_lead_test_email()
+        except Exception as exc:
+            messages.error(request, f"Тестовое письмо не отправлено: {type(exc).__name__}: {exc}")
+        else:
+            messages.success(request, f"Тестовое письмо отправлено. SMTP вернуло: {sent_count}.")
+        return redirect(reverse("admin:main_leademailsettings_change", args=[object_id]))
 
     def changelist_view(self, request, extra_context=None):
         """Одна запись — сразу открываем форму с полем, а не пустой список."""

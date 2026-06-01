@@ -218,21 +218,48 @@ DJANGO_VITE_DEV_SERVER_HOST = '127.0.0.1'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Почта: заявки с сайта (send_mail), админка «Уведомления о заявках (email)»
-DEFAULT_FROM_EMAIL = (os.environ.get("DEFAULT_FROM_EMAIL") or "").strip() or "noreply@artemadera.su"
+SITE_BASE_URL = (
+    os.environ.get("SITE_BASE_URL")
+    or os.environ.get("DEFAULT_SITE_URL")
+    or "https://artemadera.su"
+).strip().rstrip("/")
+EMAIL_HOST_USER = (
+    os.environ.get("EMAIL_HOST_USER")
+    or os.environ.get("EMAIL_LOGIN")
+    or os.environ.get("SMTP_LOGIN")
+    or ""
+).strip()
+EMAIL_HOST_PASSWORD = (
+    os.environ.get("EMAIL_HOST_PASSWORD")
+    or os.environ.get("EMAIL_PASSWORD")
+    or os.environ.get("SMTP_PASSWORD")
+    or ""
+).strip()
+DEFAULT_FROM_EMAIL = (
+    os.environ.get("DEFAULT_FROM_EMAIL")
+    or EMAIL_HOST_USER
+    or "noreply@artemadera.su"
+).strip()
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
-EMAIL_BACKEND = os.environ.get(
-    "EMAIL_BACKEND",
-    "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend",
+
+_email_backend_env = (os.environ.get("EMAIL_BACKEND") or "").strip()
+EMAIL_BACKEND = _email_backend_env or (
+    "django.core.mail.backends.smtp.EmailBackend"
+    if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD
+    else ("django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend")
 )
 EMAIL_HOST = (os.environ.get("EMAIL_HOST") or "").strip()
+if not EMAIL_HOST and EMAIL_HOST_USER.lower().endswith(("@yandex.ru", "@ya.ru", "@yandex.com")):
+    EMAIL_HOST = "smtp.yandex.ru"
 _raw_port = (os.environ.get("EMAIL_PORT") or "587").strip()
 try:
     EMAIL_PORT = int(_raw_port) if _raw_port else 587
 except ValueError:
     EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "1").strip() not in ("0", "false", "False")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "0").strip() in ("1", "true", "True")
+if EMAIL_USE_SSL:
+    EMAIL_USE_TLS = False
 # SMTP без хоста на проде ничего не отправит — падаем в консоль, чтобы письма были видны в логах процесса
 if "smtp" in str(EMAIL_BACKEND).lower() and not EMAIL_HOST:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

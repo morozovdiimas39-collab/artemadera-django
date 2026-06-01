@@ -1,6 +1,6 @@
 {% load static %}
 {% if portfolio_section.is_visible and portfolio_projects %}
-<section id="portfolio" class="portfolio-section relative overflow-hidden bg-[#1c120c]">
+<section id="portfolio" class="portfolio-section{% if request.path == '/' %} portfolio-section--home{% endif %} relative overflow-hidden bg-[#1c120c]">
  <div class="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none">
   <div class="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] bg-amber-500/10 blur-[120px] rounded-full opacity-80"></div>
   <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 blur-[100px] rounded-full"></div>
@@ -21,36 +21,77 @@
    </p>
   </div>
 
-  <div class="portfolio-cases-grid">
+  <div class="portfolio-cases-grid{% if request.path == '/' %} portfolio-cases-grid--home{% endif %}">
    {% for project in portfolio_projects %}
    {% with cover=project.cover_item %}
    <button
     type="button"
-    class="portfolio-case-card"
+    class="portfolio-case-card{% if request.path == '/' %} portfolio-case-card--photo{% endif %}{% if forloop.counter > 9 %} is-hidden{% endif %}"
     data-portfolio-case-trigger="{{ project.pk }}"
+    data-portfolio-item
     aria-expanded="false"
     aria-controls="portfolio-case-panel-{{ project.pk }}"
+    aria-label="Открыть проект {{ project.display_title }}"
    >
     <span class="portfolio-case-card-media">
      {% if cover %}
-     {% include 'includes/portfolio_photo.html' with photo=cover alt=project.title class='portfolio-case-card-img' %}
+     {% include 'includes/portfolio_photo.html' with photo=cover alt=project.display_title class='portfolio-case-card-img' %}
      {% endif %}
      <span class="portfolio-case-card-overlay"></span>
+     {% if request.path == '/' and project.get_gallery_items|length > 1 %}
+     <span class="portfolio-photo-count">{{ project.get_gallery_items|length }} фото</span>
+     {% endif %}
     </span>
+    {% if request.path == '/' %}
+    {% if project.has_text_content %}
     <span class="portfolio-case-card-body">
      {% if project.house_type_label %}
      <span class="portfolio-case-tag">{{ project.house_type_label }}</span>
      {% endif %}
+     {% if project.title %}
      <span class="portfolio-case-card-title">{{ project.title }}</span>
+     {% elif cover.caption %}
+     <span class="portfolio-case-card-title">{{ cover.caption }}</span>
+     {% endif %}
      {% if project.summary %}
      <span class="portfolio-case-card-summary">{{ project.summary }}</span>
      {% endif %}
-     <span class="portfolio-case-card-cta">Смотреть кейс</span>
+     {% if project.location %}
+     <span class="portfolio-case-card-summary">{{ project.location }}</span>
+     {% endif %}
     </span>
+    {% endif %}
+    {% else %}
+    {% if project.has_text_content or cover.caption %}
+    <span class="portfolio-case-card-body">
+     {% if project.house_type_label %}
+     <span class="portfolio-case-tag">{{ project.house_type_label }}</span>
+     {% endif %}
+     {% if project.title %}
+     <span class="portfolio-case-card-title">{{ project.title }}</span>
+     {% elif cover.caption %}
+     <span class="portfolio-case-card-title">{{ cover.caption }}</span>
+     {% endif %}
+     {% if project.summary %}
+     <span class="portfolio-case-card-summary">{{ project.summary }}</span>
+     {% endif %}
+     {% if project.has_text_content %}
+     <span class="portfolio-case-card-cta">Смотреть кейс</span>
+     {% endif %}
+    </span>
+    {% endif %}
+    {% endif %}
    </button>
    {% endwith %}
    {% endfor %}
   </div>
+  {% if portfolio_projects|length > 9 %}
+  <div class="portfolio-more-wrap">
+   <button type="button" class="portfolio-more-btn" data-portfolio-show-more>
+    Показать больше
+   </button>
+  </div>
+  {% endif %}
 
   <div id="portfolio-detail" class="portfolio-detail" hidden>
    {% for project in portfolio_projects %}
@@ -66,7 +107,7 @@
       Свернуть
      </button>
 
-     <div class="portfolio-detail-layout">
+     <div class="portfolio-detail-layout{% if request.path == '/' and not project.has_text_content %} portfolio-detail-layout--media-only{% endif %}">
       <div class="portfolio-detail-gallery" data-portfolio-gallery>
        {% with gallery=project.get_gallery_items %}
        {% for photo in gallery %}
@@ -91,6 +132,7 @@
        {% endwith %}
       </div>
 
+      {% if project.has_text_content %}
       <div class="portfolio-detail-content">
        <div class="portfolio-detail-tags">
         {% if project.house_type_label %}
@@ -103,7 +145,7 @@
         <span class="portfolio-case-tag portfolio-case-tag--ba">До / После</span>
         {% endif %}
        </div>
-       <h3 class="portfolio-detail-title">{{ project.title }}</h3>
+       <h3 class="portfolio-detail-title">{{ project.display_title }}</h3>
        {% if project.location %}
        <p class="portfolio-detail-location">{{ project.location }}</p>
        {% endif %}
@@ -113,6 +155,7 @@
        <p class="portfolio-detail-text">{{ project.summary }}</p>
        {% endif %}
       </div>
+      {% endif %}
      </div>
     </div>
    </article>

@@ -739,10 +739,11 @@ def _before_after_defaults():
 
 
 def before_after_processor(request):
-    page_key = (request.path or "/").strip("/") or "home"
+    # «До/после» везде как на главной: привязка к странице home, не к текущему URL.
+    before_after_page_key = "home"
     try:
         section = BeforeAfterSection.load()
-        page = SitePage.objects.filter(page_key=page_key, is_active=True).first()
+        page = SitePage.objects.filter(page_key=before_after_page_key, is_active=True).first()
         page_items = []
         if page:
             page_items = list(
