@@ -249,7 +249,7 @@ EMAIL_BACKEND = _email_backend_env or (
     else ("django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend")
 )
 EMAIL_HOST = (os.environ.get("EMAIL_HOST") or "").strip()
-if not EMAIL_HOST and EMAIL_HOST_USER.lower().endswith(("@yandex.ru", "@ya.ru", "@yandex.com")):
+if not EMAIL_HOST and EMAIL_HOST_USER:
     EMAIL_HOST = "smtp.yandex.ru"
 _raw_port = (os.environ.get("EMAIL_PORT") or "587").strip()
 try:
@@ -263,6 +263,13 @@ if EMAIL_USE_SSL:
 # SMTP без хоста на проде ничего не отправит — падаем в консоль, чтобы письма были видны в логах процесса
 if "smtp" in str(EMAIL_BACKEND).lower() and not EMAIL_HOST:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+LEAD_NOTIFICATION_EMAILS = (
+    os.environ.get("LEAD_NOTIFICATION_EMAILS")
+    or os.environ.get("NOTIFICATION_EMAILS")
+    or EMAIL_HOST_USER
+    or ""
+).strip()
 
 UNFOLD = {
     "SITE_TITLE": "ArteMadera",

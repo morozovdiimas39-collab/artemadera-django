@@ -60,7 +60,7 @@ def lead_status_action_url(lead, status: str) -> str:
 def _smtp_host_for_login(login: str, host: str) -> str:
     if host:
         return host
-    if login.lower().endswith(("@yandex.ru", "@ya.ru", "@yandex.com")):
+    if login:
         return "smtp.yandex.ru"
     return ""
 
@@ -205,7 +205,11 @@ def send_lead_created_email(lead) -> None:
         logger.exception("LeadEmailSettings.load failed — миграции применены? (main.0030)")
         return
 
-    raw = (cfg.notification_emails or "").strip()
+    raw = (
+        (cfg.notification_emails or "").strip()
+        or (getattr(settings, "LEAD_NOTIFICATION_EMAILS", "") or "").strip()
+        or (getattr(settings, "EMAIL_HOST_USER", "") or "").strip()
+    )
     if not raw:
         logger.warning(
             "Письмо о заявке #%s не отправлено: в админке «Почта: уведомления о заявках» "
