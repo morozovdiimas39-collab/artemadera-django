@@ -66,12 +66,14 @@ def _smtp_host_for_login(login: str, host: str) -> str:
 
 
 def _email_connection_from_config(cfg):
-    login = (getattr(cfg, "smtp_login", "") or "").strip() or (getattr(settings, "EMAIL_HOST_USER", "") or "").strip()
-    password = (getattr(cfg, "smtp_password", "") or "").strip() or (getattr(settings, "EMAIL_HOST_PASSWORD", "") or "").strip()
-    host = _smtp_host_for_login(login, (getattr(cfg, "smtp_host", "") or getattr(settings, "EMAIL_HOST", "") or "").strip())
-    port = int(getattr(cfg, "smtp_port", None) or getattr(settings, "EMAIL_PORT", 587) or 587)
-    use_ssl = bool(getattr(cfg, "smtp_use_ssl", False) or getattr(settings, "EMAIL_USE_SSL", False))
-    use_tls = bool(getattr(cfg, "smtp_use_tls", True) if not use_ssl else False)
+    env_login = (getattr(settings, "EMAIL_HOST_USER", "") or "").strip()
+    env_password = (getattr(settings, "EMAIL_HOST_PASSWORD", "") or "").strip()
+    login = env_login or (getattr(cfg, "smtp_login", "") or "").strip()
+    password = env_password or (getattr(cfg, "smtp_password", "") or "").strip()
+    host = _smtp_host_for_login(login, (getattr(settings, "EMAIL_HOST", "") or getattr(cfg, "smtp_host", "") or "").strip())
+    port = int(getattr(settings, "EMAIL_PORT", None) or getattr(cfg, "smtp_port", 587) or 587)
+    use_ssl = bool(getattr(settings, "EMAIL_USE_SSL", False) or getattr(cfg, "smtp_use_ssl", False))
+    use_tls = bool(getattr(settings, "EMAIL_USE_TLS", True) if not use_ssl else False)
 
     if login and password and host:
         return (
@@ -205,11 +207,14 @@ def send_lead_created_email(lead) -> None:
         logger.exception("LeadEmailSettings.load failed — миграции применены? (main.0030)")
         return
 
-    raw = (
-        (cfg.notification_emails or "").strip()
-        or (getattr(settings, "LEAD_NOTIFICATION_EMAILS", "") or "").strip()
-        or (getattr(settings, "EMAIL_HOST_USER", "") or "").strip()
-    )
+    raw = "\n".join(
+        part
+        for part in (
+            (cfg.notification_emails or "").strip(),
+            (getattr(settings, "LEAD_NOTIFICATION_EMAILS", "") or "").strip(),
+        )
+        if part
+    ) or (getattr(settings, "EMAIL_HOST_USER", "") or "").strip()
     if not raw:
         logger.warning(
             "Письмо о заявке #%s не отправлено: в админке «Почта: уведомления о заявках» "
