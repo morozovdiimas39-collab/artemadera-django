@@ -115,7 +115,7 @@ class CrmDealAdmin(ModelAdmin):
     search_fields = ("title", "contact__name", "contact__phone", "description")
     autocomplete_fields = ("contact", "responsible", "source")
     filter_horizontal = ("tags",)
-    readonly_fields = ("created_at", "updated_at", "closed_at", "site_lead")
+    readonly_fields = ("created_at", "updated_at", "closed_at", "site_lead", "traffic_details")
     inlines = (CrmTaskInline, CrmActivityInline)
     fieldsets = (
         (
@@ -136,10 +136,39 @@ class CrmDealAdmin(ModelAdmin):
             },
         ),
         (
+            "Источник заявки",
+            {"fields": ("traffic_details",), "classes": ("collapse",)},
+        ),
+        (
             "Даты",
             {"fields": (("created_at", "updated_at", "closed_at"),), "classes": ("collapse",)},
         ),
     )
+
+    @admin.display(description="UTM и переход")
+    def traffic_details(self, obj):
+        lead = getattr(obj, "site_lead", None)
+        if not lead:
+            return "—"
+        rows = [
+            ("Страница заявки", lead.page_url),
+            ("Посадочная страница", lead.landing_page),
+            ("Referrer", lead.referrer),
+            ("utm_source", lead.utm_source),
+            ("utm_medium", lead.utm_medium),
+            ("utm_campaign", lead.utm_campaign),
+            ("utm_content", lead.utm_content),
+            ("utm_term", lead.utm_term),
+            ("yclid", lead.yclid),
+            ("gclid", lead.gclid),
+            ("fbclid", lead.fbclid),
+            ("ymclid", lead.ymclid),
+            ("ClientID Метрики", lead.ym_client_id),
+        ]
+        lines = [f"{label}: {value}" for label, value in rows if value]
+        if not lines:
+            return "—"
+        return format_html('<pre style="white-space:pre-wrap;margin:0">{}</pre>', "\n".join(lines))
 
     def get_urls(self):
         urls = super().get_urls()

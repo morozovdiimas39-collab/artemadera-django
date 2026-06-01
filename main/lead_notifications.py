@@ -124,6 +124,26 @@ def _build_email_bodies(lead) -> tuple[str, str]:
     ]
     if getattr(lead, "ym_client_id", None):
         text_lines.insert(4, f"ClientID Метрики: {lead.ym_client_id}")
+    traffic_lines = []
+    for label, attr in (
+        ("Страница заявки", "page_url"),
+        ("Посадочная страница", "landing_page"),
+        ("Referrer", "referrer"),
+        ("utm_source", "utm_source"),
+        ("utm_medium", "utm_medium"),
+        ("utm_campaign", "utm_campaign"),
+        ("utm_content", "utm_content"),
+        ("utm_term", "utm_term"),
+        ("yclid", "yclid"),
+        ("gclid", "gclid"),
+        ("fbclid", "fbclid"),
+        ("ymclid", "ymclid"),
+    ):
+        value = getattr(lead, attr, "") or ""
+        if value:
+            traffic_lines.append(f"{label}: {value}")
+    if traffic_lines:
+        text_lines.extend(["", "Источник заявки:", *traffic_lines])
 
     rows = [
         ("Имя", lead.name),
@@ -132,6 +152,23 @@ def _build_email_bodies(lead) -> tuple[str, str]:
     ]
     if getattr(lead, "ym_client_id", None):
         rows.append(("ClientID Метрики", lead.ym_client_id))
+    for label, attr in (
+        ("Страница заявки", "page_url"),
+        ("Посадочная страница", "landing_page"),
+        ("Referrer", "referrer"),
+        ("utm_source", "utm_source"),
+        ("utm_medium", "utm_medium"),
+        ("utm_campaign", "utm_campaign"),
+        ("utm_content", "utm_content"),
+        ("utm_term", "utm_term"),
+        ("yclid", "yclid"),
+        ("gclid", "gclid"),
+        ("fbclid", "fbclid"),
+        ("ymclid", "ymclid"),
+    ):
+        value = getattr(lead, attr, "") or ""
+        if value:
+            rows.append((label, value))
     rows.append(("Сообщение", lead.message or "—"))
 
     detail_rows = "".join(

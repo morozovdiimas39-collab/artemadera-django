@@ -53,6 +53,29 @@ class PageServiceLinkInline(admin.TabularInline):
     ordering = ("sort_order", "pk")
 
 
+class BeforeAfterItemInline(admin.TabularInline):
+    model = BeforeAfterItem
+    extra = 2
+    max_num = 2
+    fields = (
+        "title",
+        "before_image",
+        "after_image",
+        "before_static",
+        "after_static",
+        "sort_order",
+        "is_active",
+    )
+    ordering = ("sort_order", "pk")
+    formfield_overrides = {
+        models.ImageField: {
+            "widget": unfold_widgets.UnfoldAdminImageFieldWidget(
+                attrs={"accept": "image/*"},
+            ),
+        },
+    }
+
+
 @admin.register(SitePage)
 class SitePageAdmin(ModelAdmin):
     form = SitePageAdminForm
@@ -68,7 +91,7 @@ class SitePageAdmin(ModelAdmin):
     list_filter = ("is_active", "show_services_block")
     search_fields = ("title", "page_key")
     ordering = ("sort_order", "title")
-    inlines = (PageServiceLinkInline,)
+    inlines = (PageServiceLinkInline, BeforeAfterItemInline)
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -935,12 +958,29 @@ class BlogPostAdmin(ModelAdmin):
 
 @admin.register(ContactLead)
 class ContactLeadAdmin(ModelAdmin):
-    list_display = ("name", "phone", "direct_status", "ym_client_id", "crm_deal_link", "created_at")
+    list_display = ("name", "phone", "direct_status", "traffic_source", "ym_client_id", "crm_deal_link", "created_at")
     list_filter = ("direct_status", "created_at")
-    search_fields = ("name", "phone", "message", "ym_client_id")
+    search_fields = (
+        "name",
+        "phone",
+        "message",
+        "ym_client_id",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "yclid",
+        "gclid",
+        "page_url",
+        "landing_page",
+        "referrer",
+    )
     readonly_fields = ("created_at", "direct_status_updated_at", "crm_deal_link")
     ordering = ("-created_at",)
     actions = ("create_crm_deals",)
+
+    @admin.display(description="Источник")
+    def traffic_source(self, obj):
+        return obj.traffic_summary()
 
     @admin.display(description="CRM")
     def crm_deal_link(self, obj):

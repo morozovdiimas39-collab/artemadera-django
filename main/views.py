@@ -21,16 +21,20 @@ def _contact_post_message(request):
     """Текст заявки: квиз, калькулятор и обычные поля."""
     from_block = (request.POST.get("from_block") or "").strip()
     if from_block == "quiz":
-        svc = (request.POST.get("quiz_service") or "").strip()
-        house = (request.POST.get("quiz_house_type") or "").strip()
+        page = (request.POST.get("quiz_page") or "").strip()
+        svc = (request.POST.get("quiz_service_label") or request.POST.get("quiz_service") or "").strip()
+        house = (request.POST.get("quiz_house_label") or request.POST.get("quiz_house_type") or "").strip()
         area = (request.POST.get("quiz_area") or "").strip()
+        area_unit = (request.POST.get("quiz_area_unit") or "м²").strip()
         parts = []
+        if page:
+            parts.append(f"страница: {page}")
         if svc:
-            parts.append(f"услуга: {svc}")
+            parts.append(f"задача: {svc}")
         if house:
-            parts.append(f"тип дома: {house}")
+            parts.append(f"объект/деталь: {house}")
         if area:
-            parts.append(f"площадь: {area} м²")
+            parts.append(f"объём: {area} {area_unit}")
         return "Квиз. " + ("; ".join(parts) if parts else "")
     calc_slug = (request.POST.get("calculator_profile") or "").strip()
     if from_block == "calculator" and calc_slug:
@@ -38,6 +42,43 @@ def _contact_post_message(request):
         extra = f"Калькулятор: {calc_slug}"
         return f"{base}\n{extra}".strip() if base else extra
     return (request.POST.get("message") or "").strip()
+
+
+_LEAD_TRAFFIC_FIELDS = (
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+    "utm_term",
+    "yclid",
+    "gclid",
+    "fbclid",
+    "ymclid",
+    "ym_client_id",
+    "page_url",
+    "landing_page",
+    "referrer",
+)
+
+
+def _clean_lead_value(value, max_len=500):
+    return (value or "").strip()[:max_len]
+
+
+def _lead_traffic_kwargs(request):
+    """UTM и источники перехода: берём из формы, с fallback на текущий запрос."""
+    data = {}
+    for field in _LEAD_TRAFFIC_FIELDS:
+        limit = 32 if field == "ym_client_id" else 500 if field in ("page_url", "landing_page", "referrer") else 255
+        data[field] = _clean_lead_value(request.POST.get(field) or request.GET.get(field), limit)
+
+    if not data["page_url"]:
+        data["page_url"] = request.build_absolute_uri(request.get_full_path())[:500]
+    if not data["landing_page"]:
+        data["landing_page"] = data["page_url"]
+    if not data["referrer"]:
+        data["referrer"] = _clean_lead_value(request.META.get("HTTP_REFERER"), 500)
+    return data
 
 
 def _handle_contact_post(request, base_path):
@@ -56,6 +97,7 @@ def _handle_contact_post(request, base_path):
             name=(request.POST.get("name") or "").strip() or "—",
             phone=phone,
             message=_contact_post_message(request),
+            **_lead_traffic_kwargs(request),
         )
         if create_deal_from_site_lead:
             try:

@@ -1110,6 +1110,18 @@ class ContactLead(models.Model):
         verbose_name="ClientID Метрики (_ym_uid)",
         help_text="Числовой идентификатор для офлайн-конверсий в Директе; можно передавать из формы скрытым полем.",
     )
+    page_url = models.URLField(max_length=500, blank=True, verbose_name="Страница заявки")
+    landing_page = models.URLField(max_length=500, blank=True, verbose_name="Посадочная страница")
+    referrer = models.URLField(max_length=500, blank=True, verbose_name="Referrer")
+    utm_source = models.CharField(max_length=255, blank=True, verbose_name="UTM source")
+    utm_medium = models.CharField(max_length=255, blank=True, verbose_name="UTM medium")
+    utm_campaign = models.CharField(max_length=255, blank=True, verbose_name="UTM campaign")
+    utm_content = models.CharField(max_length=255, blank=True, verbose_name="UTM content")
+    utm_term = models.CharField(max_length=255, blank=True, verbose_name="UTM term")
+    yclid = models.CharField(max_length=255, blank=True, verbose_name="Yandex Click ID")
+    gclid = models.CharField(max_length=255, blank=True, verbose_name="Google Click ID")
+    fbclid = models.CharField(max_length=255, blank=True, verbose_name="Facebook Click ID")
+    ymclid = models.CharField(max_length=255, blank=True, verbose_name="Yandex Metrika Click ID")
     direct_status = models.CharField(
         max_length=16,
         choices=DIRECT_STATUS_CHOICES,
@@ -1131,6 +1143,19 @@ class ContactLead(models.Model):
 
     def __str__(self):
         return f"{self.name} — {self.phone}"
+
+    def traffic_summary(self):
+        if self.utm_source:
+            return self.utm_source
+        if self.yclid:
+            return "Яндекс"
+        if self.gclid:
+            return "Google"
+        if self.fbclid:
+            return "Facebook"
+        if self.referrer:
+            return self.referrer[:80]
+        return "—"
 
 
 class FaqSection(models.Model):

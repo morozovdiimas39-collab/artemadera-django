@@ -739,11 +739,15 @@ def _before_after_defaults():
 
 
 def before_after_processor(request):
-    # «До/после» везде как на главной: привязка к странице home, не к текущему URL.
-    before_after_page_key = "home"
+    from .site_page import normalize_page_key
+
+    before_after_page_key = normalize_page_key(request.path)
     try:
         section = BeforeAfterSection.load()
-        page = SitePage.objects.filter(page_key=before_after_page_key, is_active=True).first()
+        page = SitePage.objects.filter(
+            page_key=before_after_page_key, is_active=True
+        ).first()
+        home_page = SitePage.objects.filter(page_key="home", is_active=True).first()
         page_items = []
         if page:
             page_items = list(
@@ -751,12 +755,19 @@ def before_after_processor(request):
                     "sort_order", "pk"
                 )
             )
-        items = page_items or list(
+        home_items = []
+        if home_page and before_after_page_key == "home":
+            home_items = list(
+                BeforeAfterItem.objects.filter(page=home_page, is_active=True).order_by(
+                    "sort_order", "pk"
+                )
+            )
+        items = page_items or home_items or list(
             BeforeAfterItem.objects.filter(page__isnull=True, is_active=True).order_by(
                 "sort_order", "pk"
             )
         )
-        items = [i for i in items if i.is_ready]
+        items = [i for i in items if i.is_ready][:2]
     except OperationalError:
         return _before_after_defaults()
 

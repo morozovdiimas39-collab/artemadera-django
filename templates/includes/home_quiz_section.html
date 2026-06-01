@@ -17,13 +17,17 @@
 
    <!-- Левая панель — квиз -->
    <div class="hq-card__body">
-    <form id="home-quiz" method="post" action="/#quiz">
+    <form id="home-quiz" class="hq-form" method="post" action="/#quiz" data-area-unit="м²" data-area-min="20" data-area-max="600">
      {% csrf_token %}
      <input type="hidden" name="form_type" value="contact"/>
      <input type="hidden" name="from_block" value="quiz"/>
+     <input type="hidden" name="quiz_page" value="Главная"/>
      <input type="hidden" name="quiz_service" id="hq-input-service" value=""/>
+     <input type="hidden" name="quiz_service_label" id="hq-input-service-label" value=""/>
      <input type="hidden" name="quiz_house_type" id="hq-input-house" value=""/>
+     <input type="hidden" name="quiz_house_label" id="hq-input-house-label" value=""/>
      <input type="hidden" name="quiz_area" id="hq-input-area" value="100"/>
+     <input type="hidden" name="quiz_area_unit" id="hq-input-area-unit" value="м²"/>
 
      <!-- Прогресс -->
      <div class="hq-progress">

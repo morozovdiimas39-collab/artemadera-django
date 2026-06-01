@@ -130,6 +130,30 @@ def log_stage_change(deal, old_stage, new_stage, *, user=None, note=""):
     )
 
 
+def _lead_traffic_lines(lead) -> list[str]:
+    labels = [
+        ("page_url", "Страница заявки"),
+        ("landing_page", "Посадочная страница"),
+        ("referrer", "Referrer"),
+        ("utm_source", "utm_source"),
+        ("utm_medium", "utm_medium"),
+        ("utm_campaign", "utm_campaign"),
+        ("utm_content", "utm_content"),
+        ("utm_term", "utm_term"),
+        ("yclid", "yclid"),
+        ("gclid", "gclid"),
+        ("fbclid", "fbclid"),
+        ("ymclid", "ymclid"),
+        ("ym_client_id", "ClientID Метрики"),
+    ]
+    lines = []
+    for attr, label in labels:
+        value = (getattr(lead, attr, "") or "").strip()
+        if value:
+            lines.append(f"{label}: {value}")
+    return lines
+
+
 @transaction.atomic
 def create_deal_from_site_lead(lead, *, from_block: str | None = None, user=None) -> CrmDeal:
     """Создаёт контакт и сделку из заявки ContactLead."""
@@ -153,6 +177,9 @@ def create_deal_from_site_lead(lead, *, from_block: str | None = None, user=None
         description_parts.append(lead.message)
     if from_block:
         description_parts.append(f"Блок формы: {from_block}")
+    traffic_lines = _lead_traffic_lines(lead)
+    if traffic_lines:
+        description_parts.append("Источник заявки:\n" + "\n".join(traffic_lines))
 
     deal = CrmDeal.objects.create(
         title=title,
@@ -165,11 +192,12 @@ def create_deal_from_site_lead(lead, *, from_block: str | None = None, user=None
         responsible=user,
     )
 
-    if lead.message:
+    activity_body = "\n\n".join(part for part in [lead.message, "\n".join(traffic_lines)] if part)
+    if activity_body:
         CrmActivity.objects.create(
             deal=deal,
             activity_type=CrmActivity.TYPE_NOTE,
-            body=lead.message,
+            body=activity_body,
             author=user,
         )
 

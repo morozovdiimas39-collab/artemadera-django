@@ -1,4 +1,81 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // --- 0. Lead attribution: UTM / click ids stay with the visitor across pages ---
+  const trackingKeys = [
+    'utm_source',
+    'utm_medium',
+    'utm_campaign',
+    'utm_content',
+    'utm_term',
+    'yclid',
+    'gclid',
+    'fbclid',
+    'ymclid',
+  ];
+  const trackingStorageKey = 'artemadera_lead_tracking';
+  const readTracking = () => {
+    try {
+      return JSON.parse(window.localStorage.getItem(trackingStorageKey) || '{}') || {};
+    } catch {
+      return {};
+    }
+  };
+  const writeTracking = (data) => {
+    try {
+      window.localStorage.setItem(trackingStorageKey, JSON.stringify(data));
+    } catch {
+      // Storage may be disabled; forms still submit current-page fallback values.
+    }
+  };
+  const readCookie = (name) => {
+    const escaped = name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&');
+    const match = document.cookie.match(new RegExp('(?:^|; )' + escaped + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : '';
+  };
+  const captureTracking = () => {
+    const params = new URLSearchParams(window.location.search);
+    const stored = readTracking();
+    let hasNewTraffic = false;
+    trackingKeys.forEach((key) => {
+      const value = params.get(key);
+      if (value) {
+        stored[key] = value;
+        hasNewTraffic = true;
+      }
+    });
+    if (hasNewTraffic || !stored.landing_page) {
+      stored.landing_page = window.location.href;
+    }
+    if (document.referrer && !stored.referrer) {
+      stored.referrer = document.referrer;
+    }
+    writeTracking(stored);
+    return stored;
+  };
+  captureTracking();
+  const setHiddenField = (form, name, value) => {
+    let input = form.querySelector(`input[name="${name}"]`);
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      form.appendChild(input);
+    }
+    input.value = value || '';
+  };
+  const fillLeadTrackingFields = (form) => {
+    const current = readTracking();
+    trackingKeys.forEach((key) => setHiddenField(form, key, current[key] || ''));
+    setHiddenField(form, 'page_url', window.location.href);
+    setHiddenField(form, 'landing_page', current.landing_page || window.location.href);
+    setHiddenField(form, 'referrer', current.referrer || document.referrer || '');
+    setHiddenField(form, 'ym_client_id', readCookie('_ym_uid') || current.ym_client_id || '');
+  };
+  document.querySelectorAll('form').forEach((form) => {
+    if (form.querySelector('input[name="form_type"][value="contact"]')) {
+      fillLeadTrackingFields(form);
+    }
+  });
+
   // --- 1. Dropdown "Услуги" ---
   const navServicesWrap = document.getElementById('nav-services-wrap');
   const servicesDropdown = document.getElementById('services-dropdown');
@@ -50,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Legacy anchor map
   const anchorMap = {
     'Калькулятор': '#quiz',
+    'Квиз': '#quiz',
     'Этапы': '#process',
     'До/После': '#comparison',
     'Почему мы': '#whyus',
@@ -171,6 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!form.querySelector('input[name="form_type"][value="contact"]')) return;
     e.preventDefault();
     const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+    fillLeadTrackingFields(form);
     const fd = new FormData(form);
     let postPath = form.getAttribute('action') || window.location.pathname;
     if (postPath) {
@@ -608,12 +687,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepLabel   = document.getElementById('hq-step-label');
     const stepPct     = document.getElementById('hq-step-pct');
     const inputService = document.getElementById('hq-input-service');
+    const inputServiceLabel = document.getElementById('hq-input-service-label');
     const inputHouse   = document.getElementById('hq-input-house');
+    const inputHouseLabel = document.getElementById('hq-input-house-label');
     const inputArea    = document.getElementById('hq-input-area');
     const quizImage    = document.getElementById('hq-quiz-image');
     const summary      = document.getElementById('hq-summary');
     const slider       = document.getElementById('hq-area-slider');
     const numInput     = document.getElementById('hq-area-num');
+    const areaUnit     = quizForm.dataset.areaUnit || 'м²';
+    const areaMin      = parseInt(quizForm.dataset.areaMin || (numInput && numInput.min) || '20', 10);
+    const areaMax      = parseInt(quizForm.dataset.areaMax || (numInput && numInput.max) || '600', 10);
 
     const TOTAL = 3;
     const LABELS = {
@@ -622,7 +706,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let currentStep = 1;
-    const answers = { service: '', house: '', area: '100' };
+    const answers = {
+      service: '',
+      serviceLabel: '',
+      house: '',
+      houseLabel: '',
+      area: inputArea ? inputArea.value : (numInput ? numInput.value : '100'),
+    };
 
     const setProgress = (n) => {
       const pct = Math.round((n / (TOTAL + 1)) * 100);
@@ -645,9 +735,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateSummary = () => {
       if (!summary) return;
       const pills = [];
-      if (answers.service) pills.push(LABELS.service[answers.service] || answers.service);
-      if (answers.house)   pills.push(LABELS.house[answers.house] || answers.house);
-      if (answers.area)    pills.push(answers.area + ' м²');
+      if (answers.service) pills.push(answers.serviceLabel || LABELS.service[answers.service] || answers.service);
+      if (answers.house)   pills.push(answers.houseLabel || LABELS.house[answers.house] || answers.house);
+      if (answers.area)    pills.push(answers.area + ' ' + areaUnit);
       summary.innerHTML = pills.map((p) => `<span class="hq-summary__pill">${p}</span>`).join('');
     };
 
@@ -656,17 +746,25 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', () => {
         const s = parseInt(btn.dataset.step, 10);
         const val = btn.dataset.value;
+        const label = btn.dataset.label || (btn.querySelector('span:last-child') ? btn.querySelector('span:last-child').textContent.trim() : btn.textContent.trim());
         quizForm.querySelectorAll(`.hq-option[data-step="${s}"]`).forEach((b) => b.classList.remove('hq-option--active'));
         btn.classList.add('hq-option--active');
         if (s === 1) {
           answers.service = val;
+          answers.serviceLabel = label;
           if (inputService) inputService.value = val;
+          if (inputServiceLabel) inputServiceLabel.value = label;
           if (quizImage) {
             const src = quizImage.getAttribute('data-img-' + val) || quizImage.getAttribute('data-img-default');
             if (src) quizImage.src = src;
           }
         }
-        if (s === 2) { answers.house   = val; if (inputHouse)   inputHouse.value   = val; }
+        if (s === 2) {
+          answers.house = val;
+          answers.houseLabel = label;
+          if (inputHouse) inputHouse.value = val;
+          if (inputHouseLabel) inputHouseLabel.value = label;
+        }
       });
     });
 
@@ -687,7 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (inputArea) inputArea.value = slider.value;
       };
       const syncNum = () => {
-        let v = Math.max(20, Math.min(600, parseInt(numInput.value, 10) || 20));
+        let v = Math.max(areaMin, Math.min(areaMax, parseInt(numInput.value, 10) || areaMin));
         numInput.value = v; slider.value = v;
         answers.area = String(v);
         if (inputArea) inputArea.value = String(v);
