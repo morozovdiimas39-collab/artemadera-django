@@ -238,11 +238,12 @@ def teplyy_shov(request):
 
 
 def generic_service(request, path):
-    redir = _handle_contact_post(request, f"/{path}")
+    normalized_path = (path or "").strip("/")
+    redir = _handle_contact_post(request, f"/{normalized_path}")
     if redir:
         return redir
     contact_form_sent = request.GET.get("sent") == "1"
-    template_name = path.replace("/", "_") + ".html"
+    template_name = normalized_path.replace("/", "_") + ".html"
     try:
         return render(request, template_name, {"contact_form_sent": contact_form_sent})
     except TemplateDoesNotExist:

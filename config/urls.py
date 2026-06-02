@@ -24,8 +24,12 @@ urlpatterns = [
     path("lead-status/<path:token>/", lead_direct_status, name="lead_direct_status"),
     path("", index, name="index"),
     path("shlifovka", shlifovka, name="shlifovka"),
+    path("shlifovka/", shlifovka),
     path("pokraska", pokraska, name="pokraska"),
+    path("pokraska/", pokraska),
     path("teplyy-shov", teplyy_shov, name="teplyy_shov"),
+    path("teplyy-shov/", teplyy_shov),
+    path("blog", blog_list),
     path("blog/", blog_list, name="blog_list"),
     path("blog/<slug:slug>/", blog_detail, name="blog_detail"),
 ]
