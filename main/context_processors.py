@@ -749,7 +749,7 @@ def before_after_processor(request):
         ).first()
         home_page = SitePage.objects.filter(page_key="home", is_active=True).first()
         page_items = []
-        if page:
+        if page and before_after_page_key != "shlifovka":
             page_items = list(
                 BeforeAfterItem.objects.filter(page=page, is_active=True).order_by(
                     "sort_order", "pk"
