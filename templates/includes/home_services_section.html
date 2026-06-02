@@ -28,11 +28,6 @@
     {% endif %}
     <div class="home-service-tile__overlay"></div>
     <div class="home-service-tile__body">
-     {% with tag=service.get_home_tag %}
-     {% if tag %}
-     <span class="home-service-tile__tag">{{ tag }}</span>
-     {% endif %}
-     {% endwith %}
      <h3 class="home-service-tile__title">{{ service.name }}</h3>
      {% if service.short_description %}
      <p class="home-service-tile__text">{{ service.short_description }}</p>

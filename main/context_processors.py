@@ -137,7 +137,7 @@ def _shlifovka_services_defaults():
             "link_url": "/otdelka/shlifovka/sruba",
             "static_image": "images/service-1.jpg",
             "home_layout": "wide",
-            "tag": "от 1 200 ₽/м²",
+            "tag": "",
         },
         {
             "name": "Шлифовка бруса",
@@ -147,7 +147,7 @@ def _shlifovka_services_defaults():
             "link_url": "/otdelka/shlifovka/brusa",
             "static_image": "images/service-2.jpg",
             "home_layout": "",
-            "tag": "от 1 100 ₽/м²",
+            "tag": "",
         },
         {
             "name": "Шлифовка оцилиндровки",
@@ -157,7 +157,7 @@ def _shlifovka_services_defaults():
             "link_url": "/otdelka/shlifovka/ocilindrovannogo-brevna",
             "static_image": "images/portfolio-1.jpg",
             "home_layout": "",
-            "tag": "от 1 150 ₽/м²",
+            "tag": "",
         },
         {
             "name": "Шлифовка лафета",
@@ -167,7 +167,7 @@ def _shlifovka_services_defaults():
             "link_url": "/otdelka/shlifovka/lafeta",
             "static_image": "images/portfolio-2.jpg",
             "home_layout": "wide",
-            "tag": "от 1 250 ₽/м²",
+            "tag": "",
         },
         {
             "name": "Консьержная шлифовка",
@@ -177,7 +177,7 @@ def _shlifovka_services_defaults():
             "link_url": "/otdelka/shlifovka/konsyerzhnaya",
             "static_image": "images/service-3.jpg",
             "home_layout": "half",
-            "tag": "от 800 ₽/м²",
+            "tag": "",
         },
         {
             "name": "Шлифовка бань и саун",
@@ -187,8 +187,8 @@ def _shlifovka_services_defaults():
             "link_url": "/otdelka/shlifovka/bani-i-sauny",
             "static_image": "images/portfolio-3.jpg",
             "home_layout": "half",
-            "tag": "от 900 ₽/м²",
-            "cta_label": "Рассчитать стоимость",
+            "tag": "",
+            "cta_label": "Получить консультацию",
         },
     ]
     return [_ShlifovkaFallbackCard(**{**r, "cta_label": r.get("cta_label", "")}) for r in rows]
@@ -902,8 +902,8 @@ def _page_quiz_for_page(page):
     page_label = title or "Страница услуги"
 
     data = {
-        "title": "Рассчитайте стоимость работ",
-        "subtitle": "Ответьте на 3 вопроса — перезвоним и сориентируем по цене",
+        "title": "Получите консультацию по работам",
+        "subtitle": "Ответьте на 3 вопроса — перезвоним и сориентируем по объёму работ",
         "page_label": page_label,
         "service_title": "Что нужно сделать?",
         "house_title": "Какой тип дома у вас?",

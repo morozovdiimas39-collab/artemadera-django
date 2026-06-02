@@ -11,7 +11,7 @@
      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
     </div>
     <h3 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 leading-tight">Онлайн-калькулятор</h3>
-    <p class="text-gray-400 text-base sm:text-lg font-light leading-relaxed mb-8">Узнайте примерную стоимость шлифовки. Точную смету рассчитаем после осмотра объекта.</p>
+    <p class="text-gray-400 text-base sm:text-lg font-light leading-relaxed mb-8">Оставьте параметры дома. Точную смету подготовим после осмотра объекта.</p>
     <ul class="space-y-4 w-full">
      <li class="flex items-start gap-3 text-sm">
       <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">✓</span>
@@ -74,11 +74,6 @@
      </div>
     </div>
 
-    <div class="flex items-center justify-between gap-4 py-5 px-5 rounded-2xl bg-white/[0.04] border border-white/10">
-     <span class="text-sm text-gray-400">Примерная сумма</span>
-     <span id="calc-total" class="text-3xl sm:text-4xl font-black text-amber-500 tabular-nums">{{ calculator_initial_total }}</span>
-    </div>
-
     {% if contact_form_sent %}
     <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-6 text-center" role="status">
      <p class="text-white font-bold mb-1">Заявка отправлена</p>
@@ -99,7 +94,7 @@
       class="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-amber-500 focus:bg-white/10 focus:outline-none text-white text-base font-semibold placeholder:text-gray-500 transition-all"
      />
      <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold text-base py-4 shadow-lg shadow-amber-900/25 transition-all">
-      Зафиксировать цену
+      Получить консультацию
      </button>
      <p class="text-center text-xs text-gray-500">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
     </form>

@@ -58,17 +58,12 @@
      <div class="absolute inset-0 bg-gradient-to-t from-[#1c120c]/95 via-[#1c120c]/50 to-[#1c120c]/20 group-hover:via-[#1c120c]/40 transition-colors duration-500"></div>
     </div>
     <div class="relative p-8 sm:p-10 h-full flex flex-col justify-end min-h-[360px]">
-     {% with tag=card.get_home_tag %}
-     {% if tag %}
-     <div class="absolute top-8 right-8 px-4 py-2 rounded-full bg-black/50 border border-white/10"><span class="text-amber-400 text-sm font-black">{{ tag }}</span></div>
-     {% endif %}
-     {% endwith %}
      <h3 class="text-2xl sm:text-3xl font-bold text-white mb-4 tracking-tight group-hover:text-amber-300 transition-colors">{{ card.name }}</h3>
      {% if card.short_description %}
      <p class="shlifovka-service-desc text-white mb-8 text-base leading-relaxed max-w-md">{{ card.short_description }}</p>
      {% endif %}
      <span class="shlifovka-service-cta inline-flex items-center gap-3 text-amber-400 group-hover:text-amber-300 w-fit">
-      {% if card.cta_label %}{{ card.cta_label }}{% else %}Узнать подробнее{% endif %}
+      Узнать подробнее
       <span class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center group-hover:bg-amber-500 group-hover:border-amber-500 group-hover:text-white transition-all duration-300">
        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-rotate-45 transition-transform duration-300" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
       </span>
@@ -90,17 +85,12 @@
      <div class="absolute inset-0 bg-gradient-to-t from-[#1c120c]/95 via-[#1c120c]/50 to-[#1c120c]/20 group-hover:via-[#1c120c]/40 transition-colors duration-500"></div>
     </div>
     <div class="relative p-8 sm:p-10 h-full flex flex-col justify-end min-h-[360px]">
-     {% with tag=card.get_home_tag %}
-     {% if tag %}
-     <div class="absolute top-8 right-8 px-4 py-2 rounded-full bg-black/50 border border-white/10"><span class="text-amber-400 text-sm font-black">{{ tag }}</span></div>
-     {% endif %}
-     {% endwith %}
      <h3 class="text-2xl sm:text-3xl font-bold text-white mb-4 tracking-tight group-hover:text-amber-300 transition-colors">{{ card.name }}</h3>
      {% if card.short_description %}
      <p class="shlifovka-service-desc text-white mb-8 text-base leading-relaxed max-w-md">{{ card.short_description }}</p>
      {% endif %}
      <span class="shlifovka-service-cta inline-flex items-center gap-3 text-amber-400 group-hover:text-amber-300 w-fit">
-      {% if card.cta_label %}{{ card.cta_label }}{% else %}Узнать подробнее{% endif %}
+      Узнать подробнее
       <span class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center group-hover:bg-amber-500 group-hover:border-amber-500 group-hover:text-white transition-all duration-300">
        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-rotate-45 transition-transform duration-300" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
       </span>
