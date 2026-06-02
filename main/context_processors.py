@@ -839,6 +839,213 @@ def blog_processor(request):
     return {"blog_section": section, "blog_posts": posts}
 
 
+def _quiz_option(value, label):
+    return SimpleNamespace(value=value, label=label)
+
+
+_QUIZ_HOUSE_OPTIONS = [
+    _quiz_option("srub", "Сруб (бревенчатый)"),
+    _quiz_option("brus", "Дом из бруса"),
+    _quiz_option("kleen", "Клееный брус"),
+    _quiz_option("ocil", "Оцилиндровка"),
+    _quiz_option("lafet", "Лафет"),
+    _quiz_option("banya", "Баня/сауна"),
+]
+
+_QUIZ_FINISH_OPTIONS = [
+    _quiz_option("facade", "Фасад"),
+    _quiz_option("inside", "Внутри дома"),
+    _quiz_option("full", "Внутри и снаружи"),
+    _quiz_option("bath", "Баня/сауна"),
+]
+
+_QUIZ_OPENING_OPTIONS = [
+    _quiz_option("windows", "Окна"),
+    _quiz_option("doors", "Двери"),
+    _quiz_option("windows-doors", "Окна и двери"),
+    _quiz_option("consult", "Нужна консультация"),
+]
+
+_QUIZ_PRODUCTION_OPTIONS = [
+    _quiz_option("plintus", "Плинтус"),
+    _quiz_option("falshbalka", "Фальшбалки"),
+    _quiz_option("besedka", "Беседка"),
+    _quiz_option("custom", "Нестандартное изделие"),
+]
+
+_QUIZ_STATIC_IMAGES = {
+    "shlifovka": "/media/pages/hero/137908e0-151b-425d-9233-b2af8fca286d.png",
+    "pokraska": "/media/pages/hero/23b84e30-5a9c-45b5-acca-0462e07d96e2.png",
+    "teplyy-shov": "/media/pages/hero/1548c512-16f1-44ac-ab5f-c0bcd0881ee2.png",
+    "obsada": "/media/home_quiz/окосячка_квиз.png",
+    "kryshi": "/media/home_quiz/22d51408-b9ec-4da9-86e0-b331453930c7.png",
+    "otdelka": "/media/pages/hero/181d5f3a-d444-4273-8649-fdb655ea1b49.png",
+    "proizvodstvo": "/media/pages/hero/a5d5006c-0a0b-4fa2-9ed9-3567a35bb325.png",
+}
+
+
+def _page_image_url(page, image_key):
+    from django.templatetags.static import static
+
+    hero = getattr(page, "hero_image", None)
+    if hero:
+        try:
+            return hero.url
+        except ValueError:
+            pass
+    return _QUIZ_STATIC_IMAGES.get(image_key) or static(_HOME_QUIZ_DEFAULT_STATIC)
+
+
+def _page_quiz_for_page(page):
+    page_key = (getattr(page, "page_key", "") or "").strip()
+    title = (getattr(page, "title", "") or "").strip()
+    page_label = title or "Страница услуги"
+
+    data = {
+        "title": "Рассчитайте стоимость работ",
+        "subtitle": "Ответьте на 3 вопроса — перезвоним и сориентируем по цене",
+        "page_label": page_label,
+        "service_title": "Что нужно сделать?",
+        "house_title": "Какой тип дома у вас?",
+        "area_title": "Площадь дома",
+        "area_unit": "м²",
+        "area_min": 20,
+        "area_max": 600,
+        "area_default": 100,
+        "area_step": 5,
+        "service_options": [_quiz_option(page_key or "service", page_label)],
+        "house_options": _QUIZ_HOUSE_OPTIONS,
+        "image_key": page_key,
+        "image_alt": page_label,
+    }
+
+    by_key = {
+        "shlifovka": {
+            "service_options": [
+                _quiz_option("shlifovka-sruba", "Шлифовка сруба"),
+                _quiz_option("shlifovka-brusa", "Шлифовка бруса"),
+                _quiz_option("shlifovka-ocil", "Шлифовка оцилиндровки"),
+                _quiz_option("shlifovka-lafet", "Шлифовка лафета"),
+                _quiz_option("shlifovka-bani", "Шлифовка бани/сауны"),
+                _quiz_option("shlifovka-consierge", "Консьержная шлифовка"),
+            ],
+            "image_key": "shlifovka",
+        },
+        "pokraska": {
+            "service_options": [
+                _quiz_option("pokraska-facade", "Покраска фасада"),
+                _quiz_option("pokraska-inside", "Покраска внутри дома"),
+                _quiz_option("pokraska-full", "Покраска под ключ"),
+                _quiz_option("pokraska-renew", "Обновить старое покрытие"),
+            ],
+            "image_key": "pokraska",
+        },
+        "teplyy-shov": {
+            "service_options": [
+                _quiz_option("teplyy-shov", "Тёплый шов"),
+                _quiz_option("germetizaciya", "Герметизация швов"),
+                _quiz_option("konopatka", "Конопатка"),
+                _quiz_option("repair-shov", "Ремонт старых швов"),
+            ],
+            "image_key": "teplyy-shov",
+        },
+        "obsada": {
+            "service_options": [
+                _quiz_option("obsada", "Обсада"),
+                _quiz_option("okosyachka", "Окосячка"),
+                _quiz_option("obsada-okna", "Обсада окон"),
+                _quiz_option("obsada-dveri", "Обсада дверей"),
+            ],
+            "house_title": "Какие проёмы нужны?",
+            "house_options": _QUIZ_OPENING_OPTIONS,
+            "area_title": "Количество проёмов",
+            "area_unit": "шт.",
+            "area_min": 1,
+            "area_max": 40,
+            "area_default": 6,
+            "area_step": 1,
+            "image_key": "obsada",
+        },
+        "kryshi": {
+            "service_options": [
+                _quiz_option("roof-new", "Новая кровля"),
+                _quiz_option("roof-repair", "Ремонт кровли"),
+                _quiz_option("roof-insulation", "Утепление"),
+                _quiz_option("roof-gutters", "Водосточная система"),
+            ],
+            "house_title": "Какой объект?",
+            "house_options": [
+                _quiz_option("house", "Дом"),
+                _quiz_option("bath", "Баня"),
+                _quiz_option("gazebo", "Беседка"),
+                _quiz_option("other", "Другое строение"),
+            ],
+            "area_title": "Площадь кровли",
+            "area_unit": "м²",
+            "area_min": 20,
+            "area_max": 500,
+            "area_default": 120,
+            "image_key": "kryshi",
+        },
+        "injeneriya": {
+            "service_options": [
+                _quiz_option("electric", "Электрика"),
+                _quiz_option("heating", "Отопление"),
+                _quiz_option("water", "Водоснабжение"),
+                _quiz_option("complex", "Комплекс инженерии"),
+            ],
+            "house_title": "На какой стадии объект?",
+            "house_options": [
+                _quiz_option("new", "Новый дом"),
+                _quiz_option("renovation", "Реконструкция"),
+                _quiz_option("finish", "Идёт отделка"),
+                _quiz_option("audit", "Нужна проверка"),
+            ],
+            "image_key": "otdelka",
+        },
+        "otdelochnye-raboty": {
+            "service_options": [
+                _quiz_option("walls", "Отделка стен"),
+                _quiz_option("floors", "Отделка пола"),
+                _quiz_option("konopatka", "Конопатка"),
+                _quiz_option("complex-finish", "Комплексная отделка"),
+            ],
+            "house_options": _QUIZ_FINISH_OPTIONS,
+            "image_key": "otdelka",
+        },
+        "proizvodstvo": {
+            "service_options": _QUIZ_PRODUCTION_OPTIONS,
+            "house_title": "Что нужно изготовить?",
+            "house_options": _QUIZ_PRODUCTION_OPTIONS,
+            "area_title": "Примерный объём",
+            "area_unit": "шт.",
+            "area_min": 1,
+            "area_max": 100,
+            "area_default": 10,
+            "area_step": 1,
+            "image_key": "proizvodstvo",
+        },
+    }
+
+    if page_key.startswith("otdelka/shlifovka/"):
+        data.update(by_key["shlifovka"])
+        data["page_label"] = title or "Шлифовка деревянного дома"
+    elif page_key.startswith("obsada/"):
+        data.update(by_key["obsada"])
+        data["page_label"] = title or "Обсада"
+    elif page_key.startswith("otdelka/"):
+        data.update(by_key["otdelochnye-raboty"])
+        data["page_label"] = title or "Отделочные работы"
+    elif page_key.startswith("proizvodstvo/"):
+        data.update(by_key["proizvodstvo"])
+        data["page_label"] = title or "Производство"
+    elif page_key in by_key:
+        data.update(by_key[page_key])
+
+    data["image_url"] = _page_image_url(page, data["image_key"])
+    return SimpleNamespace(**data)
+
+
 def site_page_processor(request):
     from .site_page import get_site_page, services_block_captions
 
@@ -847,6 +1054,7 @@ def site_page_processor(request):
         "site_page": page,
         "page_hero": page,
         "services_block_captions": services_block_captions(page),
+        "page_quiz": _page_quiz_for_page(page),
     }
 
 
