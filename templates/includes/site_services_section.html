@@ -51,9 +51,9 @@
    <a href="{{ card.link_url }}" class="group relative w-full bg-card/40 border border-white/5 hover:border-amber-500/40 rounded-[2rem] overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(245,158,11,0.2)]">
     <div class="absolute inset-0">
      {% if card.image %}
-     <img src="{{ card.image.url }}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60"/>
+     <img src="{{ card.image.url }}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60" loading="lazy" decoding="async"/>
      {% elif card.static_image %}
-     <img src="{% static card.static_image %}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60"/>
+     <img src="{% static card.static_image %}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60" loading="lazy" decoding="async"/>
      {% endif %}
      <div class="absolute inset-0 bg-gradient-to-t from-[#1c120c]/95 via-[#1c120c]/50 to-[#1c120c]/20 group-hover:via-[#1c120c]/40 transition-colors duration-500"></div>
     </div>
@@ -83,9 +83,9 @@
    <a href="{{ card.link_url }}" class="group relative min-w-0 bg-card/40 border border-white/5 hover:border-amber-500/40 rounded-[2rem] overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(245,158,11,0.2)]{% if card.home_layout == 'last' %} site-service-card--last lg:col-span-8 md:col-span-2{% elif card.home_layout == 'wide' %} lg:col-span-8 md:col-span-2{% elif card.home_layout == 'half' %} lg:col-span-6 md:col-span-1{% else %} lg:col-span-4 md:col-span-1{% endif %}">
     <div class="absolute inset-0">
      {% if card.image %}
-     <img src="{{ card.image.url }}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60"/>
+     <img src="{{ card.image.url }}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60" loading="lazy" decoding="async"/>
      {% elif card.static_image %}
-     <img src="{% static card.static_image %}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60"/>
+     <img src="{% static card.static_image %}" alt="{{ card.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60" loading="lazy" decoding="async"/>
      {% endif %}
      <div class="absolute inset-0 bg-gradient-to-t from-[#1c120c]/95 via-[#1c120c]/50 to-[#1c120c]/20 group-hover:via-[#1c120c]/40 transition-colors duration-500"></div>
     </div>

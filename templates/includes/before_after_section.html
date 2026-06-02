@@ -16,9 +16,9 @@
   <div class="comparison-grid">
    {% for item in before_after_items %}
    <figure class="ba-compare" data-ba-slider>
-    <img src="{{ item.after_src }}" alt="{{ item.title }} — после" class="ba-after" loading="lazy" />
+    <img src="{{ item.after_src }}" alt="{{ item.title }} — после" class="ba-after" loading="lazy" decoding="async" />
     <div class="ba-before-wrap">
-     <img src="{{ item.before_src }}" alt="{{ item.title }} — до" class="ba-before" loading="lazy" />
+     <img src="{{ item.before_src }}" alt="{{ item.title }} — до" class="ba-before" loading="lazy" decoding="async" />
     </div>
     <div class="ba-handle" aria-hidden="true">
      <span class="ba-handle-line"></span>

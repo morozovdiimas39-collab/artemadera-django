@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const METRIKA_COUNTER_ID = 87164937;
+  const reachGoal = (goal, params = {}) => {
+    if (!goal || typeof window.ym !== 'function') return;
+    try {
+      window.ym(METRIKA_COUNTER_ID, 'reachGoal', goal, params);
+    } catch {
+      // Метрика не должна мешать отправке заявки.
+    }
+  };
+
   // --- 0. Lead attribution: UTM / click ids stay with the visitor across pages ---
   const trackingKeys = [
     'utm_source',
@@ -75,6 +85,24 @@ document.addEventListener('DOMContentLoaded', () => {
       fillLeadTrackingFields(form);
     }
   });
+
+  const leadGoalByBlock = {
+    quiz: 'LEAD_QUIZ',
+    calculator: 'LEAD_CALCULATOR',
+    callback_modal: 'LEAD_CALLBACK',
+    measure: 'LEAD_MEASURE',
+  };
+  const contactGoalForForm = (form) => {
+    const block = (form.querySelector('input[name="from_block"]')?.value || '').trim();
+    return leadGoalByBlock[block] || 'LEAD_CONTACT';
+  };
+  const sentParams = new URLSearchParams(window.location.search);
+  if (sentParams.get('sent') === '1') {
+    const hash = window.location.hash || '';
+    const fallbackBlock = sentParams.get('from') || (hash === '#quiz' ? 'quiz' : hash === '#zamer' ? 'measure' : 'contact');
+    reachGoal('LEAD_SEND', { block: fallbackBlock, path: window.location.pathname });
+    reachGoal(leadGoalByBlock[fallbackBlock] || 'LEAD_CONTACT', { path: window.location.pathname });
+  }
 
   // --- 1. Dropdown "Услуги" ---
   const navServicesWrap = document.getElementById('nav-services-wrap');
@@ -278,7 +306,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok && ct.includes('application/json')) {
         const data = await res.json();
         if (data.ok) {
+          const block = (form.querySelector('input[name="from_block"]')?.value || 'contact').trim() || 'contact';
+          const goal = contactGoalForForm(form);
+          reachGoal('LEAD_SEND', { block, path: window.location.pathname });
+          reachGoal(goal, { block, path: window.location.pathname });
           form.reset();
+          fillLeadTrackingFields(form);
           openLeadSuccess();
         }
       } else if (res.status === 400 && ct.includes('application/json')) {
@@ -586,6 +619,23 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
+    const hydratePaneImages = (pane) => {
+      pane.querySelectorAll('img[data-portfolio-src]').forEach((img) => {
+        if (!img.getAttribute('src')) {
+          img.setAttribute('src', img.dataset.portfolioSrc);
+          img.setAttribute('loading', 'lazy');
+        }
+      });
+    };
+
+    const hydrateCardImages = (item) => {
+      item.querySelectorAll('img[data-portfolio-card-src]').forEach((img) => {
+        if (!img.getAttribute('src')) {
+          img.setAttribute('src', img.dataset.portfolioCardSrc);
+        }
+      });
+    };
+
     const bindGallery = (pane) => {
       const slides = pane.querySelectorAll('.portfolio-detail-slide');
       if (slides.length <= 1) return;
@@ -638,7 +688,10 @@ document.addEventListener('DOMContentLoaded', () => {
       panes.forEach((pane) => {
         const match = pane.getAttribute('data-portfolio-case-panel') === id;
         pane.hidden = !match;
-        if (match) setGallerySlide(pane, 0);
+        if (match) {
+          hydratePaneImages(pane);
+          setGallerySlide(pane, 0);
+        }
       });
       triggers.forEach((btn) => {
         const match = btn.getAttribute('data-portfolio-case-trigger') === id;
@@ -671,6 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showMoreBtn.addEventListener('click', () => {
         const hiddenItems = Array.from(portfolioItems).filter((item) => item.classList.contains('is-hidden'));
         hiddenItems.slice(0, revealStep).forEach((item) => {
+          hydrateCardImages(item);
           item.classList.remove('is-hidden');
         });
         updateShowMore();

@@ -22,9 +22,9 @@
    {% for service in home_services %}
    <a href="{{ service.link_url }}" class="home-service-tile{% if service.home_layout == 'wide' %} home-service-tile--wide{% elif service.home_layout == 'last' %} home-service-tile--last{% endif %}">
     {% if service.image %}
-    <img src="{{ service.image.url }}" alt="{{ service.name }}" class="home-service-tile__img" loading="lazy"/>
+    <img src="{{ service.image.url }}" alt="{{ service.name }}" class="home-service-tile__img" loading="lazy" decoding="async"/>
     {% elif service.static_image %}
-    <img src="{% static service.static_image %}" alt="{{ service.name }}" class="home-service-tile__img" loading="lazy"/>
+    <img src="{% static service.static_image %}" alt="{{ service.name }}" class="home-service-tile__img" loading="lazy" decoding="async"/>
     {% endif %}
     <div class="home-service-tile__overlay"></div>
     <div class="home-service-tile__body">

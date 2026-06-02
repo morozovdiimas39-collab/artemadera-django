@@ -874,13 +874,13 @@ _QUIZ_PRODUCTION_OPTIONS = [
 ]
 
 _QUIZ_STATIC_IMAGES = {
-    "shlifovka": "/media/pages/hero/137908e0-151b-425d-9233-b2af8fca286d.png",
-    "pokraska": "/media/pages/hero/23b84e30-5a9c-45b5-acca-0462e07d96e2.png",
-    "teplyy-shov": "/media/pages/hero/1548c512-16f1-44ac-ab5f-c0bcd0881ee2.png",
-    "obsada": "/media/home_quiz/окосячка_квиз.png",
-    "kryshi": "/media/home_quiz/22d51408-b9ec-4da9-86e0-b331453930c7.png",
-    "otdelka": "/media/pages/hero/181d5f3a-d444-4273-8649-fdb655ea1b49.png",
-    "proizvodstvo": "/media/pages/hero/a5d5006c-0a0b-4fa2-9ed9-3567a35bb325.png",
+    "shlifovka": "/media/pages/hero/137908e0-151b-425d-9233-b2af8fca286d.webp",
+    "pokraska": "/media/pages/hero/23b84e30-5a9c-45b5-acca-0462e07d96e2.webp",
+    "teplyy-shov": "/media/pages/hero/1548c512-16f1-44ac-ab5f-c0bcd0881ee2.webp",
+    "obsada": "/media/home_quiz/окосячка_квиз.webp",
+    "kryshi": "/media/home_quiz/22d51408-b9ec-4da9-86e0-b331453930c7.webp",
+    "otdelka": "/media/pages/hero/181d5f3a-d444-4273-8649-fdb655ea1b49.webp",
+    "proizvodstvo": "/media/pages/hero/a5d5006c-0a0b-4fa2-9ed9-3567a35bb325.webp",
 }
 
 

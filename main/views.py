@@ -145,11 +145,37 @@ def lead_direct_status(request, token):
     lead.save(update_fields=["direct_status", "direct_status_updated_at"])
 
     label = dict(ContactLead.DIRECT_STATUS_CHOICES).get(status, status)
+    goal_by_status = {
+        ContactLead.DIRECT_STATUS_IN_PROGRESS: "DIRECT_TARGET",
+        ContactLead.DIRECT_STATUS_PAID: "DIRECT_PAID",
+        ContactLead.DIRECT_STATUS_CANCELLED: "DIRECT_CANCELLED",
+        ContactLead.DIRECT_STATUS_SPAM: "DIRECT_SPAM",
+    }
+    goal = goal_by_status.get(status, "DIRECT_STATUS_CHANGED")
     return HttpResponse(
         f"""
         <!doctype html>
         <html lang="ru">
-        <head><meta charset="utf-8"><title>Статус заявки обновлён</title></head>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Статус заявки обновлён</title>
+          <!-- Yandex.Metrika counter -->
+          <script type="text/javascript">
+            (function(m,e,t,r,i,k,a){{
+              m[i]=m[i]||function(){{(m[i].a=m[i].a||[]).push(arguments)}};
+              m[i].l=1*new Date();
+              for (var j = 0; j < document.scripts.length; j++) {{if (document.scripts[j].src === r) {{ return; }}}}
+              k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            }})(window, document,'script','https://mc.yandex.ru/metrika/tag.js', 'ym');
+
+            ym(87164937, 'init', {{webvisor:true, clickmap:true, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true}});
+            ym(87164937, 'reachGoal', 'DIRECT_STATUS_CHANGED', {{status: '{status}', lead_id: '{lead.pk}'}});
+            ym(87164937, 'reachGoal', '{goal}', {{status: '{status}', lead_id: '{lead.pk}'}});
+          </script>
+          <noscript><div><img src="https://mc.yandex.ru/watch/87164937" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+          <!-- /Yandex.Metrika counter -->
+        </head>
         <body style="margin:0;font-family:Arial,sans-serif;background:#1c120c;color:#fff;display:grid;min-height:100vh;place-items:center">
           <main style="max-width:560px;padding:32px;border:1px solid rgba(245,158,11,.35);border-radius:16px;background:rgba(255,255,255,.05)">
             <h1 style="margin:0 0 12px">Готово</h1>

@@ -35,7 +35,15 @@
    >
     <span class="portfolio-case-card-media">
      {% if cover %}
+     {% if forloop.counter > 9 %}
+     {% if cover.image %}
+     <img data-portfolio-card-src="{{ cover.image.url }}" alt="{{ project.display_title }}" class="portfolio-case-card-img" loading="lazy" decoding="async" />
+     {% elif cover.static_image %}
+     <img data-portfolio-card-src="{% static cover.static_image %}" alt="{{ project.display_title }}" class="portfolio-case-card-img" loading="lazy" decoding="async" />
+     {% endif %}
+     {% else %}
      {% include 'includes/portfolio_photo.html' with photo=cover alt=project.display_title class='portfolio-case-card-img' %}
+     {% endif %}
      {% endif %}
      <span class="portfolio-case-card-overlay"></span>
      {% if request.path == '/' and project.get_gallery_items|length > 1 %}
@@ -112,7 +120,11 @@
        {% with gallery=project.get_gallery_items %}
        {% for photo in gallery %}
        <figure class="portfolio-detail-slide{% if forloop.first %} is-active{% endif %}" data-slide-index="{{ forloop.counter0 }}">
-        {% include 'includes/portfolio_photo.html' with photo=photo alt=photo.caption|default:project.title class='portfolio-detail-slide-img' %}
+        {% if photo.image %}
+        <img data-portfolio-src="{{ photo.image.url }}" alt="{{ photo.caption|default:project.title }}" class="portfolio-detail-slide-img" decoding="async" />
+        {% elif photo.static_image %}
+        <img data-portfolio-src="{% static photo.static_image %}" alt="{{ photo.caption|default:project.title }}" class="portfolio-detail-slide-img" decoding="async" />
+        {% endif %}
         {% if photo.caption %}
         <figcaption>{{ photo.caption }}</figcaption>
         {% endif %}
@@ -124,7 +136,11 @@
        <div class="portfolio-gallery-thumbs">
         {% for photo in gallery %}
         <button type="button" class="portfolio-gallery-thumb{% if forloop.first %} is-active{% endif %}" data-gallery-thumb="{{ forloop.counter0 }}" aria-label="Фото {{ forloop.counter }}">
-         {% include 'includes/portfolio_photo.html' with photo=photo alt='' class='portfolio-gallery-thumb-img' %}
+         {% if photo.image %}
+         <img data-portfolio-src="{{ photo.image.url }}" alt="" class="portfolio-gallery-thumb-img" decoding="async" />
+         {% elif photo.static_image %}
+         <img data-portfolio-src="{% static photo.static_image %}" alt="" class="portfolio-gallery-thumb-img" decoding="async" />
+         {% endif %}
         </button>
         {% endfor %}
        </div>

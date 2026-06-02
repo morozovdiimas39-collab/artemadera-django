@@ -12,7 +12,7 @@
     <img id="hq-quiz-image" src="{{ home_quiz_default_url }}" alt="Деревянный дом ArteMadera"
      data-img-default="{{ home_quiz_default_url }}"
      {% for row in home_quiz_service_images %}data-img-{{ row.key }}="{{ row.url }}"
-     {% endfor %} loading="lazy"/>
+     {% endfor %} loading="lazy" decoding="async"/>
    </div>
 
    <!-- Левая панель — квиз -->
