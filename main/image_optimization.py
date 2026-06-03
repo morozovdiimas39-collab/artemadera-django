@@ -1,5 +1,6 @@
 from io import BytesIO
 from pathlib import PurePosixPath
+from uuid import uuid4
 
 from django.core.files.base import ContentFile
 from django.db import models
@@ -12,7 +13,7 @@ WEBP_QUALITY = 78
 
 def _target_name(name):
     path = PurePosixPath(name)
-    return str(path.with_suffix(".webp"))
+    return str(path.with_name(f"{path.stem}_{uuid4().hex[:10]}.webp"))
 
 
 def optimize_field_file(field_file, *, max_side=MAX_IMAGE_SIDE, quality=WEBP_QUALITY):
@@ -22,9 +23,6 @@ def optimize_field_file(field_file, *, max_side=MAX_IMAGE_SIDE, quality=WEBP_QUA
     storage = field_file.storage
     original_name = field_file.name
     if not storage.exists(original_name):
-        existing_target = _target_name(original_name)
-        if existing_target != original_name and storage.exists(existing_target):
-            return existing_target
         return None
 
     try:
@@ -54,11 +52,6 @@ def optimize_field_file(field_file, *, max_side=MAX_IMAGE_SIDE, quality=WEBP_QUA
     image.save(output, **save_kwargs)
 
     target_name = _target_name(original_name)
-    if target_name == original_name and storage.exists(original_name):
-        storage.delete(original_name)
-    elif storage.exists(target_name):
-        storage.delete(target_name)
-
     saved_name = storage.save(target_name, ContentFile(output.getvalue()))
     if original_name != saved_name and storage.exists(original_name):
         storage.delete(original_name)
