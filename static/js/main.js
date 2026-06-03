@@ -181,18 +181,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 3. Mobile Menu Toggle ---
   const menuToggleBtn = document.getElementById('mobile-menu-toggle');
   const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+  let closeMobileMenu = () => {};
 
   if (menuToggleBtn && mobileMenuOverlay) {
-    const closeMenu = () => {
-      mobileMenuOverlay.classList.remove('is-open');
+    const mobileMenuContent = document.getElementById('mobile-menu-content');
+    closeMobileMenu = () => {
+      mobileMenuOverlay.classList.remove('is-open', 'opacity-0', 'pointer-events-none');
+      mobileMenuContent?.classList.remove('-translate-y-6', 'opacity-0');
       document.body.style.overflow = '';
     };
-    menuToggleBtn.addEventListener('click', () => {
+    const openMobileMenu = () => {
+      mobileMenuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+      mobileMenuContent?.classList.remove('-translate-y-6', 'opacity-0');
       mobileMenuOverlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
+    };
+    menuToggleBtn.addEventListener('click', () => {
+      if (mobileMenuOverlay.classList.contains('is-open')) {
+        closeMobileMenu();
+        return;
+      }
+      openMobileMenu();
     });
-    document.getElementById('mob-backdrop')?.addEventListener('click', closeMenu);
-    mobileMenuOverlay.querySelectorAll('a').forEach(el => el.addEventListener('click', closeMenu));
+    document.getElementById('mob-backdrop')?.addEventListener('click', closeMobileMenu);
+    mobileMenuOverlay.querySelectorAll('a').forEach(el => el.addEventListener('click', closeMobileMenu));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMobileMenu(); });
   }
 
   // --- 4. Callback Modal ---
@@ -231,9 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mobileCallbackBtn = document.getElementById('mobile-callback-open');
     if (mobileCallbackBtn) mobileCallbackBtn.addEventListener('click', () => {
-      document.getElementById('mobile-menu-overlay')?.classList.add('opacity-0', 'pointer-events-none');
-      document.getElementById('mobile-menu-content')?.classList.add('-translate-y-6', 'opacity-0');
-      document.body.style.overflow = '';
+      closeMobileMenu();
       setTimeout(openModal, 200);
     });
 

@@ -44,6 +44,11 @@ from .models import (
 )
 
 
+class AdminImageCompressionMixin:
+    class Media:
+        js = ("admin/js/image_upload_compress.js",)
+
+
 class PageServiceLinkInline(admin.TabularInline):
     model = PageServiceLink
     extra = 1
@@ -53,7 +58,7 @@ class PageServiceLinkInline(admin.TabularInline):
     ordering = ("sort_order", "pk")
 
 
-class BeforeAfterItemInline(admin.TabularInline):
+class BeforeAfterItemInline(AdminImageCompressionMixin, admin.TabularInline):
     model = BeforeAfterItem
     extra = 2
     max_num = 2
@@ -77,7 +82,7 @@ class BeforeAfterItemInline(admin.TabularInline):
 
 
 @admin.register(SitePage)
-class SitePageAdmin(ModelAdmin):
+class SitePageAdmin(AdminImageCompressionMixin, ModelAdmin):
     form = SitePageAdminForm
     formfield_overrides = {
         models.ImageField: {
@@ -193,7 +198,7 @@ class SitePageAdmin(ModelAdmin):
 
 
 @admin.register(Service)
-class ServiceAdmin(ModelAdmin):
+class ServiceAdmin(AdminImageCompressionMixin, ModelAdmin):
     """Общий справочник услуг — привязка к страницам в разделе «Страницы»."""
 
     formfield_overrides = {
@@ -303,7 +308,7 @@ class CalculatorConfigAdmin(ModelAdmin):
         return False
 
 
-class HomeQuizSettingsAdmin(ModelAdmin):
+class HomeQuizSettingsAdmin(AdminImageCompressionMixin, ModelAdmin):
     list_display = ("__str__",)
 
     formfield_overrides = {
@@ -462,7 +467,7 @@ _PORTFOLIO_IMAGE_WIDGET = {
 }
 
 
-class PortfolioProjectImageInline(admin.TabularInline):
+class PortfolioProjectImageInline(AdminImageCompressionMixin, admin.TabularInline):
     model = PortfolioProjectImage
     extra = 1
     min_num = 0
@@ -481,7 +486,7 @@ class PortfolioProjectImageInline(admin.TabularInline):
 
 
 @admin.register(PortfolioProject)
-class PortfolioProjectAdmin(ModelAdmin):
+class PortfolioProjectAdmin(AdminImageCompressionMixin, ModelAdmin):
     list_display = ("preview", "admin_title", "photos_count", "house_type", "location", "sort_order", "is_active")
     list_editable = ("sort_order", "is_active")
     list_filter = ("is_active", "house_type", "has_before_after")
@@ -606,7 +611,7 @@ class PortfolioProjectAdmin(ModelAdmin):
 
 
 @admin.register(ExperienceSection)
-class ExperienceSectionAdmin(ModelAdmin):
+class ExperienceSectionAdmin(AdminImageCompressionMixin, ModelAdmin):
     formfield_overrides = {
         models.ImageField: {
             "widget": unfold_widgets.UnfoldAdminImageFieldWidget(
@@ -846,7 +851,7 @@ class BeforeAfterSectionAdmin(ModelAdmin):
 
 
 @admin.register(BeforeAfterItem)
-class BeforeAfterItemAdmin(ModelAdmin):
+class BeforeAfterItemAdmin(AdminImageCompressionMixin, ModelAdmin):
     list_display = ("title", "page", "sort_order", "is_active")
     list_editable = ("sort_order", "is_active")
     list_filter = ("page", "is_active")
@@ -913,7 +918,7 @@ class BlogSectionAdmin(ModelAdmin):
 
 
 @admin.register(BlogPost)
-class BlogPostAdmin(ModelAdmin):
+class BlogPostAdmin(AdminImageCompressionMixin, ModelAdmin):
     list_display = ("preview", "title", "published_at", "is_active")
     list_editable = ("is_active",)
     list_filter = ("is_active",)
