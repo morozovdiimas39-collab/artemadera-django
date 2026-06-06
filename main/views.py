@@ -1,11 +1,14 @@
+import logging
+
 from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.exceptions import TemplateDoesNotExist
-from django.db.utils import OperationalError
 from django.utils import timezone
 
 from .models import ContactLead, BlogPost, BlogSection
+
+logger = logging.getLogger(__name__)
 
 try:
     from crm.services import create_deal_from_site_lead
@@ -117,7 +120,8 @@ def _handle_contact_post(request, base_path):
         if from_block == "callback_modal":
             return redirect(f"{base_path}?sent=1")
         return redirect(f"{base_path}?sent=1#contact")
-    except OperationalError:
+    except Exception:
+        logger.exception("Не удалось сохранить заявку с сайта")
         if _is_xhr_contact(request):
             return JsonResponse({"ok": False, "error": "server"}, status=503)
         return None

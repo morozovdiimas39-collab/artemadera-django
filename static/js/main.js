@@ -304,15 +304,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const csrf = form.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
     if (submitBtn) submitBtn.disabled = true;
     try {
-      const res = await fetch(postPath, {
-        method: 'POST',
-        body: fd,
-        credentials: 'same-origin',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-          ...(csrf ? { 'X-CSRFToken': csrf } : {}),
-        },
-      });
+      const sendLead = () => fetch(postPath, {
+          method: 'POST',
+          body: fd,
+          credentials: 'same-origin',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            ...(csrf ? { 'X-CSRFToken': csrf } : {}),
+          },
+        });
+      let res = await sendLead();
+      if ([500, 502, 503, 504].includes(res.status)) {
+        await new Promise((resolve) => window.setTimeout(resolve, 800));
+        res = await sendLead();
+      }
       const ct = res.headers.get('content-type') || '';
       if (res.ok && ct.includes('application/json')) {
         const data = await res.json();

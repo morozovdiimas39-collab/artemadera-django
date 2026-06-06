@@ -87,6 +87,7 @@ def _email_connection_from_config(cfg):
                 password=password,
                 use_tls=use_tls,
                 use_ssl=use_ssl,
+                timeout=10,
                 fail_silently=False,
             ),
             login,
