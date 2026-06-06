@@ -869,7 +869,7 @@ class ReviewsSection(models.Model):
     yandex_rating = models.DecimalField(
         max_digits=2,
         decimal_places=1,
-        default=5.0,
+        default=4.8,
         verbose_name="Рейтинг (для отображения)",
     )
     yandex_reviews_count = models.PositiveIntegerField(

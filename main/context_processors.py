@@ -45,8 +45,8 @@ def _home_services_defaults():
         ("shlifovka", "Шлифовка деревянных домов", "Срубы, брус, оцилиндровка и лафет.", "/shlifovka", "wide", "", "images/quiz/quiz_shlifovka_1776809850085.png"),
         ("pokraska", "Покраска", "Грунт, масла и лазури для фасада и интерьера.", "/pokraska", "", "под ключ", "images/quiz/quiz_pokraska_1776809864700.png"),
         ("teplyy-shov", "Тёплый шов", "Заполнение межвенцовых швов эластичным составом.", "/teplyy-shov", "", "герметизация", "images/quiz/quiz_konopatka_1776809894304.png"),
-        ("okosyachka", "Окосячка", "Компенсация усадки, углы и каркас сруба.", "/obsada", "", "усадка", "images/quiz/quiz_srub_1776809774832.png"),
-        ("obsada-okna", "Обсада", "Короба под окна и двери.", "/obsada/okna", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
+        ("okosyachka", "Обсада", "Компенсация усадки и защита оконных и дверных проёмов.", "/obsada", "", "усадка", "images/quiz/quiz_srub_1776809774832.png"),
+        ("obsada-okna", "Окна", "Обсадные короба и подготовка оконных проёмов.", "/obsada/okna", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
         ("kryshi", "Крыши", "Монтаж и ремонт кровли.", "/kryshi", "", "кровля", "images/portfolio-3.jpg"),
         ("injeneriya", "Инженерия", "Проект и монтаж инженерных систем.", "/injeneriya", "last", "коммуникации", "images/after.jpg"),
     ]
@@ -428,7 +428,7 @@ def _experience_defaults():
         ),
         SimpleNamespace(
             title="Собственное производство",
-            description="Плинтусы, фальшбалки и другие элементы — под контролем.",
+            description="Обсада, наличники, декоративные панели, плинтусы, фальшбалки и другие погонажные изделия.",
             icon="factory",
         ),
     ]
@@ -485,7 +485,7 @@ def _reviews_defaults():
             "отделке и работе команды на объекте."
         ),
         yandex_maps_url="https://yandex.ru/maps/org/artemadera/45828270851/",
-        yandex_rating=5.0,
+        yandex_rating=4.8,
         yandex_reviews_count=0,
         is_visible=True,
     )
@@ -662,8 +662,8 @@ def _faq_defaults():
         SimpleNamespace(
             question="Можно ли шлифовать деревянный дом зимой?",
             answer=(
-                "Да. На объекте создаём временный тепловой контур, чтобы поддерживать "
-                "нужную температуру и влажность."
+                "Да. На объекте создаём временный тепловой контур и используем "
+                "специальное оборудование, чтобы поддерживать нужную температуру и влажность."
             ),
         ),
         SimpleNamespace(
@@ -952,7 +952,7 @@ def _page_quiz_for_page(page):
         "obsada": {
             "service_options": [
                 _quiz_option("obsada", "Обсада"),
-                _quiz_option("okosyachka", "Окосячка"),
+                _quiz_option("okosyachka", "Окна"),
                 _quiz_option("obsada-okna", "Обсада окон"),
                 _quiz_option("obsada-dveri", "Обсада дверей"),
             ],

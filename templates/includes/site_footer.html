@@ -22,7 +22,7 @@
   <div class="site-footer-main">
    <div class="site-footer-brand">
     <a href="/" class="site-footer-logo">
-     <span class="site-footer-logo-mark" aria-hidden="true">A</span>
+     <span class="site-footer-logo-mark" aria-hidden="true">M</span>
      <span class="site-footer-logo-text">
       <span class="site-footer-logo-name"><span class="text-white">Arte</span><span class="text-amber-400">Madera</span></span>
       <span class="site-footer-logo-tag">Отделка деревянных домов</span>
@@ -87,7 +87,8 @@
       </a>
      </li>
      {% if contact_section and contact_section.address %}
-     <li class="site-footer-contact site-footer-contact--static">
+     <li>
+      <a href="https://yandex.ru/navi/?text={{ contact_section.address|urlencode }}" target="_blank" rel="noopener" class="site-footer-contact">
       <span class="site-footer-contact-icon" aria-hidden="true">
        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
       </span>
@@ -95,6 +96,7 @@
        <strong>Офис</strong>
        <small>{{ contact_section.address }}</small>
       </span>
+      </a>
      </li>
      {% endif %}
     </ul>

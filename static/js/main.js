@@ -766,7 +766,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const TOTAL = 3;
     const LABELS = {
-      service: { shlifovka: 'Шлифовка', pokraska: 'Покраска', 'teplyy-shov': 'Тёплый шов', okosyachka: 'Окосячка', obsada: 'Обсада', kryshi: 'Крыши', injeneriya: 'Инженерия' },
+      service: { shlifovka: 'Шлифовка', pokraska: 'Покраска', 'teplyy-shov': 'Тёплый шов', okosyachka: 'Окна', obsada: 'Обсада', kryshi: 'Крыши', injeneriya: 'Инженерия' },
       house:   { srub: 'Сруб', brus: 'Брус', kleen: 'Клееный брус', ocil: 'Оцилиндровка', lafet: 'Лафет', banya: 'Баня' },
     };
 
