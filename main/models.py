@@ -1051,7 +1051,7 @@ class LeadEmailSettings(models.Model):
     smtp_login = models.EmailField(
         blank=True,
         verbose_name="Логин SMTP",
-        help_text="Например morozov.diimas39@yandex.ru. Если пусто — берётся EMAIL_HOST_USER из окружения.",
+        help_text="Корпоративная почта, от имени которой отправляются уведомления. Если пусто — берётся EMAIL_HOST_USER из окружения.",
     )
     smtp_password = models.CharField(
         max_length=255,
