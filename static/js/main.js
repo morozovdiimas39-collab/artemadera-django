@@ -877,4 +877,43 @@ document.addEventListener('DOMContentLoaded', () => {
     showStep(1);
   }
 
+  // --- Phone mask: +7 (999) 999-99-99, with normal editing and full deletion ---
+  const formatPhone = (value, deleting = false) => {
+    let digits = String(value || '').replace(/\D/g, '');
+    if (!digits) return '';
+
+    if (digits[0] === '7' || digits[0] === '8') {
+      digits = digits.slice(1);
+    }
+    digits = digits.slice(0, 10);
+    if (!digits) return deleting ? '' : '+7';
+
+    let result = '+7 (' + digits.slice(0, 3);
+    if (digits.length >= 3) result += ')';
+    if (digits.length > 3) result += ' ' + digits.slice(3, 6);
+    if (digits.length > 6) result += '-' + digits.slice(6, 8);
+    if (digits.length > 8) result += '-' + digits.slice(8, 10);
+    return result;
+  };
+
+  document.querySelectorAll('input[type="tel"]').forEach((input) => {
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Backspace' || input.selectionStart !== input.selectionEnd) return;
+
+      event.preventDefault();
+      let digits = input.value.replace(/\D/g, '');
+      if (digits[0] === '7' || digits[0] === '8') digits = digits.slice(1);
+      input.value = formatPhone(digits.slice(0, -1), true);
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    input.addEventListener('input', (event) => {
+      input.value = formatPhone(
+        input.value,
+        String(event.inputType || '').startsWith('delete'),
+      );
+    });
+    input.addEventListener('blur', () => {
+      if (!input.value.replace(/\D/g, '').replace(/^7$/, '')) input.value = '';
+    });
+  });
 });
