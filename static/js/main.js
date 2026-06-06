@@ -884,6 +884,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     input.addEventListener('input', (e) => {
       let digits = input.value.replace(/\D/g, '');
+      if (!digits || (e.inputType?.startsWith('delete') && digits === '7')) {
+        input.value = '';
+        return;
+      }
       if (digits.startsWith('8')) digits = '7' + digits.slice(1);
       if (!digits.startsWith('7')) digits = '7' + digits;
       digits = digits.slice(0, 11);
@@ -895,11 +899,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (digits.length >= 9) result += '-' + digits.slice(9, 11);
 
       input.value = result;
-    });
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Backspace' && input.value === '+7 ') {
-        e.preventDefault();
-      }
     });
     input.addEventListener('blur', () => {
       if (input.value === '+7 ' || input.value === '+7') input.value = '';

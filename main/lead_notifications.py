@@ -109,6 +109,43 @@ def _email_connection_from_config(cfg):
     )
 
 
+def _yandex_ssl_fallback_connection(cfg):
+    env_login = (getattr(settings, "EMAIL_HOST_USER", "") or "").strip()
+    env_password = (getattr(settings, "EMAIL_HOST_PASSWORD", "") or "").strip()
+    login = (getattr(cfg, "smtp_login", "") or "").strip() or env_login
+    password = (getattr(cfg, "smtp_password", "") or "").strip() or env_password
+    host = _smtp_host_for_login(login, (getattr(cfg, "smtp_host", "") or "").strip())
+    if not login or not password or host != "smtp.yandex.ru":
+        return None, login, ""
+    return (
+        get_connection(
+            "django.core.mail.backends.smtp.EmailBackend",
+            host=host,
+            port=465,
+            username=login,
+            password=password,
+            use_tls=False,
+            use_ssl=True,
+            timeout=10,
+            fail_silently=False,
+        ),
+        login,
+        f"smtps://{login}@{host}:465",
+    )
+
+
+def _send_email_message(subject, body, html_body, from_email, recipients, connection):
+    message = EmailMultiAlternatives(
+        subject,
+        body,
+        from_email,
+        recipients,
+        connection=connection,
+    )
+    message.attach_alternative(html_body, "text/html")
+    return message.send(fail_silently=False)
+
+
 def _build_email_bodies(lead) -> tuple[str, str]:
     labels = LEAD_STATUS_LABELS
     action_lines = [
@@ -240,28 +277,35 @@ def send_lead_created_email(lead) -> None:
     connection, from_email, backend_label = _email_connection_from_config(cfg)
 
     try:
-        message = EmailMultiAlternatives(
-            subject,
-            body,
-            from_email,
-            recipients,
-            connection=connection,
-        )
-        message.attach_alternative(html_body, "text/html")
-        message.send(fail_silently=False)
+        _send_email_message(subject, body, html_body, from_email, recipients, connection)
         logger.info(
             "Письмо о заявке #%s отправлено получателям: %s (backend=%s)",
             lead.pk,
             ", ".join(recipients),
             backend_label,
         )
-    except Exception:
-        logger.exception(
-            "Ошибка отправки письма о заявке #%s. Проверьте SMTP в .env: "
-            "EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_USE_TLS; "
-            "или для проверки: EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend",
-            lead.pk,
-        )
+    except Exception as primary_error:
+        fallback, fallback_from, fallback_label = _yandex_ssl_fallback_connection(cfg)
+        if fallback and backend_label != fallback_label:
+            try:
+                _send_email_message(
+                    subject, body, html_body, fallback_from, recipients, fallback
+                )
+                logger.info(
+                    "Письмо о заявке #%s отправлено через резервный SMTP: %s",
+                    lead.pk,
+                    fallback_label,
+                )
+                return
+            except Exception:
+                logger.exception(
+                    "Ошибка отправки письма о заявке #%s через основной и резервный SMTP. "
+                    "Основная ошибка: %s",
+                    lead.pk,
+                    primary_error,
+                )
+                return
+        logger.exception("Ошибка отправки письма о заявке #%s", lead.pk)
 
 
 def send_lead_test_email() -> int:
@@ -273,16 +317,18 @@ def send_lead_test_email() -> int:
     if not recipients:
         raise ValueError("В поле «Email для уведомлений» нет валидного адреса получателя.")
 
-    connection, from_email, _backend_label = _email_connection_from_config(cfg)
-    message = EmailMultiAlternatives(
-        "ArteMadera: тест отправки заявок",
-        "Это тестовое письмо из админки ArteMadera. Если оно дошло, заявки тоже будут уходить.",
-        from_email,
-        recipients,
-        connection=connection,
-    )
-    message.attach_alternative(
-        "<p>Это тестовое письмо из админки ArteMadera.</p><p>Если оно дошло, заявки тоже будут уходить.</p>",
-        "text/html",
-    )
-    return message.send(fail_silently=False)
+    subject = "ArteMadera: тест отправки заявок"
+    body = "Это тестовое письмо из админки ArteMadera. Если оно дошло, заявки тоже будут уходить."
+    html_body = "<p>Это тестовое письмо из админки ArteMadera.</p><p>Если оно дошло, заявки тоже будут уходить.</p>"
+    connection, from_email, backend_label = _email_connection_from_config(cfg)
+    try:
+        return _send_email_message(
+            subject, body, html_body, from_email, recipients, connection
+        )
+    except Exception:
+        fallback, fallback_from, fallback_label = _yandex_ssl_fallback_connection(cfg)
+        if not fallback or backend_label == fallback_label:
+            raise
+        return _send_email_message(
+            subject, body, html_body, fallback_from, recipients, fallback
+        )
