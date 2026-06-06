@@ -877,33 +877,4 @@ document.addEventListener('DOMContentLoaded', () => {
     showStep(1);
   }
 
-  // --- Phone mask: +7 (999) 999-99-99 ---
-  function applyPhoneMask(input) {
-    input.addEventListener('focus', () => {
-      if (!input.value) input.value = '+7 ';
-    });
-    input.addEventListener('input', (e) => {
-      let digits = input.value.replace(/\D/g, '');
-      if (!digits || (e.inputType?.startsWith('delete') && digits === '7')) {
-        input.value = '';
-        return;
-      }
-      if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-      if (!digits.startsWith('7')) digits = '7' + digits;
-      digits = digits.slice(0, 11);
-
-      let result = '+7';
-      if (digits.length > 1) result += ' (' + digits.slice(1, 4);
-      if (digits.length >= 4) result += ') ' + digits.slice(4, 7);
-      if (digits.length >= 7) result += '-' + digits.slice(7, 9);
-      if (digits.length >= 9) result += '-' + digits.slice(9, 11);
-
-      input.value = result;
-    });
-    input.addEventListener('blur', () => {
-      if (input.value === '+7 ' || input.value === '+7') input.value = '';
-    });
-  }
-
-  document.querySelectorAll('input[type="tel"]').forEach(applyPhoneMask);
 });
