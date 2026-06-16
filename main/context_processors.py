@@ -42,19 +42,20 @@ def _home_services_defaults():
     from .models import CalculatorProfile
 
     seeds = [
-        ("shlifovka", "Шлифовка деревянных домов", "Срубы, брус, оцилиндровка и лафет.", "/shlifovka", "wide", "", "images/quiz/quiz_shlifovka_1776809850085.png"),
+        ("shlifovka", "Шлифовка", "Срубы, брус, оцилиндровка и лафет.", "/shlifovka", "", "", "images/quiz/quiz_shlifovka_1776809850085.png"),
         ("pokraska", "Покраска", "Грунт, масла и лазури для фасада и интерьера.", "/pokraska", "", "под ключ", "images/quiz/quiz_pokraska_1776809864700.png"),
         ("teplyy-shov", "Тёплый шов", "Заполнение межвенцовых швов эластичным составом.", "/teplyy-shov", "", "герметизация", "images/quiz/quiz_konopatka_1776809894304.png"),
-        ("okosyachka", "Обсада", "Компенсация усадки и защита оконных и дверных проёмов.", "/obsada", "", "усадка", "images/quiz/quiz_srub_1776809774832.png"),
-        ("obsada-okna", "Окна", "Обсадные короба и подготовка оконных проёмов.", "/obsada/okna", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
+        ("otdelochnye-raboty", "Отделочные работы", "Комплексная внутренняя и внешняя отделка деревянных домов.", "/otdelochnye-raboty", "", "под ключ", "images/service-2.jpg"),
+        ("obsada-okna", "Обсада / окна", "Обсадные короба и подготовка оконных проёмов.", "/obsada", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
         ("kryshi", "Крыши", "Монтаж и ремонт кровли.", "/kryshi", "", "кровля", "images/portfolio-3.jpg"),
-        ("injeneriya", "Инженерия", "Проект и монтаж инженерных систем.", "/injeneriya", "last", "коммуникации", "images/after.jpg"),
+        ("injeneriya", "Инженерия", "Проект и монтаж инженерных систем.", "/injeneriya", "", "коммуникации", "images/after.jpg"),
+        ("stroitelstvo", "Строительство", "Строительство деревянных домов полного цикла.", "https://artemaderastroy.ru/", "", "полный цикл", "images/hero-bg.jpg"),
+        ("proizvodstvo", "Производство", "Собственное производство изделий из дерева под проект.", "/proizvodstvo", "", "на заказ", "images/portfolio-1.jpg"),
     ]
     calc_slugs = {
         "shlifovka": "shlifovka",
         "pokraska": "pokraska",
         "teplyy-shov": "teplyy-shov",
-        "okosyachka": "obsada",
         "obsada-okna": "obsada",
         "kryshi": "kryshi",
         "injeneriya": "injeneriya",
@@ -170,25 +171,14 @@ def _shlifovka_services_defaults():
             "tag": "",
         },
         {
-            "name": "Консьержная шлифовка",
+            "name": "Шлифовка блок-хауса, имитации бруса и планкена",
             "short_description": (
-                "Финишная тонкая шлифовка перед покраской или пропиткой — идеально гладкая поверхность."
+                "Подготовка фасадных и погонажных изделий к покраске с сохранением профиля."
             ),
-            "link_url": "/otdelka/shlifovka/konsyerzhnaya",
+            "link_url": "/shlifovka#quiz",
             "static_image": "images/service-3.jpg",
-            "home_layout": "half",
+            "home_layout": "last",
             "tag": "",
-        },
-        {
-            "name": "Шлифовка бань и саун",
-            "short_description": (
-                "Шлифовка деревянных бань и саун с учётом высоких температур и влажности."
-            ),
-            "link_url": "/otdelka/shlifovka/bani-i-sauny",
-            "static_image": "images/portfolio-3.jpg",
-            "home_layout": "half",
-            "tag": "",
-            "cta_label": "Получить консультацию",
         },
     ]
     return [_ShlifovkaFallbackCard(**{**r, "cta_label": r.get("cta_label", "")}) for r in rows]
@@ -387,18 +377,19 @@ def portfolio_processor(request):
 def _experience_defaults():
     section = SimpleNamespace(
         badge_text="ОПЫТ И НАДЁЖНОСТЬ",
-        title_prefix="Более",
-        title_highlight="10 лет с деревом",
+        title_prefix="Более 10 лет",
+        title_highlight="с деревом",
         description=(
             "Строительно-отделочная компания полного цикла для деревянных домов "
-            "в Москве и области — от шлифовки и покраски до кровли и инженерии."
+            "в любом регионе нашей страны — от строительства до профессиональной "
+            "отделки и инженерии."
         ),
         story=(
-            "ArteMadera объединяет комплекс отделочных работ у одного исполнителя: "
-            "не нужно искать разных подрядчиков и согласовывать сроки. Работаем по договору "
-            "с фиксированной сметой, используем сертифицированные материалы и собственное "
-            "производство. На замере можем бесплатно показать качество — «тест-драйв» "
-            "на участке вашего дома."
+            "ArteMadera объединяет комплекс строительных и отделочных работ у одного "
+            "исполнителя: не нужно искать разных подрядчиков и согласовывать сроки. "
+            "Работаем по договору с фиксированной сметой, используем сертифицированные "
+            "материалы и собственное производство. На замере можем бесплатно показать "
+            "качество — «тест-драйв» на участке вашего дома."
         ),
         image=None,
         static_image="images/team.png",
@@ -409,26 +400,33 @@ def _experience_defaults():
         SimpleNamespace(value="500+", label="Выполненных объектов"),
         SimpleNamespace(value="1", label="Подрядчик на весь цикл"),
         SimpleNamespace(value="3 года", label="Гарантия на работы"),
+        SimpleNamespace(value="Своё", label="Собственное производство"),
+        SimpleNamespace(value="Своя", label="Площадка для сборки домов"),
     ]
     advantages = [
         SimpleNamespace(
-            title="Работа по договору",
-            description="Фиксируем обязательства и гарантию в договоре.",
-            icon="contract",
+            title="Превосходное качество",
+            description="Гарантируем превосходное качество покраски бруса.",
+            icon="shield",
         ),
         SimpleNamespace(
-            title="Смета без «раздуваний»",
-            description="Согласованный бюджет не меняется в процессе работ.",
-            icon="wallet",
+            title="Проверенные составы",
+            description="Используем только проверенные сертифицированные составы для покрытия.",
+            icon="certificate",
         ),
         SimpleNamespace(
-            title="Тест-драйв качества",
-            description="Бесплатно показываем технологию на замере.",
+            title="Большой опыт",
+            description="Уверенно берёмся за работу любой сложности.",
             icon="sparkles",
         ),
         SimpleNamespace(
-            title="Собственное производство",
-            description="Обсада, наличники, декоративные панели, плинтусы, фальшбалки и другие погонажные изделия.",
+            title="Ответственный подход",
+            description="Честно и ответственно подходим к выполнению задачи.",
+            icon="contract",
+        ),
+        SimpleNamespace(
+            title="Всегда на связи",
+            description="Даём исчерпывающую информацию о ходе работ и по запросу предоставляем фотоотчёт.",
             icon="factory",
         ),
     ]
@@ -559,11 +557,11 @@ def reviews_processor(request):
 
 def _process_defaults():
     section = SimpleNamespace(
-        badge_text="КАК МЫ РАБОТАЕМ",
+        badge_text="ЭТАПЫ РАБОТЫ",
         title_prefix="Этапы",
         title_highlight="нашей работы",
         description=(
-            "От первого выезда до передачи объекта — четыре последовательных шага, "
+            "От первого выезда до постгарантийной поддержки — пять последовательных шагов, "
             "понятных ещё до начала работ."
         ),
         is_visible=True,
@@ -572,30 +570,27 @@ def _process_defaults():
         SimpleNamespace(
             step_number="01",
             title="Выезд на объект",
-            description=(
-                "Осматриваем задачу и объём: замеры, фото, фиксация пожеланий — отправная точка для сметы."
-            ),
+            description="Осматриваем задачу, выполняем замеры и фиксируем пожелания.",
         ),
         SimpleNamespace(
             step_number="02",
             title="Смета и договор",
-            description=(
-                "Считаем работы по этапам, согласуем сроки и цену, закрепляем всё в договоре — без скрытых условий."
-            ),
+            description="Согласуем объём, сроки и стоимость, закрепляем условия в договоре.",
         ),
         SimpleNamespace(
             step_number="03",
             title="Работы на объекте",
-            description=(
-                "Выполняем этапы по плану: технология, безопасность, порядок и промежуточные согласования по ходу."
-            ),
+            description="Выполняем работы по согласованной технологии и держим вас в курсе.",
         ),
         SimpleNamespace(
             step_number="04",
             title="Сдача объекта",
-            description=(
-                "Передаём результат: совместная приёмка, акты, рекомендации по уходу и гарантия на выполненные работы."
-            ),
+            description="Проводим совместную приёмку, передаём результат и гарантию.",
+        ),
+        SimpleNamespace(
+            step_number="05",
+            title="Постгарантийное обслуживание",
+            description="Остаёмся на связи после завершения работ, консультируем по уходу и оперативно помогаем при необходимости.",
         ),
     ]
     return {"work_process_section": section, "work_process_steps": steps}
@@ -921,14 +916,15 @@ def _page_quiz_for_page(page):
 
     by_key = {
         "shlifovka": {
+            "service_title": "Что нужно отшлифовать?",
             "service_options": [
-                _quiz_option("shlifovka-sruba", "Шлифовка сруба"),
-                _quiz_option("shlifovka-brusa", "Шлифовка бруса"),
-                _quiz_option("shlifovka-ocil", "Шлифовка оцилиндровки"),
-                _quiz_option("shlifovka-lafet", "Шлифовка лафета"),
-                _quiz_option("shlifovka-bani", "Шлифовка бани/сауны"),
-                _quiz_option("shlifovka-consierge", "Консьержная шлифовка"),
+                _quiz_option("shlifovka-srub", "Сруб"),
+                _quiz_option("shlifovka-brus", "Брус"),
+                _quiz_option("shlifovka-ocil", "Оцилиндрованное бревно"),
+                _quiz_option("shlifovka-lafet", "Лафет"),
+                _quiz_option("shlifovka-pogonazh", "Блок-хаус, имитация бруса, планкен"),
             ],
+            "house_title": "Из чего построен объект?",
             "image_key": "shlifovka",
         },
         "pokraska": {
@@ -950,11 +946,12 @@ def _page_quiz_for_page(page):
             "image_key": "teplyy-shov",
         },
         "obsada": {
+            "service_title": "Какая задача стоит?",
             "service_options": [
-                _quiz_option("obsada", "Обсада"),
-                _quiz_option("okosyachka", "Окна"),
-                _quiz_option("obsada-okna", "Обсада окон"),
-                _quiz_option("obsada-dveri", "Обсада дверей"),
+                _quiz_option("obsada-new", "Подготовить новые проёмы"),
+                _quiz_option("obsada-replace", "Заменить окна или двери"),
+                _quiz_option("obsada-repair", "Исправить существующую обсаду"),
+                _quiz_option("obsada-consult", "Нужна консультация"),
             ],
             "house_title": "Какие проёмы нужны?",
             "house_options": _QUIZ_OPENING_OPTIONS,
@@ -1014,9 +1011,15 @@ def _page_quiz_for_page(page):
             "image_key": "otdelka",
         },
         "proizvodstvo": {
+            "service_title": "Что нужно изготовить?",
             "service_options": _QUIZ_PRODUCTION_OPTIONS,
-            "house_title": "Что нужно изготовить?",
-            "house_options": _QUIZ_PRODUCTION_OPTIONS,
+            "house_title": "Что требуется на этом этапе?",
+            "house_options": [
+                _quiz_option("measurement", "Замер и консультация"),
+                _quiz_option("design", "Разработка по размерам"),
+                _quiz_option("manufacturing", "Только изготовление"),
+                _quiz_option("installation", "Изготовление и монтаж"),
+            ],
             "area_title": "Примерный объём",
             "area_unit": "шт.",
             "area_min": 1,

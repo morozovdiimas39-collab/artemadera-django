@@ -13,8 +13,13 @@
    <span class="text-amber-200">Фальшбалки</span>
   </div>
   <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+   {% if site_page.hero_h1_white or site_page.hero_h1_accent %}
+   {% if site_page.hero_h1_white %}<span class="text-white">{{ site_page.hero_h1_white|linebreaksbr }}</span>{% endif %}{% if site_page.hero_h1_white and site_page.hero_h1_accent %}<br/>{% endif %}
+   {% if site_page.hero_h1_accent %}<span class="text-amber-500">{{ site_page.hero_h1_accent|linebreaksbr }}</span>{% endif %}
+   {% else %}
    <span class="text-white">Фальшбалки</span><br/>
    <span class="text-amber-500">деревянные под заказ</span>
+   {% endif %}
   </h1>
   <p class="text-gray-300 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
    Изготовление декоративных деревянных балок для потолков и стен. Имитируют<br/>
@@ -29,12 +34,13 @@
    {% include 'includes/hero_market_experience_stat.html' %}
   </div>
  </div>
+
 </section>
+
+{% include 'includes/page_calculator_section.html' %}
 
 {% include 'includes/page_services_section.html' %}
 
-
-{% include 'includes/page_calculator_section.html' %}
 
 {% include 'includes/before_after_section.html' %}
 

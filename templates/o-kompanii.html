@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}page-about{% endblock %}
+{% block title %}О компании ArteMadera — строительство и отделка деревянных домов{% endblock %}
+{% block meta_description %}ArteMadera — строительно-отделочная компания полного цикла. Более 10 лет работаем с деревянными домами: строительство, отделка, инженерия и собственное производство.{% endblock %}
+{% block canonical %}<link rel="canonical" href="https://artemadera.ru/o-kompanii" />{% endblock %}
+
+{% block content %}
+<section class="page-hero relative min-h-[72vh] flex items-center justify-center overflow-hidden bg-[#1c120c]">
+ {% include 'includes/hero_bg.html' %}
+ <div class="hero-inner relative z-10 w-full text-center px-4 sm:px-8 py-32">
+  <div class="mb-4 text-xs text-gray-300">
+   <a class="hover:text-amber-300 transition-colors" href="/">Главная</a>
+   <span class="mx-2 text-gray-500">/</span>
+   <span class="text-amber-200">О компании</span>
+  </div>
+  <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight">
+   <span class="text-white">ArteMadera —</span><br/>
+   <span class="text-amber-500">полный цикл работ</span>
+  </h1>
+  <p class="text-gray-200 text-base sm:text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+   Более 10 лет строим, отделываем и оснащаем инженерией деревянные дома.
+   Один ответственный подрядчик на всех этапах.
+  </p>
+  <a href="#whyus" class="inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-amber-600 text-white font-bold hover:bg-amber-500 transition-colors">
+   Узнать о компании
+  </a>
+ </div>
+</section>
+
+{% include 'includes/experience_section.html' %}
+{% include 'includes/work_process_section.html' %}
+{% include 'includes/reviews_section.html' %}
+{% include 'includes/contact_section.html' with contact_only=1 %}
+{% endblock %}

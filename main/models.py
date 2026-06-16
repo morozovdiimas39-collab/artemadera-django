@@ -347,6 +347,8 @@ class Service(models.Model):
     def link_url(self):
         if self.page_url.strip():
             url = self.page_url.strip()
+            if url.startswith(("http://", "https://")):
+                return url
             return url if url.startswith("/") else f"/{url}"
         return f"/{self.slug}/"
 
@@ -592,6 +594,12 @@ class PortfolioProject(models.Model):
         verbose_name="Услуги",
         help_text="Через запятую: шлифовка, покраска",
     )
+    source_url = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="Источник",
+        help_text="Ссылка на исходную публикацию, если кейс импортирован.",
+    )
     has_before_after = models.BooleanField(
         default=False,
         verbose_name="Есть серия «До/После»",
@@ -740,27 +748,28 @@ class ExperienceSection(models.Model):
         max_length=64, default="ОПЫТ И НАДЁЖНОСТЬ", verbose_name="Бейдж"
     )
     title_prefix = models.CharField(
-        max_length=80, default="Более", verbose_name="Заголовок (белая часть)"
+        max_length=80, default="Более 10 лет", verbose_name="Заголовок (белая часть)"
     )
     title_highlight = models.CharField(
         max_length=80,
-        default="10 лет с деревом",
+        default="с деревом",
         verbose_name="Заголовок (акцент)",
     )
     description = models.TextField(
         default=(
             "Строительно-отделочная компания полного цикла для деревянных домов "
-            "в Москве и области — от шлифовки и покраски до кровли и инженерии."
+            "в любом регионе нашей страны — от строительства до профессиональной "
+            "отделки и инженерии."
         ),
         verbose_name="Краткое описание",
     )
     story = models.TextField(
         default=(
-            "ArteMadera объединяет комплекс отделочных работ у одного исполнителя: "
-            "не нужно искать разных подрядчиков и согласовывать сроки. Работаем по договору "
-            "с фиксированной сметой, используем сертифицированные материалы и собственное "
-            "производство. На замере можем бесплатно показать качество — «тест-драйв» "
-            "на участке вашего дома."
+            "ArteMadera объединяет комплекс строительных и отделочных работ у одного "
+            "исполнителя: не нужно искать разных подрядчиков и согласовывать сроки. "
+            "Работаем по договору с фиксированной сметой, используем сертифицированные "
+            "материалы и собственное производство. На замере можем бесплатно показать "
+            "качество — «тест-драйв» на участке вашего дома."
         ),
         verbose_name="Текст о компании",
     )
@@ -930,15 +939,15 @@ class Review(models.Model):
 
 
 class WorkProcessSection(models.Model):
-    badge_text = models.CharField(max_length=64, default="КАК МЫ РАБОТАЕМ", verbose_name="Бейдж")
+    badge_text = models.CharField(max_length=64, default="ЭТАПЫ РАБОТЫ", verbose_name="Бейдж")
     title_prefix = models.CharField(max_length=80, default="Этапы", verbose_name="Заголовок (белая часть)")
     title_highlight = models.CharField(
         max_length=80, default="нашей работы", verbose_name="Заголовок (акцент)"
     )
     description = models.TextField(
         default=(
-            "Прозрачный и отлаженный процесс — от первого звонка "
-            "до сдачи готового объекта."
+            "От первого выезда до постгарантийной поддержки — пять последовательных "
+            "шагов, понятных ещё до начала работ."
         ),
         verbose_name="Описание",
     )

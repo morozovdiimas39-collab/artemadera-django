@@ -15,8 +15,13 @@
    <span class="text-amber-200">Обсада окон</span>
   </div>
   <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+   {% if site_page.hero_h1_white or site_page.hero_h1_accent %}
+   {% if site_page.hero_h1_white %}<span class="text-white">{{ site_page.hero_h1_white|linebreaksbr }}</span>{% endif %}{% if site_page.hero_h1_white and site_page.hero_h1_accent %}<br/>{% endif %}
+   {% if site_page.hero_h1_accent %}<span class="text-amber-500">{{ site_page.hero_h1_accent|linebreaksbr }}</span>{% endif %}
+   {% else %}
    <span class="text-white">Обсада</span><br/>
    <span class="text-amber-500">оконных проёмов</span>
+   {% endif %}
   </h1>
   <p class="text-gray-300 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
    Профессиональная окосячка оконных проёмов в деревянных домах. П-образная<br/>
@@ -66,16 +71,16 @@
  <a href="{% if page_service_cards %}#page-services{% else %}#quiz{% endif %}" class="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 hero-scroll-arrow z-30 text-white/50 hover:text-amber-400 transition-colors animate-bounce inline-flex p-2" aria-label="Дальше">
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
  </a>
+
 </section>
+
+{% include 'includes/page_calculator_section.html' %}
 
 {% include 'includes/page_services_section.html' %}
 
 
-{% include 'includes/page_calculator_section.html' %}
-
 {% include 'includes/before_after_section.html' %}
 
 {% include 'includes/portfolio_section.html' %}
-{% include 'includes/work_process_section.html' %}
 {% include 'includes/contact_section.html' %}
 {% endblock %}

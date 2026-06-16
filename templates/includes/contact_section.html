@@ -1,3 +1,8 @@
+{% if not contact_only %}
+{% include 'includes/work_process_section.html' %}
+{% include 'includes/how_we_work_section.html' %}
+{% include 'includes/experience_section.html' %}
+{% endif %}
 {% if contact_section.is_visible %}
 <section id="contact" class="contact-section">
  <div class="container mx-auto px-4 sm:px-6 lg:px-8">

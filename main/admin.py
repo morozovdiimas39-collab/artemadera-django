@@ -134,6 +134,10 @@ class SitePageAdmin(AdminImageCompressionMixin, ModelAdmin):
                 "Тексты первого экрана",
                 {
                     "fields": (("hero_h1_white", "hero_h1_accent"), "hero_lead"),
+                    "description": (
+                        "Заголовок H1 меняется на сайте сразу после сохранения страницы. "
+                        "Если обе части пустые, используется текущий заголовок из шаблона."
+                    ),
                 },
             ),
             (
@@ -490,7 +494,7 @@ class PortfolioProjectAdmin(AdminImageCompressionMixin, ModelAdmin):
     list_display = ("preview", "admin_title", "photos_count", "house_type", "location", "sort_order", "is_active")
     list_editable = ("sort_order", "is_active")
     list_filter = ("is_active", "house_type", "has_before_after")
-    search_fields = ("title", "summary", "location", "work_types")
+    search_fields = ("title", "summary", "location", "work_types", "source_url")
     ordering = ("sort_order", "pk")
     inlines = (PortfolioProjectImageInline,)
 
@@ -517,6 +521,7 @@ class PortfolioProjectAdmin(AdminImageCompressionMixin, ModelAdmin):
                         "description",
                         ("house_type", "location"),
                         "work_types",
+                        "source_url",
                         "has_before_after",
                     ),
                     "classes": ("collapse",),

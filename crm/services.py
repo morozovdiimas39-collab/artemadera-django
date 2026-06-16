@@ -157,8 +157,9 @@ def _lead_traffic_lines(lead) -> list[str]:
 @transaction.atomic
 def create_deal_from_site_lead(lead, *, from_block: str | None = None, user=None) -> CrmDeal:
     """Создаёт контакт и сделку из заявки ContactLead."""
-    if hasattr(lead, "crm_deal") and lead.crm_deal_id:
-        return lead.crm_deal
+    existing_deal = CrmDeal.objects.filter(site_lead=lead).first()
+    if existing_deal:
+        return existing_deal
 
     ensure_crm_defaults()
     pipeline = get_default_pipeline()

@@ -1,9 +1,11 @@
 import logging
+from xml.sax.saxutils import escape
 
 from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.exceptions import TemplateDoesNotExist
+from django.db import transaction
 from django.utils import timezone
 
 from .models import ContactLead, BlogPost, BlogSection
@@ -96,22 +98,23 @@ def _handle_contact_post(request, base_path):
             return JsonResponse({"ok": False, "error": "phone_required"}, status=400)
         return None
     try:
-        lead = ContactLead.objects.create(
-            name=(request.POST.get("name") or "").strip() or "—",
-            phone=phone,
-            message=_contact_post_message(request),
-            **_lead_traffic_kwargs(request),
-        )
-        if create_deal_from_site_lead:
-            try:
-                create_deal_from_site_lead(
-                    lead,
-                    from_block=request.POST.get("from_block") or None,
-                )
-            except Exception:
-                pass
+        with transaction.atomic():
+            lead = ContactLead.objects.create(
+                name=(request.POST.get("name") or "").strip() or "—",
+                phone=phone,
+                message=_contact_post_message(request),
+                **_lead_traffic_kwargs(request),
+            )
+            if not create_deal_from_site_lead:
+                raise RuntimeError("CRM service is unavailable")
+            deal = create_deal_from_site_lead(
+                lead,
+                from_block=request.POST.get("from_block") or None,
+            )
+            if not deal or not deal.pk:
+                raise RuntimeError(f"CRM deal was not created for lead #{lead.pk}")
         if _is_xhr_contact(request):
-            return JsonResponse({"ok": True})
+            return JsonResponse({"ok": True, "lead_id": lead.pk, "crm_deal_id": deal.pk})
         from_block = (request.POST.get("from_block") or "").strip()
         if from_block == "measure":
             return redirect(f"{base_path}?sent=1&from=measure#zamer")
@@ -251,7 +254,7 @@ def generic_service(request, path):
     try:
         return render(request, template_name, {"contact_form_sent": contact_form_sent})
     except TemplateDoesNotExist:
-        return render(request, "home.html")
+        raise Http404
 
 
 def blog_list(request):
@@ -280,3 +283,43 @@ def blog_detail(request, slug):
     except OperationalError:
         section = None
     return render(request, "blog_detail.html", {"post": post, "blog_section": section})
+
+
+def robots_txt(request):
+    host = request.get_host()
+    scheme = "https" if not request.is_secure() and host == "artemadera.ru" else request.scheme
+    content = "\n".join(
+        [
+            "User-agent: *",
+            "Allow: /",
+            "Disallow: /admin/",
+            "Disallow: /export/",
+            "Disallow: /lead-status/",
+            f"Sitemap: {scheme}://{host}/sitemap.xml",
+            "",
+        ]
+    )
+    return HttpResponse(content, content_type="text/plain; charset=utf-8")
+
+
+def sitemap_xml(request):
+    from .models import BlogPost, SitePage
+
+    host = request.get_host()
+    scheme = "https" if not request.is_secure() and host == "artemadera.ru" else request.scheme
+    base_url = f"{scheme}://{host}"
+    paths = {"/", "/shlifovka", "/pokraska", "/teplyy-shov", "/blog"}
+
+    for page_key in SitePage.objects.filter(is_active=True).values_list("page_key", flat=True):
+        key = (page_key or "").strip("/")
+        if key and key != "home":
+            paths.add(f"/{key}")
+    for slug in BlogPost.objects.filter(is_active=True).exclude(slug="").values_list("slug", flat=True):
+        paths.add(f"/blog/{slug}/")
+
+    urls = "".join(
+        f"<url><loc>{escape(base_url + path)}</loc></url>"
+        for path in sorted(paths)
+    )
+    xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
+    return HttpResponse(xml, content_type="application/xml; charset=utf-8")

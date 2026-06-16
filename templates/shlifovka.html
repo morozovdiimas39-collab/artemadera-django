@@ -2,14 +2,74 @@
 {% load static %}
 
 {% block body_class %}page-shlifovka{% endblock %}
+{% block title %}Шлифовка деревянных домов в Москве и МО | ArteMadera{% endblock %}
+{% block meta_description %}Профессиональная шлифовка деревянных домов, срубов и бруса в Москве и Московской области. Бесплатный замер, фиксированная смета и гарантия до 3 лет.{% endblock %}
+{% block canonical %}<link rel="canonical" href="https://artemadera.ru/shlifovka" />{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Шлифовка деревянных домов в Москве и МО | ArteMadera" />
+<meta property="og:description" content="Шлифовка срубов, бруса и деревянных фасадов. Бесплатный замер, фиксированная смета и гарантия до 3 лет." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://artemadera.ru/shlifovka" />
+<meta property="og:image" content="https://artemadera.ru{% static 'images/service-1.jpg' %}" />
+<meta property="og:locale" content="ru_RU" />
+{% endblock %}
+{% block structured_data %}
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Service",
+ "name": "Шлифовка деревянных домов",
+ "description": "Профессиональная шлифовка деревянных домов, срубов и бруса в Москве и Московской области.",
+ "url": "https://artemadera.ru/shlifovka",
+ "areaServed": ["Москва", "Московская область"],
+ "provider": {
+  "@type": "LocalBusiness",
+  "name": "ArteMadera",
+  "url": "https://artemadera.ru/",
+  "telephone": "+7 (495) 005-01-45",
+  "address": {
+   "@type": "PostalAddress",
+   "streetAddress": "Ярославская ул., д. 8, корп. 6, офис 220",
+   "addressLocality": "Москва",
+   "addressCountry": "RU"
+  }
+ }
+}
+</script>
+{% if faq_items %}
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {% for item in faq_items %}
+  {
+   "@type": "Question",
+   "name": "{{ item.question|escapejs }}",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "{{ item.answer|striptags|escapejs }}"
+   }
+  }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+ ]
+}
+</script>
+{% endif %}
+{% endblock %}
 
 {% block content %}
 <section class="page-hero relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1c120c]">
  {% include 'includes/hero_bg.html' %}
  <div class="hero-inner relative z-10 w-full text-center px-4 sm:px-8 py-32">
   <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+   {% if site_page.hero_h1_white or site_page.hero_h1_accent %}
+   {% if site_page.hero_h1_white %}<span class="text-white">{{ site_page.hero_h1_white|linebreaksbr }}</span>{% endif %}{% if site_page.hero_h1_white and site_page.hero_h1_accent %}<br/>{% endif %}
+   {% if site_page.hero_h1_accent %}<span class="text-amber-500">{{ site_page.hero_h1_accent|linebreaksbr }}</span>{% endif %}
+   {% else %}
    <span class="text-white">Профессиональная</span><br/>
    <span class="text-amber-500">шлифовка деревянных<br/>домов</span>
+   {% endif %}
   </h1>
   <p class="text-gray-300 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
    Восстановим красоту и долговечность вашего деревянного дома.<br/>
@@ -19,9 +79,9 @@
    <button type="button" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})"
     class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-amber-600 text-white text-base font-bold transition-all hover:bg-amber-500 shadow-lg shadow-amber-900/20 whitespace-nowrap">
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
-    Получить консультацию
+    Рассчитать стоимость
    </button>
-   <a href="#quiz"
+   <a href="#shlifovka-services"
     class="inline-flex shrink-0 items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white/10 text-white text-base font-semibold backdrop-blur-sm transition-all hover:bg-white/15 whitespace-nowrap">
     Наши услуги
    </a>
@@ -41,8 +101,8 @@
      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
     </div>
     <div class="text-left">
-     <div class="text-white font-bold text-sm uppercase tracking-wider">Работаем быстро</div>
-     <div class="text-gray-400 text-xs">От 3 дней</div>
+     <div class="text-white font-bold text-sm uppercase tracking-wider">Индивидуальный подход</div>
+     <div class="text-gray-400 text-xs">К каждому клиенту</div>
     </div>
    </div>
    <div class="flex items-center gap-3">
@@ -62,15 +122,35 @@
  </a>
 </section>
 
+{% include 'includes/page_calculator_section.html' %}
+
+<section class="shlifovka-intro" aria-labelledby="shlifovka-intro-title">
+ <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="shlifovka-intro__layout">
+   <div>
+    <span class="shlifovka-intro__label">Шлифовка домов в Москве и МО</span>
+    <h2 id="shlifovka-intro-title">Подготавливаем древесину к <span>долгой защите</span></h2>
+   </div>
+   <div class="shlifovka-intro__copy">
+    <p>Шлифовка деревянного дома снимает потемневший верхний слой, выравнивает поверхность и раскрывает природную фактуру древесины перед покраской или нанесением защитного состава.</p>
+    <p>Работаем со срубами, профилированным и клеёным брусом, оцилиндрованным бревном и лафетом. Стоимость за м² и сроки фиксируем после бесплатного осмотра объекта.</p>
+    <a href="#zamer">Записаться на бесплатный замер</a>
+   </div>
+  </div>
+ </div>
+</section>
+
 {% include 'includes/shlifovka_services_section.html' %}
+{% include 'includes/before_after_section.html' %}
+
 {% include 'includes/portfolio_section.html' %}
 {% include 'includes/portfolio_measure_cta.html' %}
-{% include 'includes/before_after_section.html' %}
+{% include 'includes/how_we_work_section.html' %}
+{% include 'includes/reviews_section.html' %}
 {% include 'includes/experience_section.html' %}
 {% include 'includes/work_process_section.html' %}
-{% include 'includes/reviews_section.html' %}
-{% include 'includes/faq_section.html' %}
-{% include 'includes/contact_section.html' %}
 {% include 'includes/blog_section.html' %}
+{% include 'includes/faq_section.html' %}
+{% include 'includes/contact_section.html' with contact_only=1 %}
 {% include 'includes/shlifovka_mobile_sticky.html' %}
 {% endblock %}
