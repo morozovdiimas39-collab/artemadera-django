@@ -4,7 +4,8 @@ URL configuration for config project.
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+from django.views.static import serve as static_serve
 from django.views.generic import RedirectView
 
 from main.direct_conversions import direct_conversions_csv_view
@@ -44,6 +45,8 @@ urlpatterns = [
 # static и media — ДО catch-all, иначе /media/... уходит в generic_service
 urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / "static")
 if settings.DEBUG or getattr(settings, "SERVE_MEDIA", False):
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns.append(
+        re_path(r"^media/(?P<path>.*)$", static_serve, {"document_root": settings.MEDIA_ROOT})
+    )
 
 urlpatterns.append(path("<path:path>", generic_service, name="generic_service"))

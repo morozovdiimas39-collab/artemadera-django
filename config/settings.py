@@ -206,8 +206,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-# Отдавать загрузки через Django, если nginx не настроен (демо на artemadera.su)
-SERVE_MEDIA = _env_bool("DJANGO_SERVE_MEDIA", default=DEBUG)
+# Отдавать загруженные через админку публичные картинки, если nginx не настроен на /media/.
+SERVE_MEDIA = _env_bool("DJANGO_SERVE_MEDIA", default=True)
 
 # Токен для GET /export/yandex-direct-conversions.csv
 # Приоритет: непустой env → значение из .env → при DEBUG дефолт (на проде выставьте env / Secrets!)
