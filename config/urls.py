@@ -30,6 +30,8 @@ urlpatterns = [
     path("", index, name="index"),
     path("shlifovka", shlifovka, name="shlifovka"),
     path("shlifovka/", RedirectView.as_view(url="/shlifovka", permanent=True)),
+    path("otdelka/shlifovka", RedirectView.as_view(url="/shlifovka", permanent=True)),
+    path("otdelka/shlifovka/", RedirectView.as_view(url="/shlifovka", permanent=True)),
     path("pokraska", pokraska, name="pokraska"),
     path("pokraska/", pokraska),
     path("teplyy-shov", teplyy_shov, name="teplyy_shov"),

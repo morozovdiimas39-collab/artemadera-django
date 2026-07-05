@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,6 +35,13 @@ def _load_local_env():
 
 
 _load_local_env()
+
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    value = (os.environ.get(name) or "").strip().lower()
+    if not value:
+        return default
+    return value in {"1", "true", "yes", "on"}
 
 
 def _direct_token_from_dotenv_file() -> str:
@@ -63,7 +71,7 @@ def _direct_token_from_dotenv_file() -> str:
 SECRET_KEY = 'django-insecure-1goiny6m8_ispgx=gabm+g9a50aq$)rkuwgtkd%qr+*p^xh^ip'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = _env_bool("DJANGO_DEBUG", default=("runserver" in sys.argv))
 
 # Хосты запроса (Host header). На проде после смены домена: git pull + restart gunicorn.
 # Дополнительно без деплоя: переменная DJANGO_ALLOWED_HOSTS=foo.ru,bar.ru (через запятую).
@@ -199,7 +207,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 # Отдавать загрузки через Django, если nginx не настроен (демо на artemadera.su)
-SERVE_MEDIA = True
+SERVE_MEDIA = _env_bool("DJANGO_SERVE_MEDIA", default=DEBUG)
 
 # Токен для GET /export/yandex-direct-conversions.csv
 # Приоритет: непустой env → значение из .env → при DEBUG дефолт (на проде выставьте env / Secrets!)

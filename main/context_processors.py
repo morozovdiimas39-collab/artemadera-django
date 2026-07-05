@@ -356,11 +356,12 @@ def _portfolio_defaults():
 def portfolio_processor(request):
     try:
         section = PortfolioSection.load()
-        projects = list(
+        queryset = (
             PortfolioProject.objects.filter(is_active=True)
             .prefetch_related("photos")
             .order_by("sort_order", "pk")
         )
+        projects = list(queryset[:18])
         projects = [p for p in projects if p.has_image]
     except OperationalError:
         return _portfolio_defaults()
