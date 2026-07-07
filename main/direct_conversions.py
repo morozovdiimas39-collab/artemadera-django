@@ -50,8 +50,15 @@ REVENUE_OPEN = 300
 REVENUE_WON = 15000
 
 
-def _lead_status_revenue(lead: ContactLead) -> tuple[str, int]:
-    status = (getattr(lead, "direct_status", "") or ContactLead.DIRECT_STATUS_IN_PROGRESS).strip()
+def _lead_is_marked_for_direct(lead: ContactLead) -> bool:
+    status = (getattr(lead, "direct_status", "") or "").strip()
+    return bool(getattr(lead, "direct_status_updated_at", None)) and status != ContactLead.DIRECT_STATUS_PENDING
+
+
+def _lead_status_revenue(lead: ContactLead) -> tuple[str, int] | None:
+    if not _lead_is_marked_for_direct(lead):
+        return None
+    status = (getattr(lead, "direct_status", "") or ContactLead.DIRECT_STATUS_PENDING).strip()
     if status == ContactLead.DIRECT_STATUS_PAID:
         return "PAID", REVENUE_WON
     if status == ContactLead.DIRECT_STATUS_CANCELLED:
@@ -102,9 +109,10 @@ def _format_direct_datetime(dt) -> str:
 
 def _deal_status_revenue(deal: CrmDeal) -> tuple[str, int]:
     if getattr(deal, "site_lead_id", None):
-        lead_status = (getattr(deal.site_lead, "direct_status", "") or "").strip()
-        if lead_status and lead_status != ContactLead.DIRECT_STATUS_IN_PROGRESS:
-            return _lead_status_revenue(deal.site_lead)
+        status_revenue = _lead_status_revenue(deal.site_lead)
+        if status_revenue is None:
+            return "", 0
+        return status_revenue
 
     st = deal.stage.stage_type
     if st == CrmStage.TYPE_WON:
@@ -149,6 +157,8 @@ def _iter_rows() -> Iterator[list[Any]]:
             continue
 
         order_status, revenue_val = _deal_status_revenue(deal)
+        if not order_status:
+            continue
         if revenue_val < 0 or revenue_val > MAX_REVENUE:
             revenue_val = 0
         revenue = f"{float(revenue_val):.1f}" if revenue_val else ""
@@ -187,7 +197,10 @@ def _iter_rows() -> Iterator[list[Any]]:
         if not ym and not phone:
             continue
 
-        order_status, revenue_val = _lead_status_revenue(lead)
+        status_revenue = _lead_status_revenue(lead)
+        if status_revenue is None:
+            continue
+        order_status, revenue_val = status_revenue
         revenue = f"{float(revenue_val):.1f}" if revenue_val else ""
 
         yield [

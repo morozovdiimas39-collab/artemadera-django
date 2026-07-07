@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class CalculatorConfig(models.Model):
@@ -1099,11 +1100,13 @@ class LeadEmailSettings(models.Model):
 
 
 class ContactLead(models.Model):
+    DIRECT_STATUS_PENDING = "PENDING"
     DIRECT_STATUS_IN_PROGRESS = "IN_PROGRESS"
     DIRECT_STATUS_PAID = "PAID"
     DIRECT_STATUS_CANCELLED = "CANCELLED"
     DIRECT_STATUS_SPAM = "SPAM"
     DIRECT_STATUS_CHOICES = [
+        (DIRECT_STATUS_PENDING, "Не отмечено"),
         (DIRECT_STATUS_IN_PROGRESS, "Целевой"),
         (DIRECT_STATUS_PAID, "Оплачен"),
         (DIRECT_STATUS_CANCELLED, "Нецелевой"),
@@ -1134,9 +1137,9 @@ class ContactLead(models.Model):
     direct_status = models.CharField(
         max_length=16,
         choices=DIRECT_STATUS_CHOICES,
-        default=DIRECT_STATUS_IN_PROGRESS,
+        default=DIRECT_STATUS_PENDING,
         verbose_name="Статус для CSV Директа",
-        help_text="Меняется из письма кнопками: целевой, нецелевой, спам, оплачен.",
+        help_text="Новая заявка не попадает в CSV, пока её не отметили из письма: целевой, нецелевой, спам, оплачен.",
     )
     direct_status_updated_at = models.DateTimeField(
         blank=True,
@@ -1152,6 +1155,13 @@ class ContactLead(models.Model):
 
     def __str__(self):
         return f"{self.name} — {self.phone}"
+
+    def save(self, *args, **kwargs):
+        if self.direct_status == self.DIRECT_STATUS_PENDING:
+            self.direct_status_updated_at = None
+        elif not self.direct_status_updated_at:
+            self.direct_status_updated_at = timezone.now()
+        super().save(*args, **kwargs)
 
     def traffic_summary(self):
         if self.utm_source:

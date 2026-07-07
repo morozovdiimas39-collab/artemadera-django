@@ -194,6 +194,20 @@
    #1c120c 100%
   );
  }
+ @media (min-width: 1024px) {
+  .page-hero .hero-stats {
+   max-width: min(100%, 72rem) !important;
+   flex-wrap: nowrap !important;
+   gap: clamp(1.5rem, 3vw, 3rem) !important;
+  }
+  .page-hero .hero-stats > .flex.items-center {
+   flex: 0 0 auto;
+   min-width: 0;
+  }
+  .page-hero .hero-stats .text-white.font-bold {
+   white-space: nowrap;
+  }
+ }
  @media (max-width: 639px) {
   .page-hero {
    min-height: 100svh;

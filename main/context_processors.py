@@ -44,7 +44,7 @@ def _home_services_defaults():
     seeds = [
         ("shlifovka", "Шлифовка", "Срубы, брус, оцилиндровка и лафет.", "/shlifovka", "", "", "images/quiz/quiz_shlifovka_1776809850085.png"),
         ("pokraska", "Покраска", "Грунт, масла и лазури для фасада и интерьера.", "/pokraska", "", "под ключ", "images/quiz/quiz_pokraska_1776809864700.png"),
-        ("teplyy-shov", "Тёплый шов", "Заполнение межвенцовых швов эластичным составом.", "/teplyy-shov", "", "герметизация", "images/quiz/quiz_konopatka_1776809894304.png"),
+        ("teplyy-shov", "Тёплый шов", "Заполнение межвенцовых швов эластичным составом.", "/teplyy-shov", "", "герметизация", "services/teplyy-shov-finished.webp"),
         ("otdelochnye-raboty", "Отделочные работы", "Комплексная внутренняя и внешняя отделка деревянных домов.", "/otdelochnye-raboty", "", "под ключ", "images/service-2.jpg"),
         ("obsada-okna", "Обсада / окна", "Обсадные короба и подготовка оконных проёмов.", "/obsada", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
         ("kryshi", "Крыши", "Монтаж и ремонт кровли.", "/kryshi", "", "кровля", "images/portfolio-3.jpg"),
@@ -809,7 +809,7 @@ def _blog_defaults():
             "mozhno-li-shlifovat-srub-zimoy", "images/quiz/quiz_shlifovka_1776809850085.png"),
         _make_post(2, "Что такое «тёплый шов» для деревянного дома",
             "Зачем нужен эластичный герметик в межвенцовых швах и как он защищает древесину.",
-            "chto-takoe-teplyy-shov", "images/quiz/quiz_konopatka_1776809894304.png"),
+            "chto-takoe-teplyy-shov", "services/teplyy-shov-finished.webp"),
         _make_post(3, "Как подготовить дом из бруса к покраске",
             "Этапы шлифовки, удаления пыли и выбора системы покрытия для фасада.",
             "kak-podgotovit-dom-iz-brusa-k-pokraske", "images/quiz/quiz_pokraska_1776809864700.png"),
@@ -872,7 +872,7 @@ _QUIZ_PRODUCTION_OPTIONS = [
 _QUIZ_STATIC_IMAGES = {
     "shlifovka": "/media/pages/hero/137908e0-151b-425d-9233-b2af8fca286d.webp",
     "pokraska": "/media/pages/hero/23b84e30-5a9c-45b5-acca-0462e07d96e2.webp",
-    "teplyy-shov": "/media/pages/hero/1548c512-16f1-44ac-ab5f-c0bcd0881ee2.webp",
+    "teplyy-shov": "/media/services/teplyy-shov-finished.webp",
     "obsada": "/media/home_quiz/окосячка_квиз.webp",
     "kryshi": "/media/home_quiz/22d51408-b9ec-4da9-86e0-b331453930c7.webp",
     "otdelka": "/media/pages/hero/181d5f3a-d444-4273-8649-fdb655ea1b49.webp",
@@ -1066,7 +1066,7 @@ def site_page_processor(request):
 _HOME_QUIZ_IMAGE_ROWS = [
     ("shlifovka", "image_shlifovka", "images/quiz/quiz_shlifovka_1776809850085.png"),
     ("pokraska", "image_pokraska", "images/quiz/quiz_pokraska_1776809864700.png"),
-    ("teplyy-shov", "image_teplyy_shov", "images/quiz/quiz_konopatka_1776809894304.png"),
+    ("teplyy-shov", "image_teplyy_shov", "services/teplyy-shov-finished.webp"),
     ("okosyachka", "image_okosyachka", "images/quiz/quiz_srub_1776809774832.png"),
     ("obsada", "image_obsada", "images/quiz/quiz_brus_1776809793588.png"),
     ("kryshi", "image_kryshi", "images/portfolio-3.jpg"),
