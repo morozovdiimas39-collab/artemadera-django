@@ -1032,13 +1032,15 @@ class LeadEmailSettingsAdmin(ModelAdmin):
             "SMTP",
             {
                 "fields": (
+                    "from_email",
                     "smtp_login",
                     "smtp_password",
                     ("smtp_host", "smtp_port"),
                     ("smtp_use_tls", "smtp_use_ssl"),
                 ),
                 "description": (
-                    "Для Яндекса: логин почты + пароль приложения. Обычно host=smtp.yandex.ru, "
+                    "Email отправителя — то, что будет видно в письме. SMTP логин — техническая почта "
+                    "для авторизации. Для Яндекса: логин почты + пароль приложения. Обычно host=smtp.yandex.ru, "
                     "port=587, TLS включён. Если 587 закрыт на хостинге — port=465, TLS выключить, SSL включить."
                 ),
             },
