@@ -5,17 +5,11 @@ from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.exceptions import TemplateDoesNotExist
-from django.db import transaction
 from django.utils import timezone
 
 from .models import ContactLead, BlogPost, BlogSection
 
 logger = logging.getLogger(__name__)
-
-try:
-    from crm.services import create_deal_from_site_lead
-except ImportError:
-    create_deal_from_site_lead = None
 
 
 def _is_xhr_contact(request):
@@ -86,6 +80,16 @@ def _lead_traffic_kwargs(request):
     return data
 
 
+def _lead_crm_deal_id(lead):
+    """CRM/email обрабатываются signal'ом; ответ формы не должен падать из-за них."""
+    try:
+        deal = getattr(lead, "crm_deal", None)
+    except Exception:
+        logger.exception("Не удалось получить CRM-сделку для заявки #%s", lead.pk)
+        return None
+    return getattr(deal, "pk", None) or None
+
+
 def _handle_contact_post(request, base_path):
     """Handle contact form POST. Returns redirect, JsonResponse, or None."""
     if request.method != "POST":
@@ -98,23 +102,17 @@ def _handle_contact_post(request, base_path):
             return JsonResponse({"ok": False, "error": "phone_required"}, status=400)
         return None
     try:
-        with transaction.atomic():
-            lead = ContactLead.objects.create(
-                name=(request.POST.get("name") or "").strip() or "—",
-                phone=phone,
-                message=_contact_post_message(request),
-                **_lead_traffic_kwargs(request),
-            )
-            if not create_deal_from_site_lead:
-                raise RuntimeError("CRM service is unavailable")
-            deal = create_deal_from_site_lead(
-                lead,
-                from_block=request.POST.get("from_block") or None,
-            )
-            if not deal or not deal.pk:
-                raise RuntimeError(f"CRM deal was not created for lead #{lead.pk}")
+        lead = ContactLead.objects.create(
+            name=(request.POST.get("name") or "").strip() or "—",
+            phone=phone,
+            message=_contact_post_message(request),
+            **_lead_traffic_kwargs(request),
+        )
+        crm_deal_id = _lead_crm_deal_id(lead)
         if _is_xhr_contact(request):
-            return JsonResponse({"ok": True, "lead_id": lead.pk, "crm_deal_id": deal.pk})
+            return JsonResponse(
+                {"ok": True, "lead_id": lead.pk, "crm_deal_id": crm_deal_id}
+            )
         from_block = (request.POST.get("from_block") or "").strip()
         if from_block == "measure":
             return redirect(f"{base_path}?sent=1&from=measure#zamer")

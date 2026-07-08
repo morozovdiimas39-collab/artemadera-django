@@ -1,3 +1,4 @@
+{% load static %}
 <footer class="site-footer">
  <div class="site-footer-top">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,7 +23,9 @@
   <div class="site-footer-main">
    <div class="site-footer-brand">
     <a href="/" class="site-footer-logo">
-     <span class="site-footer-logo-mark" aria-hidden="true">M</span>
+     <span class="site-footer-logo-mark" aria-hidden="true">
+      <img src="{% static 'favicon-32x32.png' %}?v=2" alt="" class="site-footer-logo-mark-img" loading="lazy" decoding="async"/>
+     </span>
      <span class="site-footer-logo-text">
       <span class="site-footer-logo-name"><span class="text-white">Arte</span><span class="text-amber-400">Madera</span></span>
       <span class="site-footer-logo-tag">Отделка деревянных домов</span>

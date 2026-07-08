@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save
 from django.test import Client, TestCase
 from django.urls import reverse
+from unittest.mock import patch
 
 from .direct_conversions import build_direct_conversions_csv
 from .lead_notifications import signed_lead_status_token
@@ -56,3 +57,28 @@ class DirectConversionsCsvTests(TestCase):
         self.assertIn(f"lead_{lead.pk}", csv_data)
         self.assertIn("SPAM", csv_data)
         self.assertNotIn("300.0", csv_data)
+
+
+class ContactLeadSubmitTests(TestCase):
+    def test_contact_form_accepts_lead_even_when_crm_signal_fails(self):
+        with patch(
+            "crm.services.create_deal_from_site_lead",
+            side_effect=RuntimeError("CRM unavailable"),
+        ), patch("main.lead_notifications.send_lead_created_email"):
+            response = Client(HTTP_HOST="artemadera.ru").post(
+                "/",
+                {
+                    "form_type": "contact",
+                    "name": "Тест",
+                    "phone": "+7 (999) 333-44-55",
+                    "message": "Проверка заявки",
+                    "from_block": "contact",
+                },
+                HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["ok"], True)
+        self.assertTrue(
+            ContactLead.objects.filter(phone="+7 (999) 333-44-55").exists()
+        )

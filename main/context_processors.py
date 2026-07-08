@@ -720,7 +720,7 @@ def _before_after_defaults():
     items = [
         SimpleNamespace(
             pk=1,
-            title="Шлифовка сруба",
+            title="Шлифовка",
             before_image=None,
             after_image=None,
             before_static="images/before.jpg",
