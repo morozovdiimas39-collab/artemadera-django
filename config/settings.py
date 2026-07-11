@@ -108,6 +108,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'main.middleware.CanonicalHostMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -232,7 +233,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_BASE_URL = (
     os.environ.get("SITE_BASE_URL")
     or os.environ.get("DEFAULT_SITE_URL")
-    or "https://artemadera.su"
+    or "https://artemadera.ru"
 ).strip().rstrip("/")
 EMAIL_HOST_USER = (
     os.environ.get("EMAIL_HOST_USER")
