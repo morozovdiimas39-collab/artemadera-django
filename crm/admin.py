@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 
 from django.contrib import admin
 from django.http import HttpResponseBadRequest, JsonResponse
@@ -47,6 +48,8 @@ class CrmPipelineAdmin(ModelAdmin):
     list_display = ("name", "slug", "is_default", "is_active", "sort_order", "stage_count")
     list_editable = ("is_default", "is_active", "sort_order")
     prepopulated_fields = {"slug": ("name",)}
+    search_fields = ("name", "slug")
+    ordering = ("sort_order", "pk")
     inlines = (CrmStageInline,)
 
     @admin.display(description="Этапов")
@@ -80,19 +83,35 @@ class CrmLeadSourceAdmin(ModelAdmin):
     list_display = ("name", "code", "is_active", "sort_order")
     list_editable = ("is_active", "sort_order")
     search_fields = ("name", "code")
+    ordering = ("sort_order", "pk")
 
 
 @admin.register(CrmTag)
 class CrmTagAdmin(ModelAdmin):
-    list_display = ("name", "color")
+    list_display = ("tag_preview", "name", "color")
+    search_fields = ("name",)
+
+    @admin.display(description="Тег")
+    def tag_preview(self, obj):
+        return format_html(
+            '<span class="am-badge" style="background:{0}22;color:{0};border:1px solid {0}55">{1}</span>',
+            obj.color,
+            obj.name,
+        )
 
 
 @admin.register(CrmContact)
 class CrmContactAdmin(ModelAdmin):
-    list_display = ("name", "phone", "email", "company_name", "deals_count", "updated_at")
+    list_display = ("name", "phone_link", "email", "company_name", "deals_count", "updated_at")
     search_fields = ("name", "phone", "email", "company_name")
     list_filter = ("created_at",)
     readonly_fields = ("created_at", "updated_at")
+    date_hierarchy = "created_at"
+    ordering = ("-updated_at",)
+
+    @admin.display(description="Телефон")
+    def phone_link(self, obj):
+        return format_html('<a class="am-phone-link" href="tel:{0}">{1}</a>', obj.phone, obj.phone)
 
     @admin.display(description="Сделок")
     def deals_count(self, obj):
@@ -104,11 +123,11 @@ class CrmDealAdmin(ModelAdmin):
     list_display = (
         "title",
         "contact",
-        "stage",
+        "stage_badge",
         "responsible",
-        "amount",
-        "priority",
-        "source",
+        "amount_badge",
+        "priority_badge",
+        "source_badge",
         "updated_at",
     )
     list_filter = ("pipeline", "stage", "priority", "source", "responsible")
@@ -116,6 +135,9 @@ class CrmDealAdmin(ModelAdmin):
     autocomplete_fields = ("contact", "responsible", "source")
     filter_horizontal = ("tags",)
     readonly_fields = ("created_at", "updated_at", "closed_at", "site_lead", "traffic_details")
+    list_select_related = ("contact", "pipeline", "stage", "responsible", "source")
+    date_hierarchy = "created_at"
+    ordering = ("-updated_at",)
     inlines = (CrmTaskInline, CrmActivityInline)
     fieldsets = (
         (
@@ -144,6 +166,39 @@ class CrmDealAdmin(ModelAdmin):
             {"fields": (("created_at", "updated_at", "closed_at"),), "classes": ("collapse",)},
         ),
     )
+
+    @admin.display(description="Этап", ordering="stage__sort_order")
+    def stage_badge(self, obj):
+        return format_html(
+            '<span class="am-badge" style="background:{0}20;color:{0};border:1px solid {0}55">{1}</span>',
+            obj.stage.color,
+            obj.stage.name,
+        )
+
+    @admin.display(description="Бюджет", ordering="amount")
+    def amount_badge(self, obj):
+        if not obj.amount:
+            return "—"
+        return format_html('<span class="am-badge am-badge--success">{}</span>', f"{obj.amount:,.0f} ₽".replace(",", " "))
+
+    @admin.display(description="Приоритет", ordering="priority")
+    def priority_badge(self, obj):
+        classes = {
+            CrmDeal.PRIORITY_HIGH: "am-badge--danger",
+            CrmDeal.PRIORITY_NORMAL: "am-badge--neutral",
+            CrmDeal.PRIORITY_LOW: "am-badge--pending",
+        }
+        return format_html(
+            '<span class="am-badge {}">{}</span>',
+            classes.get(obj.priority, "am-badge--neutral"),
+            obj.get_priority_display(),
+        )
+
+    @admin.display(description="Источник", ordering="source__name")
+    def source_badge(self, obj):
+        if not obj.source:
+            return "—"
+        return format_html('<span class="am-source">{}</span>', obj.source.name)
 
     @admin.display(description="UTM и переход")
     def traffic_details(self, obj):
@@ -201,6 +256,8 @@ class CrmDealAdmin(ModelAdmin):
             pipeline = pipelines.filter(is_default=True).first() or pipelines.first()
 
         columns = []
+        board_count = 0
+        board_total = Decimal("0")
         if pipeline:
             deals_qs = (
                 CrmDeal.objects.filter(pipeline=pipeline)
@@ -210,6 +267,8 @@ class CrmDealAdmin(ModelAdmin):
             for stage in pipeline.stages.order_by("sort_order"):
                 stage_deals = [d for d in deals_qs if d.stage_id == stage.id]
                 total = sum((d.amount or 0) for d in stage_deals)
+                board_count += len(stage_deals)
+                board_total += total
                 columns.append(
                     {
                         "stage": stage,
@@ -226,6 +285,8 @@ class CrmDealAdmin(ModelAdmin):
             "pipelines": pipelines,
             "pipeline": pipeline,
             "columns": columns,
+            "board_count": board_count,
+            "board_total": board_total,
             "move_url": reverse("admin:crm_crmdeal_kanban_move"),
         }
         return TemplateResponse(request, "admin/crm/deal_kanban.html", context)
@@ -272,6 +333,9 @@ class CrmTaskAdmin(ModelAdmin):
     list_filter = ("is_done", "assigned_to", "due_at")
     search_fields = ("title", "deal__title")
     autocomplete_fields = ("deal", "assigned_to")
+    list_select_related = ("deal", "assigned_to")
+    date_hierarchy = "due_at"
+    ordering = ("is_done", "due_at", "-created_at")
 
 
 @admin.register(CrmActivity)
@@ -280,6 +344,8 @@ class CrmActivityAdmin(ModelAdmin):
     list_filter = ("activity_type", "created_at")
     search_fields = ("body", "deal__title")
     autocomplete_fields = ("deal", "author")
+    list_select_related = ("deal", "author")
+    date_hierarchy = "created_at"
 
     @admin.display(description="Текст")
     def body_preview(self, obj):

@@ -8,16 +8,19 @@
  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}?v=2" />
  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}?v=2" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>{% block title %}ArteMadera — Премиальная отделка деревянных домов в Москве{% endblock %}</title>
- <meta name="description" content="{% block meta_description %}Профессиональная шлифовка, покраска и реставрация деревянных домов. Гарантия до 3 лет. ☎ +7 (495) 005-01-45{% endblock %}" />
- {% block canonical %}{% endblock %}
+ <title>{% block title %}{% if seo.title %}{{ seo.title }}{% else %}ArteMadera — Премиальная отделка деревянных домов в Москве{% endif %}{% endblock %}</title>
+ <meta name="description" content="{% block meta_description %}{% if seo.description %}{{ seo.description }}{% else %}Профессиональная шлифовка, покраска и реставрация деревянных домов. Гарантия до 3 лет. ☎ +7 (495) 005-01-45{% endif %}{% endblock %}" />
+ {% if seo.noindex %}<meta name="robots" content="noindex, nofollow" />{% endif %}
+ {% block canonical %}{% if seo.canonical_url %}<link rel="canonical" href="{{ seo.canonical_url }}" />{% endif %}{% endblock %}
  {% block og_tags %}
- <meta property="og:title" content="ArteMadera — Премиальная отделка деревянных домов в Москве" />
- <meta property="og:description" content="Профессиональная шлифовка, покраска и реставрация деревянных домов. Гарантия до 3 лет." />
- <meta property="og:type" content="website" />
+ <meta property="og:title" content="{% if seo.title %}{{ seo.title }}{% else %}ArteMadera — Премиальная отделка деревянных домов в Москве{% endif %}" />
+ <meta property="og:description" content="{% if seo.description %}{{ seo.description }}{% else %}Профессиональная шлифовка, покраска и реставрация деревянных домов. Гарантия до 3 лет.{% endif %}" />
+ <meta property="og:type" content="{% if seo.og_type %}{{ seo.og_type }}{% else %}website{% endif %}" />
+ {% if seo.canonical_url %}<meta property="og:url" content="{{ seo.canonical_url }}" />{% endif %}
+ {% if seo.og_image %}<meta property="og:image" content="{{ seo.og_image }}" />{% endif %}
  <meta property="og:locale" content="ru_RU" />
  {% endblock %}
- {% block structured_data %}{% endblock %}
+ {% block structured_data %}{% if seo.schema_json %}<script type="application/ld+json">{{ seo.schema_json|safe }}</script>{% endif %}{% endblock %}
  <link rel="preconnect" href="https://fonts.googleapis.com" />
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />

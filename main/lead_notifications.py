@@ -48,7 +48,7 @@ def _site_base_url() -> str:
     raw = (
         getattr(settings, "SITE_BASE_URL", "")
         or getattr(settings, "DEFAULT_SITE_URL", "")
-        or "https://artemadera.su"
+        or "https://artemadera.ru"
     )
     return str(raw).strip().rstrip("/")
 
@@ -77,7 +77,7 @@ def _email_connection_from_config(cfg):
         (getattr(cfg, "from_email", "") or "").strip()
         or login
         or getattr(settings, "DEFAULT_FROM_EMAIL", None)
-        or "noreply@artemadera.su"
+        or "noreply@artemadera.ru"
     )
     host = _smtp_host_for_login(login, (getattr(cfg, "smtp_host", "") or getattr(settings, "EMAIL_HOST", "") or "").strip())
     port = int(getattr(cfg, "smtp_port", None) or getattr(settings, "EMAIL_PORT", 587) or 587)
@@ -125,7 +125,7 @@ def _yandex_ssl_fallback_connection(cfg):
         (getattr(cfg, "from_email", "") or "").strip()
         or login
         or getattr(settings, "DEFAULT_FROM_EMAIL", None)
-        or "noreply@artemadera.su"
+        or "noreply@artemadera.ru"
     )
     host = _smtp_host_for_login(login, (getattr(cfg, "smtp_host", "") or "").strip())
     if not login or not password or host != "smtp.yandex.ru":

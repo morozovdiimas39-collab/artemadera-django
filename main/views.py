@@ -257,6 +257,7 @@ def generic_service(request, path):
 
 def blog_list(request):
     from .context_processors import _blog_defaults
+    from .seo import build_blog_list_seo
     try:
         section = BlogSection.load()
         posts = list(
@@ -264,14 +265,20 @@ def blog_list(request):
         )
     except OperationalError:
         defaults = _blog_defaults()
+        defaults["seo"] = build_blog_list_seo()
         return render(request, "blog_list.html", defaults)
     if not posts:
         defaults = _blog_defaults()
         posts = defaults["blog_posts"]
-    return render(request, "blog_list.html", {"blog_section": section, "blog_posts": posts})
+    return render(
+        request,
+        "blog_list.html",
+        {"blog_section": section, "blog_posts": posts, "seo": build_blog_list_seo()},
+    )
 
 
 def blog_detail(request, slug):
+    from .seo import build_blog_post_seo
     try:
         post = get_object_or_404(BlogPost, slug=slug, is_active=True)
     except OperationalError:
@@ -280,12 +287,16 @@ def blog_detail(request, slug):
         section = BlogSection.load()
     except OperationalError:
         section = None
-    return render(request, "blog_detail.html", {"post": post, "blog_section": section})
+    return render(
+        request,
+        "blog_detail.html",
+        {"post": post, "blog_section": section, "seo": build_blog_post_seo(post)},
+    )
 
 
 def robots_txt(request):
-    host = request.get_host()
-    scheme = "https" if not request.is_secure() and host == "artemadera.ru" else request.scheme
+    from .seo import SITE_URL
+
     content = "\n".join(
         [
             "User-agent: *",
@@ -293,7 +304,7 @@ def robots_txt(request):
             "Disallow: /admin/",
             "Disallow: /export/",
             "Disallow: /lead-status/",
-            f"Sitemap: {scheme}://{host}/sitemap.xml",
+            f"Sitemap: {SITE_URL}/sitemap.xml",
             "",
         ]
     )
@@ -302,21 +313,19 @@ def robots_txt(request):
 
 def sitemap_xml(request):
     from .models import BlogPost, SitePage
+    from .seo import SITE_URL, canonical_path_for_key, sitemap_paths
 
-    host = request.get_host()
-    scheme = "https" if not request.is_secure() and host == "artemadera.ru" else request.scheme
-    base_url = f"{scheme}://{host}"
-    paths = {"/", "/shlifovka", "/pokraska", "/teplyy-shov", "/blog"}
+    paths = set(sitemap_paths())
+    paths.add("/blog/")
 
-    for page_key in SitePage.objects.filter(is_active=True).values_list("page_key", flat=True):
+    for page_key in SitePage.objects.filter(is_active=True, seo_noindex=False).values_list("page_key", flat=True):
         key = (page_key or "").strip("/")
-        if key and key != "home":
-            paths.add(f"/{key}")
+        paths.add(canonical_path_for_key(key or "home"))
     for slug in BlogPost.objects.filter(is_active=True).exclude(slug="").values_list("slug", flat=True):
         paths.add(f"/blog/{slug}/")
 
     urls = "".join(
-        f"<url><loc>{escape(base_url + path)}</loc></url>"
+        f"<url><loc>{escape(SITE_URL + path)}</loc></url>"
         for path in sorted(paths)
     )
     xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'

@@ -408,6 +408,22 @@ class SitePage(models.Model):
         help_text="Можно перенос строки — отобразится как <br>",
     )
     hero_lead = models.TextField(blank=True, verbose_name="Подзаголовок под H1")
+    seo_title = models.CharField(
+        max_length=180,
+        blank=True,
+        verbose_name="SEO title",
+        help_text="Если пусто — подставится автозаголовок по URL страницы.",
+    )
+    seo_description = models.TextField(
+        blank=True,
+        verbose_name="SEO description",
+        help_text="Если пусто — подставится автоописание по URL страницы.",
+    )
+    seo_noindex = models.BooleanField(
+        default=False,
+        verbose_name="Не индексировать",
+        help_text="Включайте только для технических или временных страниц.",
+    )
 
     show_services_block = models.BooleanField(
         default=False,

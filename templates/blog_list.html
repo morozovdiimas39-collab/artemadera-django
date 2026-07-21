@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block body_class %}page-blog{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ seo.canonical_url }}" />{% endblock %}
 
 {% block content %}
 <section style="padding: 7rem 0 3rem; background: #1c120c; position: relative;">

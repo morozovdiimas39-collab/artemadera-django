@@ -17,7 +17,7 @@
   <div class="crm-kanban-toolbar-left">
    <h1 class="crm-kanban-title">Воронка продаж</h1>
    {% if pipeline %}
-   <p class="crm-kanban-subtitle">{{ pipeline.name }}</p>
+   <p class="crm-kanban-subtitle">{{ pipeline.name }} · перетаскивайте карточки между этапами</p>
    {% endif %}
   </div>
   <div class="crm-kanban-toolbar-right">
@@ -39,6 +39,20 @@
  {% if not pipeline %}
  <p class="crm-kanban-empty">Создайте воронку в разделе «Воронки».</p>
  {% else %}
+ <div class="crm-kanban-stats">
+  <div class="crm-kanban-stat">
+   <span class="crm-kanban-stat-label">Сделок</span>
+   <strong>{{ board_count }}</strong>
+  </div>
+  <div class="crm-kanban-stat">
+   <span class="crm-kanban-stat-label">Бюджет</span>
+   <strong>{{ board_total|floatformat:0 }} ₽</strong>
+  </div>
+  <div class="crm-kanban-stat">
+   <span class="crm-kanban-stat-label">Этапов</span>
+   <strong>{{ columns|length }}</strong>
+  </div>
+ </div>
  <div class="crm-kanban-board">
   {% for column in columns %}
   <section class="crm-kanban-column" data-stage-id="{{ column.stage.pk }}">
@@ -62,6 +76,9 @@
      <a href="{% url 'admin:crm_crmdeal_change' deal.pk %}" class="crm-kanban-card-title">{{ deal.title }}</a>
      {% if deal.contact %}
      <p class="crm-kanban-card-contact">{{ deal.contact.name }} · {{ deal.contact.phone }}</p>
+     {% endif %}
+     {% if deal.source %}
+     <p class="crm-kanban-card-source">{{ deal.source.name }}</p>
      {% endif %}
      <div class="crm-kanban-card-meta">
       {% if deal.amount %}

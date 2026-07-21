@@ -96,6 +96,8 @@ class SitePageAdmin(AdminImageCompressionMixin, ModelAdmin):
     list_filter = ("is_active", "show_services_block")
     search_fields = ("title", "page_key")
     ordering = ("sort_order", "title")
+    list_per_page = 30
+    save_on_top = True
     inlines = (PageServiceLinkInline, BeforeAfterItemInline)
 
     def get_readonly_fields(self, request, obj=None):
@@ -137,6 +139,16 @@ class SitePageAdmin(AdminImageCompressionMixin, ModelAdmin):
                     "description": (
                         "Заголовок H1 меняется на сайте сразу после сохранения страницы. "
                         "Если обе части пустые, используется текущий заголовок из шаблона."
+                    ),
+                },
+            ),
+            (
+                "SEO",
+                {
+                    "fields": ("seo_title", "seo_description", "seo_noindex"),
+                    "description": (
+                        "Уникальные title/description для поисковиков. "
+                        "Пустые поля безопасны: сайт подставит SEO-текст по URL страницы."
                     ),
                 },
             ),
@@ -218,6 +230,8 @@ class ServiceAdmin(AdminImageCompressionMixin, ModelAdmin):
     search_fields = ("name", "slug", "short_description")
     prepopulated_fields = {"slug": ("name",)}
     autocomplete_fields = ("calculator_profile",)
+    list_per_page = 50
+    save_on_top = True
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -496,6 +510,8 @@ class PortfolioProjectAdmin(AdminImageCompressionMixin, ModelAdmin):
     list_filter = ("is_active", "house_type", "has_before_after")
     search_fields = ("title", "summary", "location", "work_types", "source_url")
     ordering = ("sort_order", "pk")
+    list_per_page = 30
+    save_on_top = True
     inlines = (PortfolioProjectImageInline,)
 
     def get_fieldsets(self, request, obj=None):
@@ -968,7 +984,16 @@ class BlogPostAdmin(AdminImageCompressionMixin, ModelAdmin):
 
 @admin.register(ContactLead)
 class ContactLeadAdmin(ModelAdmin):
-    list_display = ("name", "phone", "direct_status", "traffic_source", "ym_client_id", "crm_deal_link", "created_at")
+    list_display = (
+        "created_at",
+        "name",
+        "phone_link",
+        "status_badge",
+        "traffic_source",
+        "page_short",
+        "ym_client_id",
+        "crm_deal_link",
+    )
     list_filter = ("direct_status", "created_at")
     search_fields = (
         "name",
@@ -984,13 +1009,104 @@ class ContactLeadAdmin(ModelAdmin):
         "landing_page",
         "referrer",
     )
-    readonly_fields = ("created_at", "direct_status_updated_at", "crm_deal_link")
+    readonly_fields = ("created_at", "direct_status_updated_at", "crm_deal_link", "traffic_details")
     ordering = ("-created_at",)
-    actions = ("create_crm_deals",)
+    actions = (
+        "mark_direct_target",
+        "mark_direct_cancelled",
+        "mark_direct_spam",
+        "create_crm_deals",
+    )
+    date_hierarchy = "created_at"
+    list_per_page = 50
+    fieldsets = (
+        (
+            "Заявка",
+            {
+                "fields": (
+                    ("name", "phone"),
+                    "message",
+                    ("direct_status", "direct_status_updated_at"),
+                    "crm_deal_link",
+                    "created_at",
+                )
+            },
+        ),
+        (
+            "Источник и реклама",
+            {
+                "fields": ("traffic_details",),
+                "classes": ("collapse",),
+            },
+        ),
+        (
+            "UTM вручную",
+            {
+                "fields": (
+                    ("page_url", "landing_page"),
+                    "referrer",
+                    ("utm_source", "utm_medium", "utm_campaign"),
+                    ("utm_content", "utm_term"),
+                    ("yclid", "gclid", "fbclid", "ymclid"),
+                    "ym_client_id",
+                ),
+                "classes": ("collapse",),
+            },
+        ),
+    )
 
     @admin.display(description="Источник")
     def traffic_source(self, obj):
-        return obj.traffic_summary()
+        return format_html('<span class="am-source">{}</span>', obj.traffic_summary())
+
+    @admin.display(description="Телефон", ordering="phone")
+    def phone_link(self, obj):
+        return format_html('<a class="am-phone-link" href="tel:{0}">{1}</a>', obj.phone, obj.phone)
+
+    @admin.display(description="Статус CSV", ordering="direct_status")
+    def status_badge(self, obj):
+        classes = {
+            ContactLead.DIRECT_STATUS_PENDING: "am-badge--pending",
+            ContactLead.DIRECT_STATUS_IN_PROGRESS: "am-badge--success",
+            ContactLead.DIRECT_STATUS_PAID: "am-badge--success",
+            ContactLead.DIRECT_STATUS_CANCELLED: "am-badge--danger",
+            ContactLead.DIRECT_STATUS_SPAM: "am-badge--danger",
+        }
+        return format_html(
+            '<span class="am-badge {}">{}</span>',
+            classes.get(obj.direct_status, "am-badge--neutral"),
+            obj.get_direct_status_display(),
+        )
+
+    @admin.display(description="Страница")
+    def page_short(self, obj):
+        url = obj.page_url or obj.landing_page
+        if not url:
+            return "—"
+        short = url.replace("https://artemadera.ru", "").replace("https://www.artemadera.ru", "")
+        return format_html('<span class="am-source" title="{}">{}</span>', url, short or "/")
+
+    @admin.display(description="Детали источника")
+    def traffic_details(self, obj):
+        rows = [
+            ("Страница заявки", obj.page_url),
+            ("Посадочная страница", obj.landing_page),
+            ("Referrer", obj.referrer),
+            ("utm_source", obj.utm_source),
+            ("utm_medium", obj.utm_medium),
+            ("utm_campaign", obj.utm_campaign),
+            ("utm_content", obj.utm_content),
+            ("utm_term", obj.utm_term),
+            ("yclid", obj.yclid),
+            ("gclid", obj.gclid),
+            ("fbclid", obj.fbclid),
+            ("ymclid", obj.ymclid),
+            ("ClientID Метрики", obj.ym_client_id),
+        ]
+        lines = [f"{label}: {value}" for label, value in rows if value]
+        if not lines:
+            return "—"
+        return format_html('<pre style="white-space:pre-wrap;margin:0">{}</pre>', "\n".join(lines))
 
     @admin.display(description="CRM")
     def crm_deal_link(self, obj):
@@ -1013,6 +1129,41 @@ class ContactLeadAdmin(ModelAdmin):
             create_deal_from_site_lead(lead, user=request.user)
             created += 1
         self.message_user(request, f"Создано сделок: {created}")
+
+    def _mark_direct_status(self, request, queryset, status, label):
+        updated = 0
+        for lead in queryset:
+            lead.direct_status = status
+            lead.save(update_fields=["direct_status", "direct_status_updated_at"])
+            updated += 1
+        self.message_user(request, f"Заявок отмечено как «{label}»: {updated}")
+
+    @admin.action(description="Отметить для CSV: целевой")
+    def mark_direct_target(self, request, queryset):
+        self._mark_direct_status(
+            request,
+            queryset,
+            ContactLead.DIRECT_STATUS_IN_PROGRESS,
+            "Целевой",
+        )
+
+    @admin.action(description="Отметить для CSV: нецелевой")
+    def mark_direct_cancelled(self, request, queryset):
+        self._mark_direct_status(
+            request,
+            queryset,
+            ContactLead.DIRECT_STATUS_CANCELLED,
+            "Нецелевой",
+        )
+
+    @admin.action(description="Отметить для CSV: спам")
+    def mark_direct_spam(self, request, queryset):
+        self._mark_direct_status(
+            request,
+            queryset,
+            ContactLead.DIRECT_STATUS_SPAM,
+            "Спам",
+        )
 
 
 @admin.register(LeadEmailSettings)

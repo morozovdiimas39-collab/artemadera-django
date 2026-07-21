@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import sys
+from django.templatetags.static import static
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -250,7 +251,7 @@ EMAIL_HOST_PASSWORD = (
 DEFAULT_FROM_EMAIL = (
     os.environ.get("DEFAULT_FROM_EMAIL")
     or EMAIL_HOST_USER
-    or "noreply@artemadera.su"
+    or "noreply@artemadera.ru"
 ).strip()
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
@@ -286,20 +287,29 @@ LEAD_NOTIFICATION_EMAILS = (
 UNFOLD = {
     "SITE_TITLE": "ArteMadera",
     "SITE_HEADER": "ArteMadera",
-    "SITE_SUBHEADER": "Панель управления",
+    "SITE_SUBHEADER": "CRM, заявки и контент сайта",
+    "SITE_ICON": lambda request: static("favicon-32x32.png"),
+    "STYLES": [
+        lambda request: static("admin/css/artemadera_admin.css"),
+    ],
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": False,
         "navigation": [
             {
-                "title": "CRM",
+                "title": "Рабочий стол",
                 "icon": "business",
-                "collapsible": True,
+                "collapsible": False,
                 "items": [
                     {
-                        "title": "Воронка",
+                        "title": "Воронка продаж",
                         "icon": "view_kanban",
                         "link": "/admin/crm/crmdeal/kanban/",
+                    },
+                    {
+                        "title": "Заявки с сайта",
+                        "icon": "inbox",
+                        "link": "/admin/main/contactlead/",
                     },
                     {
                         "title": "Сделки",
@@ -317,11 +327,6 @@ UNFOLD = {
                         "link": "/admin/crm/crmtask/",
                     },
                     {
-                        "title": "Заявки с сайта",
-                        "icon": "inbox",
-                        "link": "/admin/main/contactlead/",
-                    },
-                    {
                         "title": "Почта: уведомления о заявках",
                         "icon": "mail",
                         "link": "/admin/main/leademailsettings/1/change/",
@@ -329,39 +334,24 @@ UNFOLD = {
                 ],
             },
             {
-                "title": "Сайт",
+                "title": "Страницы и услуги",
                 "separator": True,
-                "collapsible": False,
+                "collapsible": True,
                 "items": [
                     {
-                        "title": "Страницы",
+                        "title": "Страницы сайта",
                         "icon": "web",
                         "link": "/admin/main/sitepage/",
                     },
                     {
-                        "title": "Справочник услуг",
+                        "title": "Плитки услуг",
                         "icon": "category",
                         "link": "/admin/main/service/",
-                    },
-                    {
-                        "title": "Калькуляторы и цены",
-                        "icon": "calculate",
-                        "link": "/admin/main/calculatorprofile/",
-                    },
-                    {
-                        "title": "Квиз на главной — фото",
-                        "icon": "photo_library",
-                        "link": "/admin/main/homequizsettings/",
                     },
                     {
                         "title": "До / после",
                         "icon": "compare",
                         "link": "/admin/main/beforeafteritem/",
-                    },
-                    {
-                        "title": "Статьи блога",
-                        "icon": "article",
-                        "link": "/admin/main/blogpost/",
                     },
                     {
                         "title": "Кейсы портфолио (фото)",
@@ -373,10 +363,15 @@ UNFOLD = {
                         "icon": "star",
                         "link": "/admin/main/review/",
                     },
+                    {
+                        "title": "Статьи блога",
+                        "icon": "article",
+                        "link": "/admin/main/blogpost/",
+                    },
                 ],
             },
             {
-                "title": "Блоки на страницах",
+                "title": "Конструктор блоков",
                 "icon": "dashboard",
                 "collapsible": True,
                 "items": [
@@ -443,19 +438,39 @@ UNFOLD = {
                 ],
             },
             {
-                "title": "Служебное",
+                "title": "Маркетинг и настройки",
                 "icon": "settings",
                 "collapsible": True,
                 "items": [
+                    {
+                        "title": "Квиз — фото",
+                        "icon": "quiz",
+                        "link": "/admin/main/homequizsettings/",
+                    },
+                    {
+                        "title": "Калькуляторы и цены",
+                        "icon": "calculate",
+                        "link": "/admin/main/calculatorprofile/",
+                    },
                     {
                         "title": "Слайдер площади",
                         "icon": "tune",
                         "link": "/admin/main/calculatorconfig/",
                     },
                     {
-                        "title": "Почта: заявки с форм",
-                        "icon": "forward_to_inbox",
-                        "link": "/admin/main/leademailsettings/1/change/",
+                        "title": "CSV конверсий Яндекс",
+                        "icon": "download",
+                        "link": "/export/yandex-direct-conversions.csv",
+                    },
+                    {
+                        "title": "Воронки CRM",
+                        "icon": "account_tree",
+                        "link": "/admin/crm/crmpipeline/",
+                    },
+                    {
+                        "title": "Источники лидов",
+                        "icon": "source",
+                        "link": "/admin/crm/crmleadsource/",
                     },
                 ],
             },

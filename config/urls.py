@@ -37,7 +37,7 @@ urlpatterns = [
     path("pokraska/", RedirectView.as_view(url="/pokraska", permanent=True)),
     path("teplyy-shov", teplyy_shov, name="teplyy_shov"),
     path("teplyy-shov/", RedirectView.as_view(url="/teplyy-shov", permanent=True)),
-    path("blog", blog_list),
+    path("blog", RedirectView.as_view(url="/blog/", permanent=True)),
     path("blog/", blog_list, name="blog_list"),
     path("blog/<slug:slug>/", blog_detail, name="blog_detail"),
 ]

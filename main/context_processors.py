@@ -45,7 +45,7 @@ def _home_services_defaults():
         ("shlifovka", "Шлифовка", "Срубы, брус, оцилиндровка и лафет.", "/shlifovka", "", "", "images/quiz/quiz_shlifovka_1776809850085.png"),
         ("pokraska", "Покраска", "Грунт, масла и лазури для фасада и интерьера.", "/pokraska", "", "под ключ", "images/quiz/quiz_pokraska_1776809864700.png"),
         ("teplyy-shov", "Тёплый шов", "Заполнение межвенцовых швов эластичным составом.", "/teplyy-shov", "", "герметизация", "services/teplyy-shov-finished.webp"),
-        ("otdelochnye-raboty", "Отделочные работы", "Комплексная внутренняя и внешняя отделка деревянных домов.", "/otdelochnye-raboty", "", "под ключ", "images/service-2.jpg"),
+        ("otdelochnye-raboty", "Отделочные работы", "Комплексная внутренняя и внешняя отделка деревянного дома.", "/otdelochnye-raboty", "", "под ключ", "images/service-2.jpg"),
         ("obsada-okna", "Обсада / окна", "Обсадные короба и подготовка оконных проёмов.", "/obsada", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
         ("kryshi", "Крыши", "Монтаж и ремонт кровли.", "/kryshi", "", "кровля", "images/portfolio-3.jpg"),
         ("injeneriya", "Инженерия", "Проект и монтаж инженерных систем.", "/injeneriya", "", "коммуникации", "images/after.jpg"),
@@ -1052,6 +1052,7 @@ def _page_quiz_for_page(page):
 
 def site_page_processor(request):
     from .site_page import get_site_page, services_block_captions
+    from .seo import build_page_seo
 
     page = get_site_page(request)
     return {
@@ -1059,6 +1060,7 @@ def site_page_processor(request):
         "page_hero": page,
         "services_block_captions": services_block_captions(page),
         "page_quiz": _page_quiz_for_page(page),
+        "seo": build_page_seo(request, page),
     }
 
 
