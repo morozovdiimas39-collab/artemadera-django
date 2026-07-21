@@ -49,7 +49,7 @@ def _home_services_defaults():
         ("obsada-okna", "Обсада / окна", "Обсадные короба и подготовка оконных проёмов.", "/obsada", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
         ("kryshi", "Крыши", "Монтаж и ремонт кровли.", "/kryshi", "", "кровля", "images/portfolio-3.jpg"),
         ("injeneriya", "Инженерия", "Проект и монтаж инженерных систем.", "/injeneriya", "", "коммуникации", "images/after.jpg"),
-        ("stroitelstvo", "Строительство", "Строительство деревянных домов полного цикла.", "https://artemaderastroy.ru/", "", "полный цикл", "images/hero-bg.jpg"),
+        ("stroitelstvo", "Строительство", "Строительство каркасных домов полного цикла.", "/stroitelstvo/karkasnye-doma", "", "полный цикл", "images/hero-bg.jpg"),
         ("proizvodstvo", "Производство", "Собственное производство изделий из дерева под проект.", "/proizvodstvo", "", "на заказ", "images/portfolio-1.jpg"),
     ]
     calc_slugs = {

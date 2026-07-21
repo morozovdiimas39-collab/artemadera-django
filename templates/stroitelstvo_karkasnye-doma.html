@@ -1,0 +1,433 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}page-karkasnye-doma{% endblock %}
+
+{% block content %}
+<style>
+ .build-page {
+  --build-dark: #160e09;
+  --build-ink: #24170f;
+  --build-panel: #f5efe6;
+  --build-soft: #ede0cf;
+  --build-text: #20160f;
+  --build-muted: #7a6b5e;
+  --build-accent: #e68a00;
+  --build-gold: #f6ad24;
+  background: var(--build-dark);
+  color: #fff;
+ }
+ .build-container { width: min(1200px, calc(100% - 32px)); margin: 0 auto; }
+ .build-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: #140c08;
+ }
+ .build-hero__media { position: absolute; inset: 0; z-index: -2; }
+ .build-hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+ .build-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+   linear-gradient(90deg, rgba(16, 10, 7, .92) 0%, rgba(16, 10, 7, .7) 40%, rgba(16, 10, 7, .28) 100%),
+   linear-gradient(180deg, rgba(16, 10, 7, .35) 0%, rgba(16, 10, 7, .08) 52%, #160e09 100%);
+ }
+ .build-hero__content { max-width: 760px; padding: 150px 0 96px; }
+ .build-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border: 1px solid rgba(246, 173, 36, .28);
+  border-radius: 999px;
+  background: rgba(246, 173, 36, .09);
+  color: #ffd06a;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+ }
+ .build-hero h1 {
+  margin: 22px 0 22px;
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: .92;
+  font-weight: 950;
+  letter-spacing: 0;
+ }
+ .build-hero h1 span { color: var(--build-gold); }
+ .build-hero__lead {
+  max-width: 650px;
+  color: rgba(255,255,255,.82);
+  font-size: clamp(17px, 2vw, 22px);
+  line-height: 1.55;
+ }
+ .build-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+ .build-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 0 24px;
+  border-radius: 10px;
+  font-weight: 850;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  white-space: nowrap;
+ }
+ .build-btn:hover { transform: translateY(-1px); }
+ .build-btn--primary { background: var(--build-accent); color: #fff; }
+ .build-btn--primary:hover { background: #f09809; }
+ .build-btn--ghost { border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.09); color: #fff; }
+ .build-btn--ghost:hover { border-color: rgba(255,255,255,.36); background: rgba(255,255,255,.14); }
+ .build-hero__facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 980px;
+  margin-top: 54px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(16px);
+ }
+ .build-fact { padding: 20px 18px; background: rgba(22,14,9,.72); }
+ .build-fact strong { display: block; color: #fff; font-size: 18px; font-weight: 900; }
+ .build-fact span { display: block; margin-top: 4px; color: rgba(255,255,255,.62); font-size: 13px; line-height: 1.35; }
+ .build-section { padding: 92px 0; background: var(--build-dark); }
+ .build-section--light { background: var(--build-panel); color: var(--build-text); }
+ .build-section--warm { background: linear-gradient(180deg, #1d120c 0%, #24170f 100%); }
+ .build-head { max-width: 760px; margin-bottom: 42px; }
+ .build-head--center { margin-left: auto; margin-right: auto; text-align: center; }
+ .build-head h2 {
+  margin: 14px 0 0;
+  font-size: clamp(34px, 5vw, 64px);
+  line-height: .98;
+  font-weight: 950;
+  letter-spacing: 0;
+ }
+ .build-head h2 span { color: var(--build-gold); }
+ .build-head p { margin-top: 18px; color: var(--build-muted); font-size: 17px; line-height: 1.65; }
+ .build-section:not(.build-section--light) .build-head p { color: rgba(255,255,255,.66); }
+ .build-types {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 22px;
+ }
+ .build-type {
+  position: relative;
+  min-height: 360px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.12);
+  color: #fff;
+  background: #20140d;
+ }
+ .build-type:nth-child(2), .build-type:nth-child(3) { min-height: 300px; }
+ .build-type:nth-child(3) { grid-column: span 2; min-height: 340px; }
+ .build-type img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
+ .build-type:hover img { transform: scale(1.035); }
+ .build-type::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15,9,6,.08) 0%, rgba(15,9,6,.34) 45%, rgba(15,9,6,.86) 100%);
+ }
+ .build-type__body { position: relative; z-index: 1; max-width: 620px; padding: 34px; }
+ .build-type h3 { margin: 0 0 10px; font-size: clamp(28px, 3vw, 42px); line-height: 1.06; font-weight: 900; }
+ .build-type p { margin: 0; color: rgba(255,255,255,.78); font-size: 16px; line-height: 1.55; }
+ .build-packages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+ .build-package {
+  padding: 28px;
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(32, 22, 15, .13);
+  border-radius: 22px;
+  background: #fffaf2;
+ }
+ .build-package--accent { background: var(--build-text); color: #fff; border-color: rgba(246,173,36,.32); }
+ .build-package__tag { color: var(--build-accent); font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+ .build-package h3 { margin: 14px 0 12px; font-size: 28px; line-height: 1.08; font-weight: 900; }
+ .build-package p { color: var(--build-muted); line-height: 1.55; }
+ .build-package--accent p { color: rgba(255,255,255,.7); }
+ .build-package ul { display: grid; gap: 10px; margin: 22px 0 0; padding: 0; list-style: none; }
+ .build-package li { display: flex; gap: 10px; color: inherit; font-size: 14px; line-height: 1.35; }
+ .build-package li::before { content: ""; width: 8px; height: 8px; margin-top: 6px; border-radius: 50%; background: var(--build-accent); flex: 0 0 auto; }
+ .build-tech {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 42px;
+  align-items: center;
+ }
+ .build-tech__image {
+  min-height: 560px;
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12);
+ }
+ .build-tech__image img { width: 100%; height: 100%; object-fit: cover; }
+ .build-tech__steps { display: grid; gap: 14px; }
+ .build-tech-step {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 18px;
+  background: rgba(255,255,255,.045);
+ }
+ .build-tech-step__num {
+  display: inline-flex;
+  width: 58px;
+  height: 58px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(246,173,36,.12);
+  color: #ffd06a;
+  font-weight: 950;
+ }
+ .build-tech-step h3 { margin: 0 0 8px; font-size: 20px; font-weight: 900; }
+ .build-tech-step p { margin: 0; color: rgba(255,255,255,.66); font-size: 14px; line-height: 1.55; }
+ .build-estimate {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 32px;
+  align-items: stretch;
+ }
+ .build-estimate__panel {
+  padding: 38px;
+  border-radius: 24px;
+  background: #fffaf2;
+  border: 1px solid rgba(32, 22, 15, .12);
+ }
+ .build-estimate__panel h2 {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1;
+  font-weight: 950;
+ }
+ .build-estimate__panel p { margin-top: 16px; color: var(--build-muted); line-height: 1.65; font-size: 16px; }
+ .build-estimate__list { display: grid; gap: 1px; overflow: hidden; border-radius: 22px; background: rgba(32, 22, 15, .12); }
+ .build-estimate__item { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px; background: #fffaf2; }
+ .build-estimate__item strong { font-size: 18px; }
+ .build-estimate__item span { color: var(--build-accent); font-weight: 900; white-space: nowrap; }
+ @media (max-width: 980px) {
+  .build-hero__facts, .build-packages, .build-tech, .build-estimate { grid-template-columns: 1fr; }
+  .build-types { grid-template-columns: 1fr; }
+  .build-type:nth-child(3) { grid-column: auto; }
+  .build-tech__image { min-height: 360px; }
+ }
+ @media (max-width: 640px) {
+  .build-container { width: min(100% - 28px, 1200px); }
+  .build-hero { min-height: 820px; align-items: flex-end; }
+  .build-hero::after {
+   background:
+    linear-gradient(180deg, rgba(16,10,7,.2) 0%, rgba(16,10,7,.58) 36%, rgba(16,10,7,.94) 100%);
+  }
+  .build-hero__media img { object-position: center top; }
+  .build-hero__content { padding: 128px 0 46px; }
+  .build-actions { flex-direction: column; align-items: stretch; }
+  .build-btn { width: 100%; }
+  .build-hero__facts { grid-template-columns: 1fr 1fr; margin-top: 32px; border-radius: 16px; }
+  .build-fact { padding: 15px; }
+  .build-section { padding: 68px 0; }
+  .build-type, .build-type:nth-child(2), .build-type:nth-child(3) { min-height: 430px; border-radius: 20px; }
+  .build-type__body { padding: 24px; }
+  .build-package, .build-estimate__panel { padding: 24px; border-radius: 18px; }
+  .build-estimate__item { align-items: flex-start; flex-direction: column; }
+ }
+</style>
+
+<main class="build-page">
+ <section class="build-hero">
+  <div class="build-hero__media">
+   <img src="/media/services/home-construction-card.webp" alt="Каркасный деревянный дом ArteMadera" fetchpriority="high" decoding="async">
+  </div>
+  <div class="build-container">
+   <div class="build-hero__content">
+    <div class="build-kicker">
+     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="m5 21 7-18 7 18"/><path d="M9 13h6"/></svg>
+     Строительство деревянных домов
+    </div>
+    <h1>
+     {% if site_page.hero_h1_white or site_page.hero_h1_accent %}
+      {% if site_page.hero_h1_white %}{{ site_page.hero_h1_white|linebreaksbr }}{% endif %}
+      {% if site_page.hero_h1_accent %}<span>{{ site_page.hero_h1_accent|linebreaksbr }}</span>{% endif %}
+     {% else %}
+      Строительство <span>каркасных домов</span>
+     {% endif %}
+    </h1>
+    <p class="build-hero__lead">
+     {% if site_page.hero_lead %}
+      {{ site_page.hero_lead|linebreaksbr }}
+     {% else %}
+      Проектируем и строим каркасные дома под ключ в Москве и области: фундамент, коробка, тёплый контур, инженерные коммуникации и отделка у одного подрядчика.
+     {% endif %}
+    </p>
+    <div class="build-actions">
+     <a class="build-btn build-btn--primary" href="#quiz">
+      Рассчитать дом
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+     </a>
+     <a class="build-btn build-btn--ghost" href="#build-packages">Комплектации</a>
+    </div>
+    <div class="build-hero__facts">
+     <div class="build-fact"><strong>Под ключ</strong><span>Проект, стройка, инженерия и отделка</span></div>
+     <div class="build-fact"><strong>Фиксируем смету</strong><span>Стоимость понятна до старта работ</span></div>
+     <div class="build-fact"><strong>10+ лет</strong><span>Работаем с деревянными домами</span></div>
+     <div class="build-fact"><strong>500+ объектов</strong><span>Опыт в домах, банях и отделке</span></div>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ {% include 'includes/home_quiz_section.html' %}
+
+ <section class="build-section build-section--light" id="build-format">
+  <div class="build-container">
+   <div class="build-head">
+    <div class="build-kicker">Формат работ</div>
+    <h2>Строим не коробку, а <span>готовый дом</span></h2>
+    <p>Каркасный дом требует точной последовательности: проект, основание, силовой каркас, утепление, закрытие контура, инженерия и отделка. Мы ведём объект целиком, чтобы не было разрывов между подрядчиками.</p>
+   </div>
+   <div class="build-types">
+    <article class="build-type">
+     <img src="/media/portfolio/cases/1.webp" alt="Каркасный дом под ключ" loading="lazy" decoding="async">
+     <div class="build-type__body">
+      <h3>Каркасные дома для постоянного проживания</h3>
+      <p>Продумываем планировку, утепление, инженерные трассы и отделку так, чтобы дом был удобен круглый год.</p>
+     </div>
+    </article>
+    <article class="build-type">
+     <img src="/media/portfolio/cases/2.webp" alt="Деревянный дом с отделкой фасада" loading="lazy" decoding="async">
+     <div class="build-type__body">
+      <h3>Дачи и гостевые дома</h3>
+      <p>Оптимальная комплектация под сезонное проживание, быстрые сроки и понятный бюджет.</p>
+     </div>
+    </article>
+    <article class="build-type">
+     <img src="/media/portfolio/cases/photo_2025-09-05_10-04-15.webp" alt="Строительство деревянного дома полного цикла" loading="lazy" decoding="async">
+     <div class="build-type__body">
+      <h3>Полный цикл ArteMadera</h3>
+      <p>Берём строительство, окна, кровлю, инженерные коммуникации, покраску и внутреннюю отделку в одну систему работ.</p>
+     </div>
+    </article>
+   </div>
+  </div>
+ </section>
+
+ <section class="build-section build-section--warm" id="build-packages">
+  <div class="build-container">
+   <div class="build-head build-head--center">
+    <div class="build-kicker">Комплектации</div>
+    <h2>Можно строить <span>поэтапно</span></h2>
+    <p>Выбираем комплектацию под бюджет, участок и сроки. На консультации объясняем, какие работы лучше объединить, а какие можно оставить на следующий этап.</p>
+   </div>
+   <div class="build-packages">
+    <article class="build-package">
+     <div class="build-package__tag">Этап 1</div>
+     <h3>Каркас под крышу</h3>
+     <p>Базовая строительная часть, когда нужно получить надёжную конструкцию и продолжить работы позже.</p>
+     <ul>
+      <li>Фундамент под участок</li>
+      <li>Силовой каркас и перекрытия</li>
+      <li>Стропильная система и кровля</li>
+     </ul>
+    </article>
+    <article class="build-package build-package--accent">
+     <div class="build-package__tag">Оптимально</div>
+     <h3>Тёплый контур</h3>
+     <p>Дом закрыт от осадков и подготовлен к инженерии и внутренним работам.</p>
+     <ul>
+      <li>Утепление, мембраны, герметизация</li>
+      <li>Окна, двери и наружная защита</li>
+      <li>Подготовка к круглогодичной эксплуатации</li>
+     </ul>
+    </article>
+    <article class="build-package">
+     <div class="build-package__tag">Полный цикл</div>
+     <h3>Дом под ключ</h3>
+     <p>Строительство, коммуникации и отделка внутри одного договора и одного календарного плана.</p>
+     <ul>
+      <li>Электрика, отопление, вода и канализация</li>
+      <li>Внутренняя и наружная отделка</li>
+      <li>Сдача готового дома</li>
+     </ul>
+    </article>
+   </div>
+  </div>
+ </section>
+
+ <section class="build-section" id="build-tech">
+  <div class="build-container">
+   <div class="build-tech">
+    <div class="build-tech__image">
+     <img src="/media/services/home-production-card.webp" alt="Работа с древесиной при строительстве дома" loading="lazy" decoding="async">
+    </div>
+    <div>
+     <div class="build-head">
+      <div class="build-kicker">Технология</div>
+      <h2>Сначала конструктив, потом <span>красота</span></h2>
+      <p>В строительстве нельзя начинать с картинки. Сначала проверяем участок, нагрузки, влажные зоны, трассы коммуникаций и будущую отделку. Так дом не приходится переделывать после сборки.</p>
+     </div>
+     <div class="build-tech__steps">
+      <article class="build-tech-step">
+       <div class="build-tech-step__num">01</div>
+       <div><h3>Проект и посадка дома</h3><p>Уточняем планировку, пятно застройки, подъезд, ориентацию по солнцу и инженерные вводы.</p></div>
+      </article>
+      <article class="build-tech-step">
+       <div class="build-tech-step__num">02</div>
+       <div><h3>Фундамент и силовой каркас</h3><p>Подбираем основание под грунт и собираем геометрию дома без перекосов и слабых узлов.</p></div>
+      </article>
+      <article class="build-tech-step">
+       <div class="build-tech-step__num">03</div>
+       <div><h3>Тёплый контур</h3><p>Закрываем кровлю, окна, утепление, пароизоляцию, ветрозащиту и наружную оболочку.</p></div>
+      </article>
+      <article class="build-tech-step">
+       <div class="build-tech-step__num">04</div>
+       <div><h3>Инженерия и отделка</h3><p>Разводим коммуникации и выполняем отделку с учётом деревянной конструкции дома.</p></div>
+      </article>
+     </div>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="build-section build-section--light" id="build-estimate">
+  <div class="build-container">
+   <div class="build-estimate">
+    <div class="build-estimate__panel">
+     <div class="build-kicker">Смета</div>
+     <h2>Считаем дом до начала стройки</h2>
+     <p>После консультации и вводных по участку готовим понятный состав работ. Вы видите, что входит в комплектацию, где заложены материалы и какие решения влияют на итоговую стоимость.</p>
+     <div class="build-actions">
+      <a class="build-btn build-btn--primary" href="#contact">Получить расчёт</a>
+     </div>
+    </div>
+    <div class="build-estimate__list">
+     <div class="build-estimate__item"><strong>Проект и конструктив</strong><span>до сметы</span></div>
+     <div class="build-estimate__item"><strong>Материалы и комплектация</strong><span>по задачам</span></div>
+     <div class="build-estimate__item"><strong>Сроки и этапы работ</strong><span>в графике</span></div>
+     <div class="build-estimate__item"><strong>Отделка и инженерия</strong><span>по желанию</span></div>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ {% include 'includes/work_process_section.html' %}
+ {% include 'includes/portfolio_section.html' %}
+ {% include 'includes/contact_section.html' with contact_only=1 %}
+</main>
+{% endblock %}

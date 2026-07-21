@@ -1,0 +1,427 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "ArteMadera Отделка деревянных домов" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: ArteMadera
+        - generic [ref=e7]: Отделка деревянных домов
+      - generic [ref=e8]:
+        - link "Главная" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Услуги" [ref=e11] [cursor=pointer]
+        - link "Квиз" [ref=e14] [cursor=pointer]:
+          - /url: "#quiz"
+        - link "Этапы" [ref=e15] [cursor=pointer]:
+          - /url: "#process"
+        - link "До/После" [ref=e16] [cursor=pointer]:
+          - /url: "#comparison"
+        - link "О компании" [ref=e17] [cursor=pointer]:
+          - /url: /o-kompanii
+        - link "Работы" [ref=e18] [cursor=pointer]:
+          - /url: "#portfolio"
+        - link "FAQ" [ref=e19] [cursor=pointer]:
+          - /url: "#faq"
+        - link "Контакты" [ref=e20] [cursor=pointer]:
+          - /url: "#contact"
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - link "Telegram" [ref=e23] [cursor=pointer]:
+            - /url: https://t.me/
+          - link "Instagram" [ref=e26] [cursor=pointer]:
+            - /url: https://instagram.com/
+          - link "YouTube" [ref=e30] [cursor=pointer]:
+            - /url: https://youtube.com/
+        - link "+7 (495) 005-01-45" [ref=e34] [cursor=pointer]:
+          - /url: tel:74950050145
+        - button "Позвонить" [ref=e35] [cursor=pointer]
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - img "Каркасный деревянный дом ArteMadera" [ref=e39]
+      - generic [ref=e41]:
+        - generic [ref=e42]: Строительство деревянных домов
+        - heading "Строительство каркасных домов" [level=1] [ref=e45]
+        - paragraph [ref=e46]: "Каркасные дома под ключ в Москве и Московской области: проект, фундамент, тёплый контур, инженерия и отделка у одного подрядчика."
+        - generic [ref=e47]:
+          - link "Рассчитать дом" [ref=e48] [cursor=pointer]:
+            - /url: "#quiz"
+          - link "Комплектации" [ref=e51] [cursor=pointer]:
+            - /url: "#build-packages"
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - strong [ref=e54]: Под ключ
+            - generic [ref=e55]: Проект, стройка, инженерия и отделка
+          - generic [ref=e56]:
+            - strong [ref=e57]: Фиксируем смету
+            - generic [ref=e58]: Стоимость понятна до старта работ
+          - generic [ref=e59]:
+            - strong [ref=e60]: 10+ лет
+            - generic [ref=e61]: Работаем с деревянными домами
+          - generic [ref=e62]:
+            - strong [ref=e63]: 500+ объектов
+            - generic [ref=e64]: Опыт в домах, банях и отделке
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - heading "Получите консультацию" [level=2] [ref=e68]
+        - paragraph [ref=e69]: 3 вопроса — и мы перезвоним, чтобы уточнить детали
+      - generic [ref=e70]:
+        - img "Деревянный дом ArteMadera" [ref=e72]
+        - generic [ref=e74]:
+          - generic [ref=e76]:
+            - generic [ref=e77]: ВОПРОС 1 ИЗ 3
+            - generic [ref=e78]: 25%
+          - generic [ref=e81]:
+            - heading "Что нужно сделать?" [level=3] [ref=e87]
+            - generic [ref=e88]:
+              - button "Шлифовка" [ref=e89] [cursor=pointer]
+              - button "Покраска" [ref=e92] [cursor=pointer]
+              - button "Тёплый шов" [ref=e95] [cursor=pointer]
+              - button "Окна" [ref=e98] [cursor=pointer]
+              - button "Обсада" [ref=e101] [cursor=pointer]
+              - button "Крыши" [ref=e104] [cursor=pointer]
+              - button "Инженерия" [ref=e107] [cursor=pointer]
+            - button "Далее" [ref=e111] [cursor=pointer]
+    - generic [ref=e115]:
+      - generic [ref=e116]:
+        - generic [ref=e117]: Формат работ
+        - heading "Строим не коробку, а готовый дом" [level=2] [ref=e118]
+        - paragraph [ref=e119]: "Каркасный дом требует точной последовательности: проект, основание, силовой каркас, утепление, закрытие контура, инженерия и отделка. Мы ведём объект целиком, чтобы не было разрывов между подрядчиками."
+      - generic [ref=e120]:
+        - article [ref=e121]:
+          - img "Каркасный дом под ключ" [ref=e122]
+          - generic [ref=e123]:
+            - heading "Каркасные дома для постоянного проживания" [level=3] [ref=e124]
+            - paragraph [ref=e125]: Продумываем планировку, утепление, инженерные трассы и отделку так, чтобы дом был удобен круглый год.
+        - article [ref=e126]:
+          - img "Деревянный дом с отделкой фасада" [ref=e127]
+          - generic [ref=e128]:
+            - heading "Дачи и гостевые дома" [level=3] [ref=e129]
+            - paragraph [ref=e130]: Оптимальная комплектация под сезонное проживание, быстрые сроки и понятный бюджет.
+        - article [ref=e131]:
+          - img "Строительство деревянного дома полного цикла" [ref=e132]
+          - generic [ref=e133]:
+            - heading "Полный цикл ArteMadera" [level=3] [ref=e134]
+            - paragraph [ref=e135]: Берём строительство, окна, кровлю, инженерные коммуникации, покраску и внутреннюю отделку в одну систему работ.
+    - generic [ref=e137]:
+      - generic [ref=e138]:
+        - generic [ref=e139]: Комплектации
+        - heading "Можно строить поэтапно" [level=2] [ref=e140]
+        - paragraph [ref=e141]: Выбираем комплектацию под бюджет, участок и сроки. На консультации объясняем, какие работы лучше объединить, а какие можно оставить на следующий этап.
+      - generic [ref=e142]:
+        - article [ref=e143]:
+          - generic [ref=e144]: Этап 1
+          - heading "Каркас под крышу" [level=3] [ref=e145]
+          - paragraph [ref=e146]: Базовая строительная часть, когда нужно получить надёжную конструкцию и продолжить работы позже.
+          - list [ref=e147]:
+            - listitem [ref=e148]: Фундамент под участок
+            - listitem [ref=e149]: Силовой каркас и перекрытия
+            - listitem [ref=e150]: Стропильная система и кровля
+        - article [ref=e151]:
+          - generic [ref=e152]: Оптимально
+          - heading "Тёплый контур" [level=3] [ref=e153]
+          - paragraph [ref=e154]: Дом закрыт от осадков и подготовлен к инженерии и внутренним работам.
+          - list [ref=e155]:
+            - listitem [ref=e156]: Утепление, мембраны, герметизация
+            - listitem [ref=e157]: Окна, двери и наружная защита
+            - listitem [ref=e158]: Подготовка к круглогодичной эксплуатации
+        - article [ref=e159]:
+          - generic [ref=e160]: Полный цикл
+          - heading "Дом под ключ" [level=3] [ref=e161]
+          - paragraph [ref=e162]: Строительство, коммуникации и отделка внутри одного договора и одного календарного плана.
+          - list [ref=e163]:
+            - listitem [ref=e164]: Электрика, отопление, вода и канализация
+            - listitem [ref=e165]: Внутренняя и наружная отделка
+            - listitem [ref=e166]: Сдача готового дома
+    - generic [ref=e169]:
+      - generic [ref=e170]:
+        - img "Работа с древесиной при строительстве дома"
+      - generic [ref=e171]:
+        - generic [ref=e172]:
+          - generic [ref=e173]: Технология
+          - heading "Сначала конструктив, потом красота" [level=2] [ref=e174]
+          - paragraph [ref=e175]: В строительстве нельзя начинать с картинки. Сначала проверяем участок, нагрузки, влажные зоны, трассы коммуникаций и будущую отделку. Так дом не приходится переделывать после сборки.
+        - generic [ref=e176]:
+          - article [ref=e177]:
+            - generic [ref=e178]: "01"
+            - generic [ref=e179]:
+              - heading "Проект и посадка дома" [level=3] [ref=e180]
+              - paragraph [ref=e181]: Уточняем планировку, пятно застройки, подъезд, ориентацию по солнцу и инженерные вводы.
+          - article [ref=e182]:
+            - generic [ref=e183]: "02"
+            - generic [ref=e184]:
+              - heading "Фундамент и силовой каркас" [level=3] [ref=e185]
+              - paragraph [ref=e186]: Подбираем основание под грунт и собираем геометрию дома без перекосов и слабых узлов.
+          - article [ref=e187]:
+            - generic [ref=e188]: "03"
+            - generic [ref=e189]:
+              - heading "Тёплый контур" [level=3] [ref=e190]
+              - paragraph [ref=e191]: Закрываем кровлю, окна, утепление, пароизоляцию, ветрозащиту и наружную оболочку.
+          - article [ref=e192]:
+            - generic [ref=e193]: "04"
+            - generic [ref=e194]:
+              - heading "Инженерия и отделка" [level=3] [ref=e195]
+              - paragraph [ref=e196]: Разводим коммуникации и выполняем отделку с учётом деревянной конструкции дома.
+    - generic [ref=e199]:
+      - generic [ref=e200]:
+        - generic [ref=e201]: Смета
+        - heading "Считаем дом до начала стройки" [level=2] [ref=e202]
+        - paragraph [ref=e203]: После консультации и вводных по участку готовим понятный состав работ. Вы видите, что входит в комплектацию, где заложены материалы и какие решения влияют на итоговую стоимость.
+        - link "Получить расчёт" [ref=e205] [cursor=pointer]:
+          - /url: "#contact"
+      - generic [ref=e206]:
+        - generic [ref=e207]:
+          - strong [ref=e208]: Проект и конструктив
+          - generic [ref=e209]: до сметы
+        - generic [ref=e210]:
+          - strong [ref=e211]: Материалы и комплектация
+          - generic [ref=e212]: по задачам
+        - generic [ref=e213]:
+          - strong [ref=e214]: Сроки и этапы работ
+          - generic [ref=e215]: в графике
+        - generic [ref=e216]:
+          - strong [ref=e217]: Отделка и инженерия
+          - generic [ref=e218]: по желанию
+    - generic [ref=e220]:
+      - generic [ref=e221]:
+        - generic [ref=e222]: ЭТАПЫ РАБОТЫ
+        - heading "Этапы нашей работы" [level=2] [ref=e227]
+        - paragraph [ref=e228]: От первого выезда до постгарантийной поддержки — пять последовательных шагов, понятных ещё до начала работ.
+      - generic [ref=e229]:
+        - article [ref=e230]:
+          - generic: "01"
+          - generic [ref=e231]: "01"
+          - heading "Выезд на объект" [level=3] [ref=e236]
+          - paragraph [ref=e237]: Осматриваем задачу, выполняем замеры и фиксируем пожелания.
+        - article [ref=e238]:
+          - generic: "02"
+          - generic [ref=e239]: "02"
+          - heading "Смета и договор" [level=3] [ref=e244]
+          - paragraph [ref=e245]: Согласуем объём, сроки и стоимость, закрепляем условия в договоре.
+        - article [ref=e246]:
+          - generic: "03"
+          - generic [ref=e247]: "03"
+          - heading "Работы на объекте" [level=3] [ref=e252]
+          - paragraph [ref=e253]: Выполняем работы по согласованной технологии и держим вас в курсе.
+        - article [ref=e254]:
+          - generic: "04"
+          - generic [ref=e255]: "04"
+          - heading "Сдача объекта" [level=3] [ref=e260]
+          - paragraph [ref=e261]: Проводим совместную приёмку, передаём результат и гарантию.
+        - article [ref=e262]:
+          - generic: "05"
+          - generic [ref=e263]: "05"
+          - heading "Постгарантийное обслуживание" [level=3] [ref=e268]
+          - paragraph [ref=e269]: Остаёмся на связи после завершения работ, консультируем по уходу и оперативно помогаем при необходимости.
+    - generic [ref=e271]:
+      - generic [ref=e272]:
+        - generic [ref=e273]: ПОРТФОЛИО
+        - heading "Наши проекты" [level=2] [ref=e279]
+        - paragraph [ref=e280]: "Оцените качество нашей работы: мы бережно восстанавливаем древесину, возвращая домам первозданный вид и надёжную защиту."
+      - generic [ref=e281]:
+        - button "Открыть проект База отдыха" [ref=e282] [cursor=pointer]:
+          - img "База отдыха" [ref=e284]
+          - generic [ref=e285]:
+            - generic [ref=e286]: Другое
+            - generic [ref=e287]: База отдыха
+            - generic [ref=e288]: Каркасные дома для базы отдыха
+            - generic [ref=e289]: Смотреть кейс
+        - 'button "Открыть проект Работа #13" [ref=e290] [cursor=pointer]':
+          - 'img "Работа #13" [ref=e292]'
+          - generic [ref=e293]:
+            - generic [ref=e294]: Дом из клеёного бруса
+            - generic [ref=e295]: Смотреть кейс
+        - 'button "Открыть проект Работа #14" [ref=e296] [cursor=pointer]':
+          - 'img "Работа #14" [ref=e298]'
+          - generic [ref=e299]:
+            - generic [ref=e300]: Сруб
+            - generic [ref=e301]: Реставрация сруба
+            - generic [ref=e302]: Смотреть кейс
+        - 'button "Открыть проект Работа #15" [ref=e303] [cursor=pointer]':
+          - 'img "Работа #15" [ref=e305]'
+          - generic [ref=e306]:
+            - generic [ref=e307]: Фасад после шлифовки
+            - generic [ref=e308]: Смотреть кейс
+        - 'button "Открыть проект Работа #16" [ref=e309] [cursor=pointer]':
+          - 'img "Работа #16" [ref=e311]'
+          - generic [ref=e312]:
+            - generic [ref=e313]: Сруб до обновления
+            - generic [ref=e314]: Смотреть кейс
+        - 'button "Открыть проект Работа #17" [ref=e315] [cursor=pointer]':
+          - 'img "Работа #17" [ref=e317]'
+          - generic [ref=e318]:
+            - generic [ref=e319]: Оцилиндрованное бревно
+            - generic [ref=e320]: Смотреть кейс
+        - 'button "Открыть проект Работа #18" [ref=e321] [cursor=pointer]':
+          - 'img "Работа #18" [ref=e323]'
+          - generic [ref=e324]:
+            - generic [ref=e325]: Тёплый шов
+            - generic [ref=e326]: Смотреть кейс
+        - 'button "Открыть проект Работа #19" [ref=e327] [cursor=pointer]':
+          - 'img "Работа #19" [ref=e329]'
+          - generic [ref=e330]:
+            - generic [ref=e331]: Покраска фасада
+            - generic [ref=e332]: Смотреть кейс
+        - 'button "Открыть проект Работа #20" [ref=e333] [cursor=pointer]':
+          - 'img "Работа #20" [ref=e335]'
+          - generic [ref=e336]:
+            - generic [ref=e337]: Сруб
+            - generic [ref=e338]: Каркасный дом
+            - generic [ref=e339]: Смотреть кейс
+      - button "Показать больше" [ref=e341] [cursor=pointer]
+    - generic [ref=e344]:
+      - generic [ref=e345]:
+        - generic [ref=e346]: СВЯЗАТЬСЯ
+        - heading "Оставьте заявку" [level=2] [ref=e350]
+        - paragraph [ref=e351]: Расскажите о вашем доме — перезвоним в течение 30 минут.
+        - list [ref=e352]:
+          - listitem [ref=e353]:
+            - link "+7 (495) 005-01-45 Звонок бесплатный" [ref=e354] [cursor=pointer]:
+              - /url: tel:74950050145
+              - generic [ref=e358]:
+                - strong [ref=e359]: +7 (495) 005-01-45
+                - generic [ref=e360]: Звонок бесплатный
+          - listitem [ref=e361]:
+            - link "info@artemadera.ru Пн–Пт, 9:00–21:00" [ref=e362] [cursor=pointer]:
+              - /url: mailto:info@artemadera.ru
+              - generic [ref=e367]:
+                - strong [ref=e368]: info@artemadera.ru
+                - generic [ref=e369]: Пн–Пт, 9:00–21:00
+          - listitem [ref=e370]:
+            - link "Офис г. Москва, м. ВДНХ, Ярославская ул., д. 8, корп. 6, офис 220" [ref=e371] [cursor=pointer]:
+              - /url: https://yandex.ru/navi/?text=%D0%B3.%20%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C%20%D0%BC.%20%D0%92%D0%94%D0%9D%D0%A5%2C%20%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D1%83%D0%BB.%2C%20%D0%B4.%208%2C%20%D0%BA%D0%BE%D1%80%D0%BF.%206%2C%20%D0%BE%D1%84%D0%B8%D1%81%20220
+              - generic [ref=e376]:
+                - strong [ref=e377]: Офис
+                - generic [ref=e378]: г. Москва, м. ВДНХ, Ярославская ул., д. 8, корп. 6, офис 220
+      - generic [ref=e380]:
+        - paragraph [ref=e381]: Оставьте телефон — перезвоним в течение 30 минут
+        - list "Преимущества" [ref=e382]:
+          - listitem [ref=e383]: Бесплатная консультация
+          - listitem [ref=e386]: Без спама и рассылок
+          - listitem [ref=e389]: Смета по телефону
+        - generic [ref=e392]:
+          - generic [ref=e393]:
+            - generic [ref=e394]: Телефон
+            - textbox "Телефон" [ref=e395]:
+              - /placeholder: +7 (___) ___-__-__
+          - button "Отправить заявку" [ref=e396] [cursor=pointer]
+        - paragraph [ref=e397]: Нажимая кнопку, вы соглашаетесь с обработкой персональных данных
+  - contentinfo [ref=e398]:
+    - generic [ref=e401]:
+      - generic [ref=e402]:
+        - paragraph [ref=e403]: Готовы обсудить проект?
+        - paragraph [ref=e404]: Бесплатный замер и смета за 24 часа
+      - generic [ref=e405]:
+        - link "Записаться на замер" [ref=e406] [cursor=pointer]:
+          - /url: /shlifovka#zamer
+        - link "+7 (495) 005-01-45" [ref=e407] [cursor=pointer]:
+          - /url: tel:74950050145
+    - generic [ref=e408]:
+      - generic [ref=e409]:
+        - generic [ref=e410]:
+          - link "ArteMadera Отделка деревянных домов" [ref=e411] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e413]:
+              - generic [ref=e414]: ArteMadera
+              - generic [ref=e415]: Отделка деревянных домов
+          - paragraph [ref=e416]: Профессиональная шлифовка, покраска и реставрация деревянных домов в Москве и области. Работаем по договору с фиксированной сметой.
+        - generic [ref=e417]:
+          - heading "Страница" [level=3] [ref=e418]
+          - list [ref=e419]:
+            - listitem [ref=e420]:
+              - link "О компании" [ref=e421] [cursor=pointer]:
+                - /url: /o-kompanii
+            - listitem [ref=e422]:
+              - link "Квиз" [ref=e423] [cursor=pointer]:
+                - /url: /shlifovka#quiz
+            - listitem [ref=e424]:
+              - link "Наши работы" [ref=e425] [cursor=pointer]:
+                - /url: /shlifovka#portfolio
+            - listitem [ref=e426]:
+              - link "До и после" [ref=e427] [cursor=pointer]:
+                - /url: /shlifovka#comparison
+            - listitem [ref=e428]:
+              - link "Почему мы" [ref=e429] [cursor=pointer]:
+                - /url: /shlifovka#whyus
+            - listitem [ref=e430]:
+              - link "Этапы работ" [ref=e431] [cursor=pointer]:
+                - /url: /shlifovka#process
+            - listitem [ref=e432]:
+              - link "Вопросы" [ref=e433] [cursor=pointer]:
+                - /url: /shlifovka#faq
+            - listitem [ref=e434]:
+              - link "Контакты" [ref=e435] [cursor=pointer]:
+                - /url: /shlifovka#contact
+        - generic [ref=e436]:
+          - heading "Услуги" [level=3] [ref=e437]
+          - list [ref=e438]:
+            - listitem [ref=e439]:
+              - link "Шлифовка деревянных домов" [ref=e440] [cursor=pointer]:
+                - /url: /shlifovka
+            - listitem [ref=e441]:
+              - link "Покраска" [ref=e442] [cursor=pointer]:
+                - /url: /pokraska
+            - listitem [ref=e443]:
+              - link "Тёплый шов" [ref=e444] [cursor=pointer]:
+                - /url: /teplyy-shov
+            - listitem [ref=e445]:
+              - link "Конопатка" [ref=e446] [cursor=pointer]:
+                - /url: /otdelka/konopatka
+            - listitem [ref=e447]:
+              - link "Обсада и окосячка" [ref=e448] [cursor=pointer]:
+                - /url: /obsada
+            - listitem [ref=e449]:
+              - link "Отделочные работы" [ref=e450] [cursor=pointer]:
+                - /url: /otdelochnye-raboty
+            - listitem [ref=e451]:
+              - link "Производство" [ref=e452] [cursor=pointer]:
+                - /url: /proizvodstvo
+            - listitem [ref=e453]:
+              - link "Кровельные работы" [ref=e454] [cursor=pointer]:
+                - /url: /kryshi
+        - generic [ref=e455]:
+          - heading "Контакты" [level=3] [ref=e456]
+          - list [ref=e457]:
+            - listitem [ref=e458]:
+              - link "+7 (495) 005-01-45 Звонок бесплатный" [ref=e459] [cursor=pointer]:
+                - /url: tel:74950050145
+                - generic [ref=e463]:
+                  - strong [ref=e464]: +7 (495) 005-01-45
+                  - generic [ref=e465]: Звонок бесплатный
+            - listitem [ref=e466]:
+              - link "info@artemadera.ru Пн–Пт, 9:00–21:00" [ref=e467] [cursor=pointer]:
+                - /url: mailto:info@artemadera.ru
+                - generic [ref=e472]:
+                  - strong [ref=e473]: info@artemadera.ru
+                  - generic [ref=e474]: Пн–Пт, 9:00–21:00
+            - listitem [ref=e475]:
+              - link "Офис г. Москва, м. ВДНХ, Ярославская ул., д. 8, корп. 6, офис 220" [ref=e476] [cursor=pointer]:
+                - /url: https://yandex.ru/navi/?text=%D0%B3.%20%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C%20%D0%BC.%20%D0%92%D0%94%D0%9D%D0%A5%2C%20%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D1%83%D0%BB.%2C%20%D0%B4.%208%2C%20%D0%BA%D0%BE%D1%80%D0%BF.%206%2C%20%D0%BE%D1%84%D0%B8%D1%81%20220
+                - generic [ref=e481]:
+                  - strong [ref=e482]: Офис
+                  - generic [ref=e483]: г. Москва, м. ВДНХ, Ярославская ул., д. 8, корп. 6, офис 220
+      - generic [ref=e484]:
+        - paragraph [ref=e485]: © 2026 ArteMadera. Все права защищены.
+        - generic [ref=e486]:
+          - link "Политика конфиденциальности" [ref=e487] [cursor=pointer]:
+            - /url: /shlifovka#contact
+          - generic [ref=e488]: ·
+          - link "Публичная оферта" [ref=e489] [cursor=pointer]:
+            - /url: /shlifovka#contact
+  - generic:
+    - generic:
+      - button "Закрыть"
+      - heading "Обратный звонок" [level=3]
+      - paragraph: Оставьте номер — перезвоним в течение 15 минут
+      - generic:
+        - textbox "+7 (___) ___-__-__"
+        - button "Жду звонка"
+        - paragraph: Нажимая кнопку, вы соглашаетесь с обработкой персональных данных
+      - generic:
+        - generic: Работаем по договору
+        - generic: Выезд на замер бесплатно
+        - generic: Гарантия на все виды работ
+  - generic:
+    - generic:
+      - button
+      - heading [level=3]: Заявка отправлена
+      - paragraph: Перезвоним в течение 30 минут
+      - button: Понятно
