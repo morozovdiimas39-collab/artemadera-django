@@ -44,7 +44,7 @@ cd "$APP_DIR"
 ```bash
 git status --short --branch
 git fetch origin main
-test "$(git rev-parse origin/main)" = "$TARGET_SHA"
+git merge-base --is-ancestor "$TARGET_SHA" origin/main
 git diff --exit-code "$PREVIOUS_SHA" "$TARGET_SHA" -- db.sqlite3 .venv media
 test -f db.sqlite3
 sqlite3 db.sqlite3 'PRAGMA integrity_check;'
