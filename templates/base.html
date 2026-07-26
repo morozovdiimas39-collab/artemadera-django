@@ -36,6 +36,11 @@
  {% if seo.og_image %}<meta property="og:image" content="{{ seo.og_image }}" />{% endif %}
  <meta property="og:locale" content="ru_RU" />
  {% endblock %}
+ {% if site_page.has_hero_upload %}
+ <link rel="preload" as="image" href="{{ site_page.hero_image.url }}" fetchpriority="high" />
+ {% else %}
+ <link rel="preload" as="image" href="{% static site_page.hero_static_image|default:'images/hero-bg.jpg' %}" fetchpriority="high" />
+ {% endif %}
  {% block structured_data %}{% if seo.schema_json %}<script type="application/ld+json">{{ seo.schema_json|safe }}</script>{% endif %}{% endblock %}
  <link rel="preconnect" href="https://fonts.googleapis.com" />
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -3653,11 +3658,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="nav-links">
    <a href="/" class="nav-link">Главная</a>
    <div id="nav-services-wrap" style="position:relative;">
-    <button id="nav-services-btn" class="nav-link" style="background:none;border:none;cursor:pointer;">
+    <button id="nav-services-btn" class="nav-link" type="button" style="background:none;border:none;cursor:pointer;" aria-haspopup="true" aria-expanded="false" aria-controls="services-dropdown">
      Услуги
      <svg id="nav-services-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform 0.25s;" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </button>
-    <div id="services-dropdown" style="position:absolute;top:100%;left:0;padding-top:1rem;z-index:60;transition:opacity 0.2s,transform 0.2s;transform-origin:top;opacity:0;transform:scaleY(0.9);pointer-events:none;visibility:hidden;">
+    <div id="services-dropdown" style="position:absolute;top:100%;left:0;padding-top:1rem;z-index:60;transition:opacity 0.2s,transform 0.2s;transform-origin:top;opacity:0;transform:scaleY(0.9);pointer-events:none;visibility:hidden;" aria-hidden="true" inert>
      {% include "includes/services_dropdown.html" %}
     </div>
    </div>
@@ -3690,7 +3695,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     Позвонить
    </button>
    <!-- Hamburger -->
-   <button id="mobile-menu-toggle" class="nav-hamburger" style="width:2.25rem;height:2.25rem;border-radius:0.5rem;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);align-items:center;justify-content:center;cursor:pointer;">
+   <button id="mobile-menu-toggle" class="nav-hamburger" type="button" style="width:2.25rem;height:2.25rem;border-radius:0.5rem;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);align-items:center;justify-content:center;cursor:pointer;" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu-overlay">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
    </button>
   </div>
@@ -3699,9 +3704,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </nav>
 
 <!-- Mobile Menu -->
-<div id="mobile-menu-overlay">
+<div id="mobile-menu-overlay" aria-hidden="true" inert>
  <div class="mob-backdrop" id="mob-backdrop"></div>
- <div id="mobile-menu-content">
+ <div id="mobile-menu-content" role="dialog" aria-modal="true" aria-label="Мобильное меню">
   <p class="mob-section-title">Услуги</p>
   <a href="/stroitelstvo/karkasnye-doma" class="mob-nav-link">Строительство</a>
   <a href="/shlifovka" class="mob-nav-link">Шлифовка</a>
@@ -3744,15 +3749,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  {% include "includes/site_footer.html" %}
 
  <!-- Callback Modal -->
-<div id="callback-modal" class="cb-modal">
+<div id="callback-modal" class="cb-modal" role="dialog" aria-modal="true" aria-labelledby="callback-modal-title" aria-describedby="callback-modal-desc" aria-hidden="true" inert>
  <div class="cb-modal__backdrop modal-close"></div>
  <div class="cb-modal__card">
   <button class="cb-modal__close modal-close" aria-label="Закрыть">
    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
   </button>
 
-  <h3 class="cb-modal__title">Обратный звонок</h3>
-  <p class="cb-modal__sub">Оставьте номер — перезвоним в течение 15 минут</p>
+  <h3 class="cb-modal__title" id="callback-modal-title">Обратный звонок</h3>
+  <p class="cb-modal__sub" id="callback-modal-desc">Оставьте номер — перезвоним в течение 15 минут</p>
 
   <form class="cb-modal__form" method="post" action="{{ request.path }}">
    {% csrf_token %}
@@ -3789,14 +3794,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
  <!-- Успешная заявка (калькулятор, квиз, контакты, модалка — после AJAX) -->
- <div id="lead-success-modal" class="cb-modal" aria-hidden="true">
+ <div id="lead-success-modal" class="cb-modal" role="dialog" aria-modal="true" aria-labelledby="lead-success-modal-title" aria-describedby="lead-success-modal-desc" aria-hidden="true" inert>
   <div class="cb-modal__backdrop lead-modal-close"></div>
   <div class="cb-modal__card">
    <button type="button" class="cb-modal__close lead-modal-close" aria-label="Закрыть">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
    </button>
-   <h3 class="cb-modal__title">Заявка отправлена</h3>
-   <p class="cb-modal__sub">Перезвоним в течение 30 минут</p>
+   <h3 class="cb-modal__title" id="lead-success-modal-title">Заявка отправлена</h3>
+   <p class="cb-modal__sub" id="lead-success-modal-desc">Перезвоним в течение 30 минут</p>
    <button type="button" class="cb-modal__btn lead-modal-close">Понятно</button>
   </div>
  </div>

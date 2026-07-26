@@ -304,6 +304,7 @@ def robots_txt(request):
             "Disallow: /admin/",
             "Disallow: /export/",
             "Disallow: /lead-status/",
+            "Clean-param: utm_source&utm_medium&utm_campaign&utm_content&utm_term&utm_referrer&yclid&ymclid&gclid&gbraid&wbraid&fbclid&roistat&rs&openstat&_ga /",
             f"Sitemap: {SITE_URL}/sitemap.xml",
             "",
         ]
@@ -315,18 +316,48 @@ def sitemap_xml(request):
     from .models import BlogPost, SitePage
     from .seo import SITE_URL, canonical_path_for_key, sitemap_paths
 
-    paths = set(sitemap_paths())
-    paths.add("/blog/")
+    path_rows = {
+        path: {
+            "changefreq": "weekly",
+            "priority": "0.80",
+        }
+        for path in sitemap_paths()
+    }
+    path_rows["/"] = {
+        "changefreq": "weekly",
+        "priority": "1.00",
+    }
+    path_rows["/blog/"] = {
+        "changefreq": "weekly",
+        "priority": "0.60",
+    }
 
     for page_key in SitePage.objects.filter(is_active=True, seo_noindex=False).values_list("page_key", flat=True):
         key = (page_key or "").strip("/")
-        paths.add(canonical_path_for_key(key or "home"))
-    for slug in BlogPost.objects.filter(is_active=True).exclude(slug="").values_list("slug", flat=True):
-        paths.add(f"/blog/{slug}/")
+        path = canonical_path_for_key(key or "home")
+        path_rows.setdefault(
+            path,
+            {
+                "changefreq": "weekly",
+                "priority": "0.80",
+            },
+        )
+
+    for post in BlogPost.objects.filter(is_active=True).exclude(slug=""):
+        path_rows[f"/blog/{post.slug}/"] = {
+            "lastmod": post.published_at.isoformat() if post.published_at else "",
+            "changefreq": "monthly",
+            "priority": "0.50",
+        }
 
     urls = "".join(
-        f"<url><loc>{escape(SITE_URL + path)}</loc></url>"
-        for path in sorted(paths)
+        "<url>"
+        f"<loc>{escape(SITE_URL + path)}</loc>"
+        + (f"<lastmod>{escape(meta['lastmod'])}</lastmod>" if meta.get("lastmod") else "")
+        + f"<changefreq>{escape(meta['changefreq'])}</changefreq>"
+        + f"<priority>{escape(meta['priority'])}</priority>"
+        + "</url>"
+        for path, meta in sorted(path_rows.items())
     )
     xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
     return HttpResponse(xml, content_type="application/xml; charset=utf-8")

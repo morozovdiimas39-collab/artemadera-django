@@ -42,11 +42,11 @@ def _home_services_defaults():
     from .models import CalculatorProfile
 
     seeds = [
-        ("shlifovka", "Шлифовка", "Срубы, брус, оцилиндровка и лафет.", "/shlifovka", "", "", "images/quiz/quiz_shlifovka_1776809850085.png"),
-        ("pokraska", "Покраска", "Грунт, масла и лазури для фасада и интерьера.", "/pokraska", "", "под ключ", "images/quiz/quiz_pokraska_1776809864700.png"),
+        ("shlifovka", "Шлифовка", "Срубы, брус, оцилиндровка и лафет.", "/shlifovka", "", "", "images/quiz/quiz_shlifovka_1776809850085.webp"),
+        ("pokraska", "Покраска", "Грунт, масла и лазури для фасада и интерьера.", "/pokraska", "", "под ключ", "images/quiz/quiz_pokraska_1776809864700.webp"),
         ("teplyy-shov", "Тёплый шов", "Заполнение межвенцовых швов эластичным составом.", "/teplyy-shov", "", "герметизация", "services/teplyy-shov-finished.webp"),
         ("otdelochnye-raboty", "Отделочные работы", "Комплексная внутренняя и внешняя отделка деревянного дома.", "/otdelochnye-raboty", "", "под ключ", "images/service-2.jpg"),
-        ("obsada-okna", "Обсада / окна", "Обсадные короба и подготовка оконных проёмов.", "/obsada", "", "проёмы", "images/quiz/quiz_brus_1776809793588.png"),
+        ("obsada-okna", "Обсада / окна", "Обсадные короба и подготовка оконных проёмов.", "/obsada", "", "проёмы", "images/quiz/quiz_brus_1776809793588.webp"),
         ("kryshi", "Крыши", "Монтаж и ремонт кровли.", "/kryshi", "", "кровля", "images/portfolio-3.jpg"),
         ("injeneriya", "Инженерия", "Проект и монтаж инженерных систем.", "/injeneriya", "", "коммуникации", "images/after.jpg"),
         ("stroitelstvo", "Строительство", "Строительство каркасных домов полного цикла.", "/stroitelstvo/karkasnye-doma", "", "полный цикл", "images/hero-bg.jpg"),
@@ -393,7 +393,7 @@ def _experience_defaults():
             "качество — «тест-драйв» на участке вашего дома."
         ),
         image=None,
-        static_image="images/team.png",
+        static_image="images/team.webp",
         is_visible=True,
     )
     stats = [
@@ -464,7 +464,7 @@ def experience_processor(request):
         "images/hero-bg.jpg",
         "images/after.jpg",
     ):
-        section.static_image = "images/team.png"
+        section.static_image = "images/team.webp"
 
     defaults = _experience_defaults()
     return {
@@ -806,13 +806,13 @@ def _blog_defaults():
         _make_post(1, "Можно ли шлифовать сруб зимой?",
             "Как создают тепловой контур на объекте и почему профессиональная шлифовка "
             "возможна не только в тёплый сезон.",
-            "mozhno-li-shlifovat-srub-zimoy", "images/quiz/quiz_shlifovka_1776809850085.png"),
+            "mozhno-li-shlifovat-srub-zimoy", "images/quiz/quiz_shlifovka_1776809850085.webp"),
         _make_post(2, "Что такое «тёплый шов» для деревянного дома",
             "Зачем нужен эластичный герметик в межвенцовых швах и как он защищает древесину.",
             "chto-takoe-teplyy-shov", "services/teplyy-shov-finished.webp"),
         _make_post(3, "Как подготовить дом из бруса к покраске",
             "Этапы шлифовки, удаления пыли и выбора системы покрытия для фасада.",
-            "kak-podgotovit-dom-iz-brusa-k-pokraske", "images/quiz/quiz_pokraska_1776809864700.png"),
+            "kak-podgotovit-dom-iz-brusa-k-pokraske", "images/quiz/quiz_pokraska_1776809864700.webp"),
     ]
     return {"blog_section": section, "blog_posts": posts}
 
@@ -1066,11 +1066,11 @@ def site_page_processor(request):
 
 # (data-value кнопки, атрибут HomeQuizSettings, путь в static при пустой загрузке)
 _HOME_QUIZ_IMAGE_ROWS = [
-    ("shlifovka", "image_shlifovka", "images/quiz/quiz_shlifovka_1776809850085.png"),
-    ("pokraska", "image_pokraska", "images/quiz/quiz_pokraska_1776809864700.png"),
+    ("shlifovka", "image_shlifovka", "images/quiz/quiz_shlifovka_1776809850085.webp"),
+    ("pokraska", "image_pokraska", "images/quiz/quiz_pokraska_1776809864700.webp"),
     ("teplyy-shov", "image_teplyy_shov", "services/teplyy-shov-finished.webp"),
-    ("okosyachka", "image_okosyachka", "images/quiz/quiz_srub_1776809774832.png"),
-    ("obsada", "image_obsada", "images/quiz/quiz_brus_1776809793588.png"),
+    ("okosyachka", "image_okosyachka", "images/quiz/quiz_srub_1776809774832.webp"),
+    ("obsada", "image_obsada", "images/quiz/quiz_brus_1776809793588.webp"),
     ("kryshi", "image_kryshi", "images/portfolio-3.jpg"),
     ("injeneriya", "image_injeneriya", "images/after.jpg"),
 ]

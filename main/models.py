@@ -305,7 +305,7 @@ class Service(models.Model):
         max_length=200,
         blank=True,
         verbose_name="Фото (static)",
-        help_text="Например images/quiz/quiz_shlifovka_1776809850085.png — если нет загрузки.",
+        help_text="Например images/quiz/quiz_shlifovka_1776809850085.webp — если нет загрузки.",
     )
     home_tag_override = models.CharField(
         max_length=64,
@@ -798,7 +798,7 @@ class ExperienceSection(models.Model):
     )
     static_image = models.CharField(
         max_length=200,
-        default="images/team.png",
+        default="images/team.webp",
         blank=True,
         verbose_name="Фото из static",
     )

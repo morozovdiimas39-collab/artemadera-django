@@ -12,6 +12,7 @@ SITE_URL = f"https://{CANONICAL_HOST}"
 COMPANY_NAME = "ArteMadera"
 PHONE = "+7 (495) 005-01-45"
 ADDRESS = "Ярославская ул., д. 8, корп. 6, офис 220"
+LOGO_STATIC = "android-chrome-512x512.png"
 
 
 @dataclass(frozen=True)
@@ -39,7 +40,7 @@ SEO_DEFAULTS: dict[str, SeoDefault] = {
         "Покраска деревянного дома в Москве и МО | цена за м²",
         "Покраска деревянных домов снаружи и внутри в Москве и МО: срубы, брус, лафет и ОЦБ. Подбор ЛКМ, выкрасы, фиксированная смета.",
         "Покраска деревянного дома",
-        "images/quiz/quiz_pokraska_1776809864700.png",
+        "images/quiz/quiz_pokraska_1776809864700.webp",
     ),
     "teplyy-shov": SeoDefault(
         "Тёплый шов для деревянного дома в Москве и МО | герметизация",
@@ -51,19 +52,19 @@ SEO_DEFAULTS: dict[str, SeoDefault] = {
         "Обсада окон и дверей в деревянном доме в Москве и МО",
         "Изготовление и монтаж обсады оконных и дверных проёмов в деревянных домах. Компенсация усадки, подготовка под окна и двери.",
         "Обсада в деревянном доме",
-        "images/quiz/quiz_brus_1776809793588.png",
+        "images/quiz/quiz_brus_1776809793588.webp",
     ),
     "obsada/okna": SeoDefault(
         "Обсада окон в деревянном доме в Москве и МО",
         "Обсадные короба для окон в деревянном доме: подготовка проёмов, защита от усадки, монтаж под любые размеры окон.",
         "Обсада окон",
-        "images/quiz/quiz_brus_1776809793588.png",
+        "images/quiz/quiz_brus_1776809793588.webp",
     ),
     "obsada/dveri": SeoDefault(
         "Обсада дверей в деревянном доме в Москве и МО",
         "Обсада дверных проёмов в деревянном доме: входные и межкомнатные двери, компенсационный зазор и аккуратный монтаж.",
         "Обсада дверей",
-        "images/quiz/quiz_brus_1776809793588.png",
+        "images/quiz/quiz_brus_1776809793588.webp",
     ),
     "otdelochnye-raboty": SeoDefault(
         "Отделочные работы в деревянном доме в Москве и МО | под ключ",
@@ -165,7 +166,7 @@ SEO_DEFAULTS: dict[str, SeoDefault] = {
         "О компании ArteMadera | отделка деревянных домов",
         "ArteMadera — строительно-отделочная компания полного цикла для деревянных домов: опыт более 10 лет, договор, гарантия и собственное производство.",
         "",
-        "images/team.png",
+        "images/team.webp",
     ),
     "stroitelstvo/karkasnye-doma": SeoDefault(
         "Строительство каркасных домов в Москве и МО | под ключ",
@@ -173,6 +174,11 @@ SEO_DEFAULTS: dict[str, SeoDefault] = {
         "Строительство каркасных домов",
         "images/hero-bg.jpg",
     ),
+}
+
+SITEMAP_EXCLUDED_KEYS = {
+    "otdelka/shlifovka/bani-i-sauny",
+    "otdelka/shlifovka/konsyerzhnaya",
 }
 
 
@@ -195,6 +201,12 @@ def absolute_url(path: str) -> str:
 
 def image_url(static_path: str = "") -> str:
     path = static_path or "images/hero-bg.jpg"
+    if path.startswith(("http://", "https://")):
+        return path
+    if path.startswith("/"):
+        return absolute_url(path)
+    if path.startswith(("before_after/", "home_quiz/", "pages/", "portfolio/", "services/")):
+        return absolute_url(settings.MEDIA_URL.rstrip("/") + "/" + path)
     return absolute_url(static(path))
 
 
@@ -204,6 +216,8 @@ def company_schema() -> dict:
         "@type": "LocalBusiness",
         "name": COMPANY_NAME,
         "url": SITE_URL + "/",
+        "logo": image_url(LOGO_STATIC),
+        "image": image_url("images/hero-bg.jpg"),
         "telephone": PHONE,
         "address": {
             "@type": "PostalAddress",
@@ -212,6 +226,22 @@ def company_schema() -> dict:
             "addressCountry": "RU",
         },
         "areaServed": ["Москва", "Московская область"],
+    }
+
+
+def website_schema() -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": COMPANY_NAME,
+        "url": SITE_URL + "/",
+        "inLanguage": "ru-RU",
+        "publisher": {
+            "@type": "Organization",
+            "name": COMPANY_NAME,
+            "url": SITE_URL + "/",
+            "logo": image_url(LOGO_STATIC),
+        },
     }
 
 
@@ -260,7 +290,7 @@ def build_page_seo(request, page=None) -> dict:
     noindex = bool(getattr(page, "seo_noindex", False))
     image = image_url(default.image)
 
-    schema_items = [company_schema(), breadcrumb_schema(page_key, title)]
+    schema_items = [company_schema(), website_schema(), breadcrumb_schema(page_key, title)]
     service = service_schema(page_key, default)
     if service:
         schema_items.append(service)
@@ -279,6 +309,7 @@ def build_page_seo(request, page=None) -> dict:
 def build_blog_list_seo() -> dict:
     schema = [
         company_schema(),
+        website_schema(),
         {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
@@ -311,6 +342,7 @@ def build_blog_post_seo(post) -> dict:
     canonical_url = SITE_URL + post.get_absolute_url()
     schema = [
         company_schema(),
+        website_schema(),
         {
             "@context": "https://schema.org",
             "@type": "Article",
@@ -344,4 +376,8 @@ def build_blog_post_seo(post) -> dict:
 
 
 def sitemap_paths() -> set[str]:
-    return {canonical_path_for_key(key) for key in SEO_DEFAULTS.keys()}
+    return {
+        canonical_path_for_key(key)
+        for key in SEO_DEFAULTS.keys()
+        if key not in SITEMAP_EXCLUDED_KEYS
+    }

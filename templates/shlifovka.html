@@ -3,48 +3,7 @@
 
 {% block body_class %}page-shlifovka{% endblock %}
 {% block structured_data %}
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "Service",
- "name": "Шлифовка деревянных домов",
- "description": "Профессиональная шлифовка деревянных домов, срубов и бруса в Москве и Московской области.",
- "url": "https://artemadera.ru/shlifovka",
- "areaServed": ["Москва", "Московская область"],
- "provider": {
-  "@type": "LocalBusiness",
-  "name": "ArteMadera",
-  "url": "https://artemadera.ru/",
-  "telephone": "+7 (495) 005-01-45",
-  "address": {
-   "@type": "PostalAddress",
-   "streetAddress": "Ярославская ул., д. 8, корп. 6, офис 220",
-   "addressLocality": "Москва",
-   "addressCountry": "RU"
-  }
- }
-}
-</script>
-{% if faq_items %}
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [
-  {% for item in faq_items %}
-  {
-   "@type": "Question",
-   "name": "{{ item.question|escapejs }}",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "{{ item.answer|striptags|escapejs }}"
-   }
-  }{% if not forloop.last %},{% endif %}
-  {% endfor %}
- ]
-}
-</script>
-{% endif %}
+{% if seo.schema_json %}<script type="application/ld+json">{{ seo.schema_json|safe }}</script>{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -53,11 +12,11 @@
  <div class="hero-inner relative z-10 w-full text-center px-4 sm:px-8 py-32">
   <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
    {% if site_page.hero_h1_white or site_page.hero_h1_accent %}
-   {% if site_page.hero_h1_white %}<span class="text-white">{{ site_page.hero_h1_white|linebreaksbr }}</span>{% endif %}{% if site_page.hero_h1_white and site_page.hero_h1_accent %}<br/>{% endif %}
+   {% if site_page.hero_h1_white %}<span class="text-white">{{ site_page.hero_h1_white|linebreaksbr }} </span>{% endif %}{% if site_page.hero_h1_white and site_page.hero_h1_accent %}<br/>{% endif %}
    {% if site_page.hero_h1_accent %}<span class="text-amber-500">{{ site_page.hero_h1_accent|linebreaksbr }}</span>{% endif %}
    {% else %}
    <span class="text-white">Профессиональная</span><br/>
-   <span class="text-amber-500">шлифовка деревянных<br/>домов</span>
+   <span class="text-amber-500">шлифовка деревянных <br/>домов</span>
    {% endif %}
   </h1>
   <p class="text-gray-300 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">

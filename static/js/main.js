@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- 1. Dropdown "Услуги" ---
   const navServicesWrap = document.getElementById('nav-services-wrap');
+  const navServicesBtn = document.getElementById('nav-services-btn');
   const servicesDropdown = document.getElementById('services-dropdown');
   const servicesChevron = document.getElementById('nav-services-chevron');
 
@@ -115,6 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
       servicesDropdown.style.transform = 'scaleY(1)';
       servicesDropdown.style.pointerEvents = 'auto';
       servicesDropdown.style.visibility = 'visible';
+      servicesDropdown.removeAttribute('aria-hidden');
+      servicesDropdown.removeAttribute('inert');
+      if (navServicesBtn) navServicesBtn.setAttribute('aria-expanded', 'true');
       if (servicesChevron) servicesChevron.style.transform = 'rotate(180deg)';
     };
     const hideDropdown = () => {
@@ -122,6 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
       servicesDropdown.style.transform = 'scaleY(0.9)';
       servicesDropdown.style.pointerEvents = 'none';
       servicesDropdown.style.visibility = 'hidden';
+      servicesDropdown.setAttribute('aria-hidden', 'true');
+      servicesDropdown.setAttribute('inert', '');
+      if (navServicesBtn) navServicesBtn.setAttribute('aria-expanded', 'false');
       if (servicesChevron) servicesChevron.style.transform = 'rotate(0deg)';
     };
     navServicesWrap.addEventListener('mouseenter', showDropdown);
@@ -188,12 +195,20 @@ document.addEventListener('DOMContentLoaded', () => {
     closeMobileMenu = () => {
       mobileMenuOverlay.classList.remove('is-open', 'opacity-0', 'pointer-events-none');
       mobileMenuContent?.classList.remove('-translate-y-6', 'opacity-0');
+      mobileMenuOverlay.setAttribute('aria-hidden', 'true');
+      mobileMenuOverlay.setAttribute('inert', '');
+      menuToggleBtn.setAttribute('aria-expanded', 'false');
+      menuToggleBtn.setAttribute('aria-label', 'Открыть меню');
       document.body.style.overflow = '';
     };
     const openMobileMenu = () => {
       mobileMenuOverlay.classList.remove('opacity-0', 'pointer-events-none');
       mobileMenuContent?.classList.remove('-translate-y-6', 'opacity-0');
       mobileMenuOverlay.classList.add('is-open');
+      mobileMenuOverlay.removeAttribute('aria-hidden');
+      mobileMenuOverlay.removeAttribute('inert');
+      menuToggleBtn.setAttribute('aria-expanded', 'true');
+      menuToggleBtn.setAttribute('aria-label', 'Закрыть меню');
       document.body.style.overflow = 'hidden';
     };
     menuToggleBtn.addEventListener('click', () => {
@@ -213,10 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (modal) {
     const openModal = () => {
       modal.classList.add('is-open');
+      modal.removeAttribute('aria-hidden');
+      modal.removeAttribute('inert');
       document.body.style.overflow = 'hidden';
     };
     const closeModal = () => {
       modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      modal.setAttribute('inert', '');
       document.body.style.overflow = '';
     };
 
@@ -260,12 +279,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeLeadSuccess = () => {
     if (!leadSuccessModal) return;
     leadSuccessModal.classList.remove('is-open');
+    leadSuccessModal.setAttribute('aria-hidden', 'true');
+    leadSuccessModal.setAttribute('inert', '');
     document.body.style.overflow = '';
   };
   const openLeadSuccess = () => {
     if (!leadSuccessModal) return;
-    document.getElementById('callback-modal')?.classList.remove('is-open');
+    const callbackModal = document.getElementById('callback-modal');
+    if (callbackModal) {
+      callbackModal.classList.remove('is-open');
+      callbackModal.setAttribute('aria-hidden', 'true');
+      callbackModal.setAttribute('inert', '');
+    }
     leadSuccessModal.classList.add('is-open');
+    leadSuccessModal.removeAttribute('aria-hidden');
+    leadSuccessModal.removeAttribute('inert');
     document.body.style.overflow = 'hidden';
   };
   if (leadSuccessModal) {

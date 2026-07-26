@@ -1,4 +1,22 @@
 {% if faq_section.is_visible and faq_items %}
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {% for item in faq_items %}
+  {
+   "@type": "Question",
+   "name": "{{ item.question|escapejs }}",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "{{ item.answer|striptags|escapejs }}"
+   }
+  }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+ ]
+}
+</script>
 <section id="faq" class="faq-section">
  <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
   <div class="faq-section-inner">

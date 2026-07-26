@@ -671,7 +671,7 @@ class ExperienceSectionAdmin(AdminImageCompressionMixin, ModelAdmin):
                     "description": (
                         "Если «Фото (загрузка)» пусто — на сайте показывается файл из каталога "
                         "<code>static/</code>. Укажите путь относительно него, например "
-                        "<code>images/team.png</code>."
+                        "<code>images/team.webp</code>."
                     ),
                     "fields": photo_fields,
                 },

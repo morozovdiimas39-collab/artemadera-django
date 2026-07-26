@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from urllib.parse import urlencode
-
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 
@@ -10,6 +8,24 @@ class CanonicalHostMiddleware:
     """Сводит публичные URL к одной SEO-канонической версии."""
 
     CANONICAL_HOST = "artemadera.ru"
+    PUBLIC_HOSTS = {
+        "artemadera.ru",
+        "www.artemadera.ru",
+        "artemadera.su",
+        "www.artemadera.su",
+    }
+    LEGACY_PATH_REDIRECTS = {
+        "/otdelka": "/otdelochnye-raboty",
+        "/otdelka/": "/otdelochnye-raboty",
+        "/otdelka/shlifovka/srybi": "/otdelka/shlifovka/sruba",
+        "/otdelka/shlifovka/srybi/": "/otdelka/shlifovka/sruba",
+        "/otdelka/shlifovka/bani-i-sauny": "/shlifovka",
+        "/otdelka/shlifovka/bani-i-sauny/": "/shlifovka",
+        "/otdelka/shlifovka/konsyerzhnaya": "/shlifovka",
+        "/otdelka/shlifovka/konsyerzhnaya/": "/shlifovka",
+        "/blog/kak-sdelat-teplyye-shov-v-derevyannom-dome": "/blog/chto-takoe-teplyy-shov/",
+        "/blog/kak-sdelat-teplyye-shov-v-derevyannom-dome/": "/blog/chto-takoe-teplyy-shov/",
+    }
     TRAILING_SLASH_EXCLUDE_PREFIXES = (
         "/admin/",
         "/blog/",
@@ -30,10 +46,16 @@ class CanonicalHostMiddleware:
 
     def _canonical_url(self, request) -> str:
         host = request.get_host().split(":", 1)[0].lower()
-        if host not in {"artemadera.ru", "www.artemadera.ru"}:
+        if host not in self.PUBLIC_HOSTS:
             return ""
 
         path = request.path or "/"
+        query = request.META.get("QUERY_STRING", "")
+        suffix = f"?{query}" if query else ""
+        legacy_target = self.LEGACY_PATH_REDIRECTS.get(path)
+        if legacy_target:
+            return f"https://{self.CANONICAL_HOST}{legacy_target}{suffix}"
+
         canonical_path = path
         if (
             path != "/"
@@ -52,6 +74,4 @@ class CanonicalHostMiddleware:
         if not needs_redirect:
             return ""
 
-        query = request.META.get("QUERY_STRING", "")
-        suffix = f"?{query}" if query else ""
         return f"https://{self.CANONICAL_HOST}{canonical_path}{suffix}"
