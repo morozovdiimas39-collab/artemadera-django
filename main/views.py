@@ -305,6 +305,13 @@ def robots_txt(request):
             "Disallow: /export/",
             "Disallow: /lead-status/",
             "Clean-param: utm_source&utm_medium&utm_campaign&utm_content&utm_term&utm_referrer&yclid&ymclid&gclid&gbraid&wbraid&fbclid&roistat&rs&openstat&_ga /",
+            "",
+            "User-agent: OAI-SearchBot",
+            "Allow: /",
+            "",
+            "User-agent: ChatGPT-User",
+            "Allow: /",
+            "",
             f"Sitemap: {SITE_URL}/sitemap.xml",
             "",
         ]

@@ -209,10 +209,14 @@ class SeoEndpointTests(TestCase):
         self.assertEqual(response.status_code, 200)
         body = response.content.decode()
         self.assertIn("Sitemap: https://artemadera.ru/sitemap.xml", body)
+        self.assertIn("User-agent: *", body)
         self.assertIn("Disallow: /admin/", body)
         self.assertIn("Clean-param: utm_source", body)
         self.assertIn("yclid", body)
         self.assertIn("gclid", body)
+        self.assertIn("User-agent: OAI-SearchBot\nAllow: /", body)
+        self.assertIn("User-agent: ChatGPT-User\nAllow: /", body)
+        self.assertEqual(body.count("Sitemap: https://artemadera.ru/sitemap.xml"), 1)
 
     def test_sitemap_is_valid_and_contains_only_canonical_replacement_paths(self):
         response = Client(HTTP_HOST="artemadera.ru").get("/sitemap.xml", secure=True)
