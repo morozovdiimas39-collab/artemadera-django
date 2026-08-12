@@ -20,7 +20,7 @@
 
     <ul class="contact-details">
      <li>
-      <a href="tel:{{ contact_section.phone_href }}" class="contact-detail-link">
+      <a href="tel:+{{ contact_section.phone_href }}" class="contact-detail-link">
        <span class="contact-detail-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
        </span>
@@ -64,7 +64,7 @@
      <p><strong>Заявка отправлена!</strong> Мы перезвоним вам в ближайшее время.</p>
     </div>
     {% else %}
-    <form class="contact-form" method="post" action="{{ request.path }}#contact">
+    <form class="contact-form js-callibri-form" method="post" action="{{ request.path }}#contact" data-callibri_form_name="Контактная форма">
      {% csrf_token %}
      <input type="hidden" name="form_type" value="contact"/>
      <p class="contact-form-lead">Оставьте телефон — перезвоним в течение 30 минут</p>
@@ -87,7 +87,7 @@
        <span class="visually-hidden">Телефон</span>
        <input
         id="contact-phone"
-        class="contact-phone-input"
+        class="contact-phone-input js-callibri-phone"
         type="tel"
         name="phone"
         required

@@ -37,7 +37,7 @@
       </li>
      </ul>
 
-     <a href="tel:{{ contact_section.phone_href }}" class="measure-cta-phone">
+     <a href="tel:+{{ contact_section.phone_href }}" class="measure-cta-phone">
       <span class="measure-cta-phone-icon" aria-hidden="true">
        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
       </span>
@@ -55,7 +55,7 @@
       <p><strong>Заявка принята</strong><br/>Перезвоним для согласования замера.</p>
      </div>
      {% else %}
-     <form class="measure-cta-form" method="post" action="{% url 'shlifovka' %}#zamer">
+     <form class="measure-cta-form js-callibri-form" method="post" action="{% url 'shlifovka' %}#zamer" data-callibri_form_name="Заявка на замер">
       {% csrf_token %}
       <input type="hidden" name="form_type" value="contact"/>
       <input type="hidden" name="from_block" value="measure"/>
@@ -64,7 +64,7 @@
       <label class="measure-cta-label" for="measure-phone">Телефон</label>
       <input
        id="measure-phone"
-       class="measure-cta-input"
+       class="measure-cta-input js-callibri-phone"
        type="tel"
        name="phone"
        required

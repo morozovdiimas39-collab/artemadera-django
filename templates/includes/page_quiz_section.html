@@ -19,7 +19,7 @@
    </div>
 
    <div class="hq-card__body">
-    <form id="home-quiz" class="hq-form" method="post" action="{{ request.path }}#quiz"
+    <form id="home-quiz" class="hq-form js-callibri-form" method="post" action="{{ request.path }}#quiz" data-callibri_form_name="Квиз"
      data-area-unit="{{ page_quiz.area_unit|default:'м²' }}"
      data-area-min="{{ page_quiz.area_min|default:20 }}"
      data-area-max="{{ page_quiz.area_max|default:600 }}">
@@ -119,7 +119,7 @@
       </div>
       {% else %}
       <div class="hq-phone-wrap">
-       <input type="tel" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" class="hq-phone"/>
+       <input type="tel" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" class="hq-phone js-callibri-phone"/>
        <button type="submit" class="hq-submit">Получить консультацию</button>
        <p class="hq-privacy">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
       </div>

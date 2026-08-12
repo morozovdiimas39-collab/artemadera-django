@@ -3690,7 +3690,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </a>
    </div>
    <div class="nav-divider"></div>
-   <a href="tel:{% if contact_section %}{{ contact_section.phone_href }}{% else %}74950050145{% endif %}" class="nav-phone">{% if contact_section %}{{ contact_section.phone }}{% else %}+7 (495) 005-01-45{% endif %}</a>
+   <a href="tel:+{% if contact_section %}{{ contact_section.phone_href }}{% else %}74950050145{% endif %}" class="nav-phone">{% if contact_section %}{{ contact_section.phone }}{% else %}+7 (495) 005-01-45{% endif %}</a>
    <button type="button" id="callback-open" class="nav-call-btn" style="align-items:center;gap:0.4rem;padding:0.5rem 1.1rem;border-radius:0.6rem;background:#d97706;color:#fff;font-size:0.8rem;font-weight:700;border:none;cursor:pointer;transition:background 0.2s;white-space:nowrap;">
     Позвонить
    </button>
@@ -3759,7 +3759,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <h3 class="cb-modal__title" id="callback-modal-title">Обратный звонок</h3>
   <p class="cb-modal__sub" id="callback-modal-desc">Оставьте номер — перезвоним в течение 15 минут</p>
 
-  <form class="cb-modal__form" method="post" action="{{ request.path }}">
+  <form class="cb-modal__form js-callibri-form" method="post" action="{{ request.path }}" data-callibri_form_name="Обратный звонок">
    {% csrf_token %}
    <input type="hidden" name="form_type" value="contact"/>
    <input type="hidden" name="from_block" value="callback_modal"/>
@@ -3770,7 +3770,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     placeholder="+7 (___) ___-__-__"
     autocomplete="tel"
     inputmode="tel"
-    class="cb-modal__input"
+    class="cb-modal__input js-callibri-phone"
    />
    <button type="submit" class="cb-modal__btn">Жду звонка</button>
    <p class="cb-modal__privacy">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>

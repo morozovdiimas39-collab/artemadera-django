@@ -1,9 +1,11 @@
 import json
 import importlib
 import re
+from pathlib import Path
 from urllib.parse import urlsplit
 from xml.etree import ElementTree
 
+from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.db.models.signals import post_save
 from django.test import Client, TestCase
@@ -282,6 +284,43 @@ class SeoEndpointTests(TestCase):
 
 
 class StaticFallbackTests(TestCase):
+    def test_every_public_lead_form_has_callibri_selectors(self):
+        templates_dir = Path(settings.BASE_DIR) / "templates"
+        lead_forms = []
+
+        for template_path in templates_dir.rglob("*.html"):
+            source = template_path.read_text(encoding="utf-8")
+            for form_markup in re.findall(
+                r"<form\b.*?</form>", source, flags=re.DOTALL | re.IGNORECASE
+            ):
+                if 'name="form_type" value="contact"' in form_markup:
+                    lead_forms.append((template_path, form_markup))
+
+        self.assertEqual(len(lead_forms), 7)
+        for template_path, form_markup in lead_forms:
+            with self.subTest(template=template_path.name):
+                opening_tag = form_markup.split(">", 1)[0]
+                self.assertIn("js-callibri-form", opening_tag)
+                self.assertIn("data-callibri_form_name=", opening_tag)
+                phone_input = re.search(
+                    r'<input\b(?=[^>]*name="phone")[^>]*>',
+                    form_markup,
+                    flags=re.DOTALL | re.IGNORECASE,
+                )
+                self.assertIsNotNone(phone_input)
+                self.assertIn("js-callibri-phone", phone_input.group(0))
+
+    def test_every_template_phone_link_uses_international_prefix(self):
+        templates_dir = Path(settings.BASE_DIR) / "templates"
+        invalid_links = []
+
+        for template_path in templates_dir.rglob("*.html"):
+            source = template_path.read_text(encoding="utf-8")
+            if re.search(r'href="tel:(?!\+)', source):
+                invalid_links.append(template_path.relative_to(templates_dir).as_posix())
+
+        self.assertEqual(invalid_links, [])
+
     def test_webp_migration_targets_exist_and_decode(self):
         migration = importlib.import_module(
             "main.migrations.0089_switch_static_png_fallbacks_to_webp"
